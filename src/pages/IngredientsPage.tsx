@@ -233,12 +233,33 @@ const IngredientCard = styled.button`
   }
 `;
 
-const IngredientImage = styled.img`
+const IngredientImageWrapper = styled.div`
   width: 40px;
   height: 40px;
-  object-fit: contain;
+  flex-shrink: 0;
   background: white;
   border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+`;
+
+const IngredientImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+`;
+
+const ImagePlaceholder = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background: ${colors.background.secondary};
+  color: ${colors.text.tertiary};
 `;
 
 const IngredientName = styled.span`
@@ -291,6 +312,30 @@ const categoryIcons: Record<string, string> = {
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 type ViewMode = 'alphabet' | 'category';
+
+// Composant pour l'image d'ingrédient avec placeholder
+const IngredientImageWithPlaceholder: React.FC<{ ingredient: Ingredient }> = ({ ingredient }) => {
+  const [imageError, setImageError] = useState(false);
+  const icon = categoryIcons[ingredient.category] || '🍹';
+
+  if (imageError) {
+    return (
+      <IngredientImageWrapper>
+        <ImagePlaceholder>{icon}</ImagePlaceholder>
+      </IngredientImageWrapper>
+    );
+  }
+
+  return (
+    <IngredientImageWrapper>
+      <IngredientImage
+        src={getIngredientImage(ingredient.nameEN)}
+        alt={ingredient.name}
+        onError={() => setImageError(true)}
+      />
+    </IngredientImageWrapper>
+  );
+};
 
 export const IngredientsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -419,13 +464,7 @@ export const IngredientsPage: React.FC = () => {
                 key={i}
                 onClick={() => handleSelectSuggestion(ingredient)}
               >
-                <img
-                  src={getIngredientImage(ingredient.nameEN)}
-                  alt={ingredient.name}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
+                <IngredientImageWithPlaceholder ingredient={ingredient} />
                 {ingredient.name}
                 <span className="category">{ingredient.category}</span>
               </SuggestionItem>
@@ -491,13 +530,7 @@ export const IngredientsPage: React.FC = () => {
                       key={i}
                       onClick={() => handleIngredientClick(ingredient)}
                     >
-                      <IngredientImage
-                        src={getIngredientImage(ingredient.nameEN)}
-                        alt={ingredient.name}
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                      />
+                      <IngredientImageWithPlaceholder ingredient={ingredient} />
                       <IngredientName>{ingredient.name}</IngredientName>
                     </IngredientCard>
                   ))}
@@ -520,13 +553,7 @@ export const IngredientsPage: React.FC = () => {
                       key={i}
                       onClick={() => handleIngredientClick(ingredient)}
                     >
-                      <IngredientImage
-                        src={getIngredientImage(ingredient.nameEN)}
-                        alt={ingredient.name}
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                      />
+                      <IngredientImageWithPlaceholder ingredient={ingredient} />
                       <IngredientName>{ingredient.name}</IngredientName>
                     </IngredientCard>
                   ))}

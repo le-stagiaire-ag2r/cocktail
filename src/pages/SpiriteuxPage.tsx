@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -129,7 +130,7 @@ const CocktailsList = styled.div`
   gap: ${spacing[3]};
 `;
 
-const CocktailItem = styled.a`
+const CocktailItem = styled.button`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -138,6 +139,8 @@ const CocktailItem = styled.a`
   border: 1px solid ${colors.border.default};
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 100%;
+  text-align: left;
 
   &:hover {
     border-color: ${colors.accent.primary};
@@ -215,7 +218,12 @@ const FactsBox = styled.div`
 `;
 
 export const SpiriteuxPage: React.FC = () => {
+  const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleCocktailClick = (cocktailName: string) => {
+    navigate(`/recettes?search=${encodeURIComponent(cocktailName)}`);
+  };
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -290,7 +298,7 @@ export const SpiriteuxPage: React.FC = () => {
                   <SectionSubtitle>Cocktails emblématiques</SectionSubtitle>
                   <CocktailsList>
                     {getCocktailsBySpirit(spirit.id).map(c => (
-                      <CocktailItem key={c.id} href={`/recettes?search=${c.name}`}>
+                      <CocktailItem key={c.id} onClick={() => handleCocktailClick(c.name)}>
                         <span className="name">{c.name}</span>
                         <span className="technique">{c.technique}</span>
                       </CocktailItem>
