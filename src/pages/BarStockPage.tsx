@@ -87,8 +87,16 @@ const CategoryDesc = styled.p`
 
 const ItemsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: ${spacing[4]};
+
+  @media (max-width: 968px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const ItemCard = styled.div`
@@ -186,12 +194,11 @@ const barCategories = [
     description: 'Les fondations de tout bar à cocktails',
     items: [
       { name: 'Whisky/Bourbon', desc: 'Base du Old Fashioned, Manhattan, Whisky Sour', essential: true },
-      { name: 'Vodka', desc: 'Neutre et polyvalente - Moscow Mule, Bloody Mary, Martini', essential: true },
-      { name: 'Gin', desc: 'Aromatique aux botaniques - Gin Tonic, Negroni, Martini', essential: true },
+      { name: 'Vodka', desc: 'Neutre et polyvalente - Moscow Mule, Bloody Mary', essential: true },
+      { name: 'Gin', desc: 'Aromatique aux botaniques - Gin Tonic, Negroni', essential: true },
       { name: 'Rhum Blanc', desc: 'Léger et sucré - Mojito, Daiquiri, Piña Colada', essential: true },
       { name: 'Rhum Ambré', desc: 'Plus complexe - Mai Tai, Dark & Stormy', essential: false },
       { name: 'Tequila Blanco', desc: 'Agave pur - Margarita, Paloma, Tequila Sunrise', essential: true },
-      { name: 'Cognac/Brandy', desc: 'Élégant - Sidecar, Brandy Alexander', essential: false },
     ],
   },
   {
@@ -200,12 +207,11 @@ const barCategories = [
     description: 'Pour ajouter complexité et douceur',
     items: [
       { name: 'Vermouth Rouge', desc: 'Essentiel pour Negroni, Manhattan', essential: true },
-      { name: 'Vermouth Blanc/Dry', desc: 'Pour le Martini classique', essential: true },
+      { name: 'Vermouth Dry', desc: 'Pour le Martini classique', essential: true },
       { name: 'Triple Sec/Cointreau', desc: 'Orange - Margarita, Cosmopolitan', essential: true },
       { name: 'Campari', desc: 'Amer italien - Negroni, Americano', essential: true },
       { name: 'Aperol', desc: 'Plus doux que Campari - Spritz', essential: false },
       { name: 'Kahlúa', desc: 'Café - Espresso Martini, White Russian', essential: false },
-      { name: 'Amaretto', desc: 'Amande - Amaretto Sour', essential: false },
     ],
   },
   {
@@ -213,7 +219,7 @@ const barCategories = [
     title: 'Agrumes & Jus',
     description: 'Fraîcheur et acidité essentielles',
     items: [
-      { name: 'Citrons frais', desc: 'Toujours presser au moment - ne jamais utiliser de jus en bouteille', essential: true },
+      { name: 'Citrons frais', desc: 'Toujours presser au moment - jamais en bouteille', essential: true },
       { name: 'Limes fraîches', desc: 'Indispensables pour Mojito, Margarita, Daiquiri', essential: true },
       { name: 'Oranges', desc: 'Jus et zestes pour garniture', essential: true },
       { name: 'Pamplemousse', desc: 'Pour Paloma et variations', essential: false },
@@ -239,9 +245,9 @@ const barCategories = [
     title: 'Garnitures & Extras',
     description: 'Les détails qui font la différence',
     items: [
-      { name: 'Glace de qualité', desc: 'Gros cubes pour les cocktails, pilée pour les tiki', essential: true },
+      { name: 'Glace de qualité', desc: 'Gros cubes pour cocktails, pilée pour tiki', essential: true },
       { name: 'Angostura Bitters', desc: 'Quelques gouttes transforment tout', essential: true },
-      { name: 'Olives', desc: 'Pour Martini', essential: true },
+      { name: 'Olives', desc: 'Pour Martini classique', essential: true },
       { name: 'Cerises Maraschino', desc: 'Manhattan, Old Fashioned', essential: true },
       { name: 'Menthe fraîche', desc: 'Mojito, Julep', essential: true },
       { name: 'Sel fin', desc: 'Pour les bords de verre - Margarita', essential: true },
@@ -255,8 +261,9 @@ const barCategories = [
       { name: 'Eau gazeuse/Soda', desc: 'Highballs et spritz', essential: true },
       { name: 'Tonic Water', desc: 'Gin Tonic - choisir une marque de qualité', essential: true },
       { name: 'Ginger Beer', desc: 'Moscow Mule, Dark & Stormy', essential: true },
-      { name: 'Cola', desc: 'Cuba Libre, Jack & Coke', essential: false },
+      { name: 'Cola', desc: 'Cuba Libre, Whisky Cola', essential: false },
       { name: 'Ginger Ale', desc: 'Alternative plus douce au ginger beer', essential: false },
+      { name: 'Limonade', desc: 'Lynchburg Lemonade, Tom Collins', essential: false },
     ],
   },
 ];

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { gsap } from 'gsap';
 import { colors, typography, spacing } from '../styles/designTokens';
-import { getIngredients } from '../services/cocktailAPI';
+import { ingredients as allIngredients, Ingredient, getIngredientImage, ingredientCategories } from '../data/ingredients';
 
 const PageHeader = styled.section`
   padding: 180px ${spacing[8]} ${spacing[16]};
@@ -112,6 +112,34 @@ const SuggestionItem = styled.button`
     background: white;
     border-radius: 4px;
   }
+
+  .category {
+    font-size: ${typography.fontSize.xs};
+    color: ${colors.text.tertiary};
+    margin-left: auto;
+  }
+`;
+
+const ViewToggle = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: ${spacing[2]};
+  margin-top: ${spacing[6]};
+`;
+
+const ToggleButton = styled.button<{ $active: boolean }>`
+  padding: ${spacing[2]} ${spacing[4]};
+  font-size: ${typography.fontSize.sm};
+  font-weight: ${typography.fontWeight.medium};
+  color: ${props => props.$active ? colors.accent.primary : colors.text.tertiary};
+  background: ${props => props.$active ? colors.accent.subtle : 'transparent'};
+  border: 1px solid ${props => props.$active ? colors.accent.primary : colors.border.default};
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: ${colors.accent.primary};
+    border-color: ${colors.accent.primary};
+  }
 `;
 
 const AlphabetNav = styled.div`
@@ -120,7 +148,7 @@ const AlphabetNav = styled.div`
   flex-wrap: wrap;
   gap: ${spacing[1]};
   max-width: 800px;
-  margin: ${spacing[6]} auto 0;
+  margin: ${spacing[4]} auto 0;
 `;
 
 const LetterButton = styled.button<{ $active: boolean; $hasItems: boolean }>`
@@ -152,26 +180,21 @@ const ContentSection = styled.section`
   margin: 0 auto;
 `;
 
-const LoadingContainer = styled.div`
-  text-align: center;
-  padding: ${spacing[16]};
-  color: ${colors.text.tertiary};
+const CategorySection = styled.div`
+  margin-bottom: ${spacing[12]};
 `;
 
-const Spinner = styled.div`
-  width: 40px;
-  height: 40px;
-  margin: 0 auto ${spacing[4]};
-  border: 3px solid ${colors.border.default};
-  border-top-color: ${colors.accent.primary};
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
+const CategoryTitle = styled.h2`
+  font-family: ${typography.fontFamily.display};
+  font-size: ${typography.fontSize['2xl']};
+  font-weight: ${typography.fontWeight.bold};
+  color: ${colors.accent.primary};
+  margin-bottom: ${spacing[6]};
+  padding-bottom: ${spacing[4]};
+  border-bottom: 2px solid ${colors.border.default};
+  display: flex;
+  align-items: center;
+  gap: ${spacing[3]};
 `;
 
 const LetterSection = styled.div`
@@ -190,7 +213,7 @@ const LetterTitle = styled.h2`
 
 const IngredientsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: ${spacing[3]};
 `;
 
@@ -244,40 +267,52 @@ const NoResults = styled.div`
   }
 `;
 
+const TotalCount = styled.div`
+  text-align: center;
+  margin-bottom: ${spacing[8]};
+  font-size: ${typography.fontSize.sm};
+  color: ${colors.text.tertiary};
+`;
+
+const categoryIcons: Record<string, string> = {
+  'Spiritueux': '🥃',
+  'Liqueurs': '🍸',
+  'Vins & Vermouths': '🍷',
+  'Jus & Agrumes': '🍋',
+  'Sirops & Sucres': '🍯',
+  'Sodas & Mixers': '🥤',
+  'Produits laitiers': '🥛',
+  'Fruits': '🍓',
+  'Herbes & Épices': '🌿',
+  'Garnitures': '🧊',
+  'Autres': '✨',
+};
+
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+type ViewMode = 'alphabet' | 'category';
 
 export const IngredientsPage: React.FC = () => {
   const navigate = useNavigate();
-  const [ingredients, setIngredients] = useState<string[]>([]);
-  const [filteredIngredients, setFilteredIngredients] = useState<string[]>([]);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [filteredIngredients, setFilteredIngredients] = useState<Ingredient[]>(allIngredients);
+  const [suggestions, setSuggestions] = useState<Ingredient[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeLetter, setActiveLetter] = useState('');
+  const [viewMode, setViewMode] = useState<ViewMode>('category');
   const contentRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
+  // Filtrer les ingrédients
   useEffect(() => {
-    const loadIngredients = async () => {
-      setLoading(true);
-      const data = await getIngredients();
-      const sorted = data.sort((a, b) => a.localeCompare(b));
-      setIngredients(sorted);
-      setFilteredIngredients(sorted);
-      setLoading(false);
-    };
-    loadIngredients();
-  }, []);
-
-  useEffect(() => {
-    let filtered = ingredients;
+    let filtered = allIngredients;
 
     if (searchQuery) {
+      const lowerQuery = searchQuery.toLowerCase();
       filtered = filtered.filter(ing =>
-        ing.toLowerCase().includes(searchQuery.toLowerCase())
+        ing.name.toLowerCase().includes(lowerQuery) ||
+        ing.nameEN.toLowerCase().includes(lowerQuery)
       );
-      // Mettre à jour les suggestions aussi
       setSuggestions(filtered.slice(0, 8));
       setShowSuggestions(filtered.length > 0 && searchQuery.length >= 1);
     } else {
@@ -285,14 +320,14 @@ export const IngredientsPage: React.FC = () => {
       setShowSuggestions(false);
     }
 
-    if (activeLetter) {
+    if (activeLetter && viewMode === 'alphabet') {
       filtered = filtered.filter(ing =>
-        ing.toUpperCase().startsWith(activeLetter)
+        ing.name.toUpperCase().startsWith(activeLetter)
       );
     }
 
     setFilteredIngredients(filtered);
-  }, [searchQuery, activeLetter, ingredients]);
+  }, [searchQuery, activeLetter, viewMode]);
 
   // Fermer les suggestions en cliquant ailleurs
   useEffect(() => {
@@ -305,10 +340,11 @@ export const IngredientsPage: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Animation
   useEffect(() => {
     if (contentRef.current && filteredIngredients.length > 0) {
       gsap.fromTo(
-        contentRef.current.querySelectorAll('.letter-section'),
+        contentRef.current.querySelectorAll('.section-animate'),
         { opacity: 0, y: 20 },
         {
           opacity: 1,
@@ -319,24 +355,33 @@ export const IngredientsPage: React.FC = () => {
         }
       );
     }
-  }, [filteredIngredients]);
+  }, [filteredIngredients, viewMode]);
 
-  const groupedIngredients = filteredIngredients.reduce((acc, ing) => {
-    const letter = ing[0].toUpperCase();
+  // Grouper par lettre
+  const groupedByLetter = filteredIngredients.reduce((acc, ing) => {
+    const letter = ing.name[0].toUpperCase();
     if (!acc[letter]) acc[letter] = [];
     acc[letter].push(ing);
     return acc;
-  }, {} as Record<string, string[]>);
+  }, {} as Record<string, Ingredient[]>);
 
-  const lettersWithItems = new Set(ingredients.map(ing => ing[0].toUpperCase()));
+  // Grouper par catégorie
+  const groupedByCategory = filteredIngredients.reduce((acc, ing) => {
+    if (!acc[ing.category]) acc[ing.category] = [];
+    acc[ing.category].push(ing);
+    return acc;
+  }, {} as Record<string, Ingredient[]>);
 
-  const handleIngredientClick = (ingredient: string) => {
-    navigate(`/recettes?ingredient=${encodeURIComponent(ingredient)}`);
+  const lettersWithItems = new Set(allIngredients.map(ing => ing.name[0].toUpperCase()));
+
+  const handleIngredientClick = (ingredient: Ingredient) => {
+    // Utiliser le nom anglais pour l'API
+    navigate(`/recettes?ingredient=${encodeURIComponent(ingredient.nameEN)}`);
   };
 
-  const handleSelectSuggestion = (ingredient: string) => {
+  const handleSelectSuggestion = (ingredient: Ingredient) => {
     setShowSuggestions(false);
-    navigate(`/recettes?ingredient=${encodeURIComponent(ingredient)}`);
+    navigate(`/recettes?ingredient=${encodeURIComponent(ingredient.nameEN)}`);
   };
 
   const handleLetterClick = (letter: string) => {
@@ -345,17 +390,13 @@ export const IngredientsPage: React.FC = () => {
     setSearchQuery('');
   };
 
-  const getIngredientImageUrl = (name: string) => {
-    return `https://www.thecocktaildb.com/images/ingredients/${encodeURIComponent(name)}-Small.png`;
-  };
-
   return (
     <>
       <PageHeader>
-        <PageLabel>Guide</PageLabel>
+        <PageLabel>Guide Complet</PageLabel>
         <PageTitle>Ingrédients</PageTitle>
         <PageDesc>
-          Explorez tous les ingrédients utilisés dans la création de cocktails.
+          Explorez plus de {allIngredients.length} ingrédients utilisés dans la création de cocktails.
           Cliquez sur un ingrédient pour voir les recettes associées.
         </PageDesc>
       </PageHeader>
@@ -379,69 +420,119 @@ export const IngredientsPage: React.FC = () => {
                 onClick={() => handleSelectSuggestion(ingredient)}
               >
                 <img
-                  src={getIngredientImageUrl(ingredient)}
-                  alt={ingredient}
+                  src={getIngredientImage(ingredient.nameEN)}
+                  alt={ingredient.name}
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none';
                   }}
                 />
-                {ingredient}
+                {ingredient.name}
+                <span className="category">{ingredient.category}</span>
               </SuggestionItem>
             ))}
           </SuggestionsDropdown>
         </SearchContainer>
 
-        <AlphabetNav>
-          {alphabet.map(letter => (
-            <LetterButton
-              key={letter}
-              $active={activeLetter === letter}
-              $hasItems={lettersWithItems.has(letter)}
-              onClick={() => handleLetterClick(letter)}
-            >
-              {letter}
-            </LetterButton>
-          ))}
-        </AlphabetNav>
+        <ViewToggle>
+          <ToggleButton
+            $active={viewMode === 'category'}
+            onClick={() => { setViewMode('category'); setActiveLetter(''); }}
+          >
+            Par catégorie
+          </ToggleButton>
+          <ToggleButton
+            $active={viewMode === 'alphabet'}
+            onClick={() => setViewMode('alphabet')}
+          >
+            Alphabétique
+          </ToggleButton>
+        </ViewToggle>
+
+        {viewMode === 'alphabet' && (
+          <AlphabetNav>
+            {alphabet.map(letter => (
+              <LetterButton
+                key={letter}
+                $active={activeLetter === letter}
+                $hasItems={lettersWithItems.has(letter)}
+                onClick={() => handleLetterClick(letter)}
+              >
+                {letter}
+              </LetterButton>
+            ))}
+          </AlphabetNav>
+        )}
       </SearchSection>
 
       <ContentSection ref={contentRef}>
-        {loading ? (
-          <LoadingContainer>
-            <Spinner />
-            <p>Chargement des ingrédients...</p>
-          </LoadingContainer>
-        ) : filteredIngredients.length === 0 ? (
+        <TotalCount>
+          {filteredIngredients.length} ingrédient{filteredIngredients.length > 1 ? 's' : ''} trouvé{filteredIngredients.length > 1 ? 's' : ''}
+        </TotalCount>
+
+        {filteredIngredients.length === 0 ? (
           <NoResults>
             <h3>Aucun résultat</h3>
             <p>Essayez une autre recherche.</p>
           </NoResults>
+        ) : viewMode === 'category' ? (
+          ingredientCategories.map(category => {
+            const items = groupedByCategory[category];
+            if (!items || items.length === 0) return null;
+            return (
+              <CategorySection key={category} className="section-animate">
+                <CategoryTitle>
+                  <span>{categoryIcons[category]}</span>
+                  {category}
+                  <CountBadge>{items.length}</CountBadge>
+                </CategoryTitle>
+                <IngredientsGrid>
+                  {items.map((ingredient, i) => (
+                    <IngredientCard
+                      key={i}
+                      onClick={() => handleIngredientClick(ingredient)}
+                    >
+                      <IngredientImage
+                        src={getIngredientImage(ingredient.nameEN)}
+                        alt={ingredient.name}
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                      />
+                      <IngredientName>{ingredient.name}</IngredientName>
+                    </IngredientCard>
+                  ))}
+                </IngredientsGrid>
+              </CategorySection>
+            );
+          })
         ) : (
-          Object.entries(groupedIngredients).map(([letter, items]) => (
-            <LetterSection key={letter} className="letter-section">
-              <LetterTitle>
-                {letter}
-                <CountBadge>{items.length} ingrédient{items.length > 1 ? 's' : ''}</CountBadge>
-              </LetterTitle>
-              <IngredientsGrid>
-                {items.map((ingredient, i) => (
-                  <IngredientCard
-                    key={i}
-                    onClick={() => handleIngredientClick(ingredient)}
-                  >
-                    <IngredientImage
-                      src={getIngredientImageUrl(ingredient)}
-                      alt={ingredient}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
-                    />
-                    <IngredientName>{ingredient}</IngredientName>
-                  </IngredientCard>
-                ))}
-              </IngredientsGrid>
-            </LetterSection>
-          ))
+          Object.entries(groupedByLetter)
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([letter, items]) => (
+              <LetterSection key={letter} className="section-animate">
+                <LetterTitle>
+                  {letter}
+                  <CountBadge>{items.length} ingrédient{items.length > 1 ? 's' : ''}</CountBadge>
+                </LetterTitle>
+                <IngredientsGrid>
+                  {items.map((ingredient, i) => (
+                    <IngredientCard
+                      key={i}
+                      onClick={() => handleIngredientClick(ingredient)}
+                    >
+                      <IngredientImage
+                        src={getIngredientImage(ingredient.nameEN)}
+                        alt={ingredient.name}
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                      />
+                      <IngredientName>{ingredient.name}</IngredientName>
+                    </IngredientCard>
+                  ))}
+                </IngredientsGrid>
+              </LetterSection>
+            ))
         )}
       </ContentSection>
     </>
