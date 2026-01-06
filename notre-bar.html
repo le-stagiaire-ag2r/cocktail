@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notre Bar | Le Old Fashioned</title>
+    <meta name="description" content="Découvrez Le Old Fashioned, notre bar à cocktails. Notre histoire, notre philosophie et notre équipe passionnée.">
+
+    <link rel="icon" type="image/png" href="assets/img/favicon.png"/>
+    <link rel="stylesheet" href="assets/css/main.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .about-hero {
+            padding: 6rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(201, 162, 39, 0.1) 0%, rgba(26, 26, 26, 1) 100%);
+        }
+        .about-hero h2 {
+            font-size: 2.5rem;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+        }
+        .about-hero p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--color-text-light);
+            font-size: 1.25rem;
+            line-height: 1.8;
+        }
+        .story-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            padding: 4rem 0;
+        }
+        .story-section.reverse {
+            direction: rtl;
+        }
+        .story-section.reverse > * {
+            direction: ltr;
+        }
+        .story-image {
+            aspect-ratio: 4/3;
+            background-color: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        .story-content h3 {
+            color: var(--color-primary);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .story-content p {
+            color: var(--color-text-light);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        .values-section {
+            background-color: var(--color-bg-darker);
+            padding: 5rem 0;
+        }
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .value-card {
+            text-align: center;
+            padding: 2rem;
+        }
+        .value-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+        .value-card h4 {
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+        .value-card p {
+            color: var(--color-text-muted);
+            line-height: 1.7;
+        }
+        .team-section {
+            padding: 5rem 0;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .team-card {
+            background-color: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .team-card:hover {
+            border-color: var(--color-primary);
+        }
+        .team-photo {
+            aspect-ratio: 1;
+            background-color: var(--color-bg-darker);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        .team-info {
+            padding: 1.5rem;
+        }
+        .team-info h4 {
+            color: var(--color-text);
+            margin-bottom: 0.25rem;
+        }
+        .team-info .role {
+            color: var(--color-primary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+        .team-info p {
+            color: var(--color-text-muted);
+            font-size: 0.875rem;
+            margin: 0;
+        }
+        .cta-section {
+            text-align: center;
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--color-bg-dark) 0%, #2a2520 100%);
+        }
+        .cta-section h2 {
+            color: var(--color-text);
+            margin-bottom: 1rem;
+        }
+        .cta-section p {
+            color: var(--color-text-muted);
+            margin-bottom: 2rem;
+            font-size: 1.125rem;
+        }
+        @media (max-width: 768px) {
+            .story-section,
+            .story-section.reverse {
+                grid-template-columns: 1fr;
+                direction: ltr;
+            }
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="body-wrap">
+        <!-- Navigation -->
+        <header class="main-header">
+            <nav class="main-nav" id="main-site-nav">
+                <div class="nav-container">
+                    <a href="index.html" class="logo">
+                        <span class="logo-text">Le Old Fashioned</span>
+                    </a>
+
+                    <button class="mobile-menu-toggle" aria-label="Menu">
+                        <span class="hamburger"></span>
+                    </button>
+
+                    <ul class="nav-menu">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="recettes.html">Recettes</a></li>
+                        <li><a href="spiritueux.html">Spiritueux</a></li>
+                        <li><a href="bar-basics.html">L'Art du Cocktail</a></li>
+                        <li><a href="notre-bar.html" class="active">Notre Bar</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+
+                    <div class="nav-search">
+                        <button class="search-toggle" aria-label="Rechercher">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="M21 21l-4.35-4.35"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Search Overlay -->
+        <div class="search-overlay" id="searchOverlay">
+            <div class="search-container">
+                <button class="search-close" aria-label="Fermer">&times;</button>
+                <form class="search-form">
+                    <input type="text" placeholder="Rechercher un cocktail, un spiritueux..." class="search-input" id="searchInput">
+                    <button type="submit" class="search-submit">Rechercher</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <h1>Notre Bar</h1>
+                <p>Bienvenue au Old Fashioned, où chaque cocktail raconte une histoire.</p>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="page-content">
+            <!-- About Hero -->
+            <section class="about-hero">
+                <div class="container">
+                    <h2>L'Art du Cocktail, Simplement</h2>
+                    <p>Au Old Fashioned, nous croyons que les meilleurs cocktails naissent de la simplicité : des ingrédients de qualité, des techniques maîtrisées et une passion sincère pour l'art du bartending. Chaque verre que nous servons est une invitation au voyage.</p>
+                </div>
+            </section>
+
+            <!-- Story Section -->
+            <section class="container">
+                <div class="story-section">
+                    <div class="story-image">🥃</div>
+                    <div class="story-content">
+                        <h3>Notre Histoire</h3>
+                        <p>Le Old Fashioned est né d'une passion commune pour les cocktails classiques et l'art de recevoir. Inspirés par les speakeasies de la Prohibition et les grands bars à cocktails du monde, nous avons créé un lieu où tradition et modernité se rencontrent.</p>
+                        <p>Notre nom rend hommage au cocktail éponyme, souvent considéré comme le premier cocktail de l'histoire. Comme lui, nous privilégions l'authenticité et la qualité sur les effets de mode.</p>
+                    </div>
+                </div>
+
+                <div class="story-section reverse">
+                    <div class="story-image">🍸</div>
+                    <div class="story-content">
+                        <h3>Notre Philosophie</h3>
+                        <p>Nous sélectionnons nos spiritueux avec soin, privilégiant les producteurs artisanaux et les maisons historiques. Nos jus sont fraîchement pressés, nos sirops faits maison, nos herbes cueillies du jour.</p>
+                        <p>Chaque cocktail est préparé avec attention, dans le respect des proportions classiques tout en laissant place à la créativité. Nous aimons partager notre savoir et raconter l'histoire de chaque création.</p>
+                    </div>
+                </div>
+
+                <div class="story-section">
+                    <div class="story-image">✨</div>
+                    <div class="story-content">
+                        <h3>L'Ambiance</h3>
+                        <p>Dans une atmosphère feutrée aux lumières tamisées, le Old Fashioned vous invite à prendre le temps. Installez-vous au comptoir pour observer le ballet des bartenders ou choisissez un coin plus intime pour une soirée entre amis.</p>
+                        <p>Notre playlist soigneusement sélectionnée accompagne vos conversations, du jazz des années 50 aux sons plus contemporains. Ici, le temps s'arrête le temps d'un verre.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Values Section -->
+            <section class="values-section">
+                <div class="container">
+                    <h2 class="section-title">Nos Valeurs</h2>
+                    <div class="values-grid">
+                        <div class="value-card">
+                            <div class="value-icon">🌟</div>
+                            <h4>Qualité</h4>
+                            <p>Des ingrédients premium, des spiritueux sélectionnés avec soin, et une exécution irréprochable. Nous ne faisons aucun compromis sur la qualité.</p>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-icon">📚</div>
+                            <h4>Transmission</h4>
+                            <p>Nous aimons partager notre passion. Chaque cocktail servi est une occasion d'échanger sur son histoire, ses ingrédients et ses techniques.</p>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-icon">🤝</div>
+                            <h4>Accueil</h4>
+                            <p>Que vous soyez connaisseur ou novice, vous êtes le bienvenu. Notre équipe est là pour vous guider et vous faire découvrir de nouvelles saveurs.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Team Section -->
+            <section class="team-section">
+                <div class="container">
+                    <h2 class="section-title">Notre Équipe</h2>
+                    <div class="team-grid">
+                        <div class="team-card">
+                            <div class="team-photo">👨‍🍳</div>
+                            <div class="team-info">
+                                <h4>Alexandre</h4>
+                                <p class="role">Head Bartender</p>
+                                <p>Passionné par les classiques américains et le whisky japonais. Spécialiste des Old Fashioned.</p>
+                            </div>
+                        </div>
+                        <div class="team-card">
+                            <div class="team-photo">👩‍🍳</div>
+                            <div class="team-info">
+                                <h4>Sophie</h4>
+                                <p class="role">Bartender</p>
+                                <p>Experte en cocktails tropicaux et rhums agricoles. Créatrice de nos cocktails signatures.</p>
+                            </div>
+                        </div>
+                        <div class="team-card">
+                            <div class="team-photo">👨‍🍳</div>
+                            <div class="team-info">
+                                <h4>Thomas</h4>
+                                <p class="role">Bartender</p>
+                                <p>Amateur de gin et de cocktails britanniques. Maître de cérémonie du Martini parfait.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="cta-section">
+                <div class="container">
+                    <h2>Venez Nous Rencontrer</h2>
+                    <p>Nous serions ravis de vous accueillir et de vous faire découvrir notre univers.</p>
+                    <a href="contact.html" class="btn btn-primary">Nous Contacter</a>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <h3>Le Old Fashioned</h3>
+                        <p>Bar à cocktails</p>
+                        <p class="footer-tagline">L'art du cocktail, simplement.</p>
+                    </div>
+
+                    <div class="footer-nav">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="recettes.html">Recettes</a></li>
+                            <li><a href="spiritueux.html">Spiritueux</a></li>
+                            <li><a href="bar-basics.html">L'Art du Cocktail</a></li>
+                            <li><a href="notre-bar.html">Notre Bar</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-nav">
+                        <h4>Spiritueux</h4>
+                        <ul>
+                            <li><a href="spiritueux.html#whisky">Whisky</a></li>
+                            <li><a href="spiritueux.html#gin">Gin</a></li>
+                            <li><a href="spiritueux.html#rhum">Rhum</a></li>
+                            <li><a href="spiritueux.html#vodka">Vodka</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-contact">
+                        <h4>Contact</h4>
+                        <p>Adresse à définir</p>
+                        <p>Paris, France</p>
+                        <p class="footer-hours">Mar-Dim: 18h-02h</p>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Le Old Fashioned. Tous droits réservés.</p>
+                    <p class="footer-legal">L'abus d'alcool est dangereux pour la santé. À consommer avec modération.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

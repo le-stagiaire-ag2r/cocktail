@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Art du Cocktail | Le Old Fashioned</title>
+    <meta name="description" content="Apprenez les techniques essentielles du bartending. Outils, verrerie, méthodes de préparation pour réaliser des cocktails parfaits.">
+
+    <link rel="icon" type="image/png" href="assets/img/favicon.png"/>
+    <link rel="stylesheet" href="assets/css/main.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .basics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        .basics-card {
+            background-color: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        .basics-card:hover {
+            border-color: var(--color-primary);
+        }
+        .basics-card h3 {
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .basics-card p {
+            color: var(--color-text-muted);
+            line-height: 1.8;
+        }
+        .basics-card ul {
+            margin-top: 1rem;
+            padding-left: 1.5rem;
+        }
+        .basics-card li {
+            color: var(--color-text-light);
+            margin-bottom: 0.5rem;
+            list-style: disc;
+        }
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .tool-card {
+            background-color: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .tool-card:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-3px);
+        }
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .tool-card h4 {
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+        .tool-card p {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            margin: 0;
+        }
+        .glass-section {
+            margin-top: 4rem;
+        }
+        .glass-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+        .glass-card {
+            background-color: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .glass-card:hover {
+            border-color: var(--color-primary);
+        }
+        .glass-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .glass-card h5 {
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        .glass-card p {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            margin: 0;
+        }
+        .section-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+        .section-intro p {
+            color: var(--color-text-muted);
+            font-size: 1.125rem;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="body-wrap">
+        <!-- Navigation -->
+        <header class="main-header">
+            <nav class="main-nav" id="main-site-nav">
+                <div class="nav-container">
+                    <a href="index.html" class="logo">
+                        <span class="logo-text">Le Old Fashioned</span>
+                    </a>
+
+                    <button class="mobile-menu-toggle" aria-label="Menu">
+                        <span class="hamburger"></span>
+                    </button>
+
+                    <ul class="nav-menu">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="recettes.html">Recettes</a></li>
+                        <li><a href="spiritueux.html">Spiritueux</a></li>
+                        <li><a href="bar-basics.html" class="active">L'Art du Cocktail</a></li>
+                        <li><a href="notre-bar.html">Notre Bar</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+
+                    <div class="nav-search">
+                        <button class="search-toggle" aria-label="Rechercher">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="M21 21l-4.35-4.35"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Search Overlay -->
+        <div class="search-overlay" id="searchOverlay">
+            <div class="search-container">
+                <button class="search-close" aria-label="Fermer">&times;</button>
+                <form class="search-form">
+                    <input type="text" placeholder="Rechercher un cocktail, un spiritueux..." class="search-input" id="searchInput">
+                    <button type="submit" class="search-submit">Rechercher</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <h1>L'Art du Cocktail</h1>
+                <p>Maîtrisez les techniques essentielles du bartending. Des outils indispensables aux méthodes de préparation, découvrez tous les secrets pour réaliser des cocktails parfaits.</p>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="page-content">
+            <div class="container">
+                <!-- Techniques Section -->
+                <section id="techniques">
+                    <h2 class="section-title">Techniques de Base</h2>
+                    <div class="section-intro">
+                        <p>Chaque cocktail a sa méthode de préparation. Voici les techniques fondamentales que tout bartender doit maîtriser.</p>
+                    </div>
+
+                    <div class="basics-grid">
+                        <div class="basics-card">
+                            <h3>🧊 Shaker</h3>
+                            <p>La technique du shaker permet de mélanger, refroidir et diluer les ingrédients rapidement. Utilisée pour les cocktails contenant des jus de fruits, des sirops ou des œufs.</p>
+                            <ul>
+                                <li>Remplir le shaker de glaçons aux 2/3</li>
+                                <li>Ajouter les ingrédients</li>
+                                <li>Secouer vigoureusement 10-15 secondes</li>
+                                <li>Filtrer dans le verre</li>
+                            </ul>
+                        </div>
+
+                        <div class="basics-card">
+                            <h3>🥄 Mélanger (Stir)</h3>
+                            <p>Le mélange à la cuillère est utilisé pour les cocktails composés uniquement de spiritueux. Cette technique préserve la texture limpide du cocktail.</p>
+                            <ul>
+                                <li>Utiliser un verre à mélange</li>
+                                <li>Ajouter les glaçons et ingrédients</li>
+                                <li>Remuer doucement 30-40 secondes</li>
+                                <li>Filtrer dans le verre refroidi</li>
+                            </ul>
+                        </div>
+
+                        <div class="basics-card">
+                            <h3>🌿 Piler (Muddle)</h3>
+                            <p>Le pilage permet d'extraire les huiles essentielles et les saveurs des fruits, herbes et épices. À utiliser avec délicatesse pour ne pas rendre le cocktail amer.</p>
+                            <ul>
+                                <li>Placer les ingrédients au fond du verre</li>
+                                <li>Presser doucement avec le pilon</li>
+                                <li>Ne pas écraser les herbes (menthe)</li>
+                                <li>Tourner plutôt que frapper</li>
+                            </ul>
+                        </div>
+
+                        <div class="basics-card">
+                            <h3>🍸 Verser en Direct (Build)</h3>
+                            <p>La technique la plus simple : verser les ingrédients directement dans le verre de service. Idéale pour les highballs et les cocktails simples.</p>
+                            <ul>
+                                <li>Ajouter les glaçons dans le verre</li>
+                                <li>Verser les ingrédients par ordre de densité</li>
+                                <li>Remuer légèrement si nécessaire</li>
+                                <li>Garnir et servir</li>
+                            </ul>
+                        </div>
+
+                        <div class="basics-card">
+                            <h3>🔥 Flamber</h3>
+                            <p>Le flambage ajoute une dimension aromatique et un spectacle visuel. Utilisé pour caraméliser les sucres ou libérer les huiles des zestes d'agrumes.</p>
+                            <ul>
+                                <li>Utiliser des spiritueux à plus de 40%</li>
+                                <li>Chauffer légèrement avant d'enflammer</li>
+                                <li>Toujours éteindre avant de servir</li>
+                                <li>Attention à la sécurité !</li>
+                            </ul>
+                        </div>
+
+                        <div class="basics-card">
+                            <h3>🧂 Givrer</h3>
+                            <p>Le givrage du verre avec du sel, du sucre ou des épices ajoute une dimension gustative et décorative au cocktail.</p>
+                            <ul>
+                                <li>Humidifier le bord du verre (citron/lime)</li>
+                                <li>Tremper dans le sel ou le sucre</li>
+                                <li>Ne givrer qu'une partie pour le choix</li>
+                                <li>Utiliser des sels aromatisés pour varier</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tools Section -->
+                <section id="outils" class="section">
+                    <h2 class="section-title">Les Outils Essentiels</h2>
+                    <div class="section-intro">
+                        <p>Un bon bartender a besoin des bons outils. Voici l'équipement indispensable pour votre bar.</p>
+                    </div>
+
+                    <div class="tool-grid">
+                        <div class="tool-card">
+                            <div class="tool-icon">🍶</div>
+                            <h4>Shaker Boston</h4>
+                            <p>Composé de deux parties (verre + métal), c'est le standard professionnel pour shaker les cocktails.</p>
+                        </div>
+
+                        <div class="tool-card">
+                            <div class="tool-icon">🥄</div>
+                            <h4>Cuillère de Bar</h4>
+                            <p>Longue cuillère torsadée pour mélanger les cocktails et créer des couches (layering).</p>
+                        </div>
+
+                        <div class="tool-card">
+                            <div class="tool-icon">📏</div>
+                            <h4>Jigger</h4>
+                            <p>Double mesure (généralement 2cl/4cl) pour doser précisément les ingrédients.</p>
+                        </div>
+
+                        <div class="tool-card">
+                            <div class="tool-icon">🔧</div>
+                            <h4>Passoire Hawthorne</h4>
+                            <p>Passoire à ressort pour filtrer les cocktails shakés et retenir les glaçons.</p>
+                        </div>
+
+                        <div class="tool-card">
+                            <div class="tool-icon">🥢</div>
+                            <h4>Pilon</h4>
+                            <p>Pour écraser les fruits, herbes et épices et en extraire les saveurs.</p>
+                        </div>
+
+                        <div class="tool-card">
+                            <div class="tool-icon">🍋</div>
+                            <h4>Presse-agrumes</h4>
+                            <p>Indispensable pour extraire le jus frais des citrons et limes.</p>
+                        </div>
+
+                        <div class="tool-card">
+                            <div class="tool-icon">🧊</div>
+                            <h4>Bac à Glaçons</h4>
+                            <p>Préférez les gros glaçons qui fondent moins vite et diluent moins.</p>
+                        </div>
+
+                        <div class="tool-card">
+                            <div class="tool-icon">🔪</div>
+                            <h4>Planche & Couteau</h4>
+                            <p>Pour préparer les garnitures : tranches, zestes, quartiers d'agrumes.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Glassware Section -->
+                <section id="verrerie" class="section glass-section">
+                    <h2 class="section-title">La Verrerie</h2>
+                    <div class="section-intro">
+                        <p>Chaque cocktail mérite son verre. Le choix de la verrerie influence la dégustation et la présentation.</p>
+                    </div>
+
+                    <div class="glass-grid">
+                        <div class="glass-card">
+                            <div class="glass-icon">🍸</div>
+                            <h5>Coupe Martini</h5>
+                            <p>Martini, Cosmopolitan, Gimlet</p>
+                        </div>
+
+                        <div class="glass-card">
+                            <div class="glass-icon">🥃</div>
+                            <h5>Tumbler / Old Fashioned</h5>
+                            <p>Old Fashioned, Negroni, Whisky</p>
+                        </div>
+
+                        <div class="glass-card">
+                            <div class="glass-icon">🥛</div>
+                            <h5>Highball</h5>
+                            <p>Mojito, Moscow Mule, Gin Tonic</p>
+                        </div>
+
+                        <div class="glass-card">
+                            <div class="glass-icon">🍷</div>
+                            <h5>Coupe Champagne</h5>
+                            <p>Daiquiri, Sidecar, French 75</p>
+                        </div>
+
+                        <div class="glass-card">
+                            <div class="glass-icon">🍹</div>
+                            <h5>Hurricane</h5>
+                            <p>Piña Colada, Hurricane, Tiki drinks</p>
+                        </div>
+
+                        <div class="glass-card">
+                            <div class="glass-icon">🥂</div>
+                            <h5>Flûte</h5>
+                            <p>Bellini, Kir Royal, Champagne cocktails</p>
+                        </div>
+
+                        <div class="glass-card">
+                            <div class="glass-icon">☕</div>
+                            <h5>Verre Irish Coffee</h5>
+                            <p>Irish Coffee, Hot Toddy</p>
+                        </div>
+
+                        <div class="glass-card">
+                            <div class="glass-icon">🏺</div>
+                            <h5>Tiki Mug</h5>
+                            <p>Mai Tai, Zombie, cocktails exotiques</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tips Section -->
+                <section class="section">
+                    <h2 class="section-title">Conseils de Pro</h2>
+                    <div class="basics-grid">
+                        <div class="basics-card">
+                            <h3>La Glace</h3>
+                            <p>La qualité de la glace est cruciale. Utilisez toujours de la glace fraîche et de bonne qualité. Les gros glaçons fondent plus lentement et diluent moins votre cocktail.</p>
+                        </div>
+
+                        <div class="basics-card">
+                            <h3>Les Proportions</h3>
+                            <p>Respectez les proportions des recettes, surtout au début. Une fois maîtrisées, vous pourrez les ajuster à votre goût. Un jigger est votre meilleur ami.</p>
+                        </div>
+
+                        <div class="basics-card">
+                            <h3>La Fraîcheur</h3>
+                            <p>Utilisez toujours des jus d'agrumes fraîchement pressés. La différence avec les jus en bouteille est immense. Les herbes doivent être fraîches aussi.</p>
+                        </div>
+
+                        <div class="basics-card">
+                            <h3>La Température</h3>
+                            <p>Refroidissez vos verres avant de servir (au congélateur ou avec de la glace). Un cocktail bien froid est un cocktail réussi.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <h3>Le Old Fashioned</h3>
+                        <p>Bar à cocktails</p>
+                        <p class="footer-tagline">L'art du cocktail, simplement.</p>
+                    </div>
+
+                    <div class="footer-nav">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="recettes.html">Recettes</a></li>
+                            <li><a href="spiritueux.html">Spiritueux</a></li>
+                            <li><a href="bar-basics.html">L'Art du Cocktail</a></li>
+                            <li><a href="notre-bar.html">Notre Bar</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-nav">
+                        <h4>Spiritueux</h4>
+                        <ul>
+                            <li><a href="spiritueux.html#whisky">Whisky</a></li>
+                            <li><a href="spiritueux.html#gin">Gin</a></li>
+                            <li><a href="spiritueux.html#rhum">Rhum</a></li>
+                            <li><a href="spiritueux.html#vodka">Vodka</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-contact">
+                        <h4>Contact</h4>
+                        <p>Adresse à définir</p>
+                        <p>Paris, France</p>
+                        <p class="footer-hours">Mar-Dim: 18h-02h</p>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Le Old Fashioned. Tous droits réservés.</p>
+                    <p class="footer-legal">L'abus d'alcool est dangereux pour la santé. À consommer avec modération.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

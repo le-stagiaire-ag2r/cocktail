@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Old Fashioned | Bar à Cocktails</title>
+    <meta name="description" content="Le Old Fashioned - Bar à cocktails. Découvrez nos recettes, l'art du cocktail et nos créations signatures.">
+    <meta property="og:site_name" content="Le Old Fashioned"/>
+    <meta property="og:title" content="Le Old Fashioned | Bar à Cocktails"/>
+    <meta property="og:description" content="Découvrez l'art du cocktail dans notre bar. Recettes classiques et créations originales."/>
+    <meta property="og:type" content="website"/>
+
+    <link rel="icon" type="image/png" href="assets/img/favicon.png"/>
+    <link rel="stylesheet" href="assets/css/main.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="body-wrap">
+        <!-- Navigation -->
+        <header class="main-header">
+            <nav class="main-nav" id="main-site-nav">
+                <div class="nav-container">
+                    <a href="index.html" class="logo">
+                        <span class="logo-text">Le Old Fashioned</span>
+                    </a>
+
+                    <button class="mobile-menu-toggle" aria-label="Menu">
+                        <span class="hamburger"></span>
+                    </button>
+
+                    <ul class="nav-menu">
+                        <li><a href="index.html" class="active">Accueil</a></li>
+                        <li><a href="recettes.html">Recettes</a></li>
+                        <li><a href="spiritueux.html">Spiritueux</a></li>
+                        <li><a href="bar-basics.html">L'Art du Cocktail</a></li>
+                        <li><a href="notre-bar.html">Notre Bar</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+
+                    <div class="nav-search">
+                        <button class="search-toggle" aria-label="Rechercher">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="M21 21l-4.35-4.35"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Search Overlay -->
+        <div class="search-overlay" id="searchOverlay">
+            <div class="search-container">
+                <button class="search-close" aria-label="Fermer">&times;</button>
+                <form class="search-form">
+                    <input type="text" placeholder="Rechercher un cocktail, un spiritueux..." class="search-input" id="searchInput">
+                    <button type="submit" class="search-submit">Rechercher</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1 class="hero-title">Le Old Fashioned</h1>
+                <p class="hero-subtitle">L'art du cocktail depuis 2024</p>
+                <a href="recettes.html" class="btn btn-primary">Découvrir nos cocktails</a>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Featured Section -->
+            <section class="section featured-section">
+                <div class="container">
+                    <h2 class="section-title">Nos Signatures</h2>
+                    <div class="cocktails-grid">
+                        <article class="cocktail-card">
+                            <div class="cocktail-image">
+                                <img src="assets/img/cocktails/old-fashioned.jpg" alt="Old Fashioned">
+                                <div class="cocktail-overlay">
+                                    <a href="recette-old-fashioned.html" class="btn btn-small">Voir la recette</a>
+                                </div>
+                            </div>
+                            <div class="cocktail-info">
+                                <h3>Old Fashioned</h3>
+                                <p>Bourbon, sucre, Angostura bitters</p>
+                            </div>
+                        </article>
+
+                        <article class="cocktail-card">
+                            <div class="cocktail-image">
+                                <img src="assets/img/cocktails/negroni.jpg" alt="Negroni">
+                                <div class="cocktail-overlay">
+                                    <a href="recette-negroni.html" class="btn btn-small">Voir la recette</a>
+                                </div>
+                            </div>
+                            <div class="cocktail-info">
+                                <h3>Negroni</h3>
+                                <p>Gin, Campari, Vermouth rouge</p>
+                            </div>
+                        </article>
+
+                        <article class="cocktail-card">
+                            <div class="cocktail-image">
+                                <img src="assets/img/cocktails/manhattan.jpg" alt="Manhattan">
+                                <div class="cocktail-overlay">
+                                    <a href="recette-manhattan.html" class="btn btn-small">Voir la recette</a>
+                                </div>
+                            </div>
+                            <div class="cocktail-info">
+                                <h3>Manhattan</h3>
+                                <p>Rye whiskey, Vermouth, Angostura</p>
+                            </div>
+                        </article>
+
+                        <article class="cocktail-card">
+                            <div class="cocktail-image">
+                                <img src="assets/img/cocktails/margarita.jpg" alt="Margarita">
+                                <div class="cocktail-overlay">
+                                    <a href="recette-margarita.html" class="btn btn-small">Voir la recette</a>
+                                </div>
+                            </div>
+                            <div class="cocktail-info">
+                                <h3>Margarita</h3>
+                                <p>Tequila, Triple sec, Citron vert</p>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="section-cta">
+                        <a href="recettes.html" class="btn btn-secondary">Toutes nos recettes</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categories Section -->
+            <section class="section categories-section">
+                <div class="container">
+                    <h2 class="section-title">Explorer</h2>
+                    <div class="categories-grid">
+                        <a href="spiritueux.html#whisky" class="category-card">
+                            <div class="category-icon">🥃</div>
+                            <h3>Whisky</h3>
+                            <p>Bourbon, Rye, Scotch, Irish</p>
+                        </a>
+
+                        <a href="spiritueux.html#gin" class="category-card">
+                            <div class="category-icon">🍸</div>
+                            <h3>Gin</h3>
+                            <p>London Dry, Old Tom, Navy Strength</p>
+                        </a>
+
+                        <a href="spiritueux.html#rhum" class="category-card">
+                            <div class="category-icon">🍹</div>
+                            <h3>Rhum</h3>
+                            <p>Blanc, Ambré, Vieux, Agricole</p>
+                        </a>
+
+                        <a href="spiritueux.html#vodka" class="category-card">
+                            <div class="category-icon">🧊</div>
+                            <h3>Vodka</h3>
+                            <p>Premium, Aromatisée</p>
+                        </a>
+
+                        <a href="spiritueux.html#tequila" class="category-card">
+                            <div class="category-icon">🌵</div>
+                            <h3>Tequila & Mezcal</h3>
+                            <p>Blanco, Reposado, Añejo</p>
+                        </a>
+
+                        <a href="spiritueux.html#liqueurs" class="category-card">
+                            <div class="category-icon">🍾</div>
+                            <h3>Liqueurs</h3>
+                            <p>Amers, Vermouths, Crèmes</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bar Basics Promo -->
+            <section class="section basics-promo">
+                <div class="container">
+                    <div class="promo-content">
+                        <div class="promo-text">
+                            <h2>L'Art du Cocktail</h2>
+                            <p>Maîtrisez les techniques essentielles du bartending. Des outils indispensables aux méthodes de préparation, découvrez tous les secrets pour réaliser des cocktails parfaits.</p>
+                            <a href="bar-basics.html" class="btn btn-primary">Découvrir les bases</a>
+                        </div>
+                        <div class="promo-cards">
+                            <div class="promo-card">
+                                <h4>Techniques</h4>
+                                <p>Shaker, mélanger, piler...</p>
+                            </div>
+                            <div class="promo-card">
+                                <h4>Outils</h4>
+                                <p>Shakers, jiggers, strainers...</p>
+                            </div>
+                            <div class="promo-card">
+                                <h4>Verrerie</h4>
+                                <p>Choisir le bon verre</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Opening Hours Banner -->
+            <section class="section hours-banner">
+                <div class="container">
+                    <div class="hours-content">
+                        <h2>Venez nous rendre visite</h2>
+                        <div class="hours-info">
+                            <div class="hours-schedule">
+                                <p class="hours-days">Mardi - Dimanche</p>
+                                <p class="hours-time">18h00 - 02h00</p>
+                            </div>
+                            <div class="hours-address">
+                                <p>Adresse à définir</p>
+                                <p>Paris, France</p>
+                            </div>
+                        </div>
+                        <a href="contact.html" class="btn btn-outline">Nous contacter</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <h3>Le Old Fashioned</h3>
+                        <p>Bar à cocktails</p>
+                        <p class="footer-tagline">L'art du cocktail, simplement.</p>
+                    </div>
+
+                    <div class="footer-nav">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="recettes.html">Recettes</a></li>
+                            <li><a href="spiritueux.html">Spiritueux</a></li>
+                            <li><a href="bar-basics.html">L'Art du Cocktail</a></li>
+                            <li><a href="notre-bar.html">Notre Bar</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-nav">
+                        <h4>Spiritueux</h4>
+                        <ul>
+                            <li><a href="spiritueux.html#whisky">Whisky</a></li>
+                            <li><a href="spiritueux.html#gin">Gin</a></li>
+                            <li><a href="spiritueux.html#rhum">Rhum</a></li>
+                            <li><a href="spiritueux.html#vodka">Vodka</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-contact">
+                        <h4>Contact</h4>
+                        <p>Adresse à définir</p>
+                        <p>Paris, France</p>
+                        <p class="footer-hours">Mar-Dim: 18h-02h</p>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Le Old Fashioned. Tous droits réservés.</p>
+                    <p class="footer-legal">L'abus d'alcool est dangereux pour la santé. À consommer avec modération.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

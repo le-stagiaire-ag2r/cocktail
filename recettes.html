@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recettes de Cocktails | Le Old Fashioned</title>
+    <meta name="description" content="Découvrez toutes nos recettes de cocktails classiques et signatures. Old Fashioned, Negroni, Manhattan et bien plus.">
+
+    <link rel="icon" type="image/png" href="assets/img/favicon.png"/>
+    <link rel="stylesheet" href="assets/css/main.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .filter-btn:hover,
+        .filter-btn.active {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+        .recipe-card {
+            background-color: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+        }
+        .recipe-card:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-5px);
+        }
+        .recipe-image {
+            aspect-ratio: 4/3;
+            background-color: var(--color-bg-darker);
+            position: relative;
+            overflow: hidden;
+        }
+        .recipe-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .recipe-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: var(--color-primary);
+            color: var(--color-bg-dark);
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .recipe-content {
+            padding: 1.5rem;
+        }
+        .recipe-content h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .recipe-content h3 a {
+            color: var(--color-text);
+            transition: color 0.2s ease;
+        }
+        .recipe-content h3 a:hover {
+            color: var(--color-primary);
+        }
+        .recipe-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+        }
+        .recipe-spirit {
+            color: var(--color-primary);
+        }
+        .recipe-ingredients {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="body-wrap">
+        <!-- Navigation -->
+        <header class="main-header">
+            <nav class="main-nav" id="main-site-nav">
+                <div class="nav-container">
+                    <a href="index.html" class="logo">
+                        <span class="logo-text">Le Old Fashioned</span>
+                    </a>
+
+                    <button class="mobile-menu-toggle" aria-label="Menu">
+                        <span class="hamburger"></span>
+                    </button>
+
+                    <ul class="nav-menu">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="recettes.html" class="active">Recettes</a></li>
+                        <li><a href="spiritueux.html">Spiritueux</a></li>
+                        <li><a href="bar-basics.html">L'Art du Cocktail</a></li>
+                        <li><a href="notre-bar.html">Notre Bar</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+
+                    <div class="nav-search">
+                        <button class="search-toggle" aria-label="Rechercher">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="M21 21l-4.35-4.35"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Search Overlay -->
+        <div class="search-overlay" id="searchOverlay">
+            <div class="search-container">
+                <button class="search-close" aria-label="Fermer">&times;</button>
+                <form class="search-form">
+                    <input type="text" placeholder="Rechercher un cocktail, un spiritueux..." class="search-input" id="searchInput">
+                    <button type="submit" class="search-submit">Rechercher</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <h1>Nos Recettes</h1>
+                <p>Découvrez notre collection de cocktails classiques et nos créations signatures. Des recettes détaillées pour reproduire vos cocktails préférés.</p>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="page-content">
+            <div class="container">
+                <!-- Filters -->
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all" onclick="filterCocktails('all')">Tous</button>
+                    <button class="filter-btn" data-filter="whisky" onclick="filterCocktails('whisky')">Whisky</button>
+                    <button class="filter-btn" data-filter="gin" onclick="filterCocktails('gin')">Gin</button>
+                    <button class="filter-btn" data-filter="rhum" onclick="filterCocktails('rhum')">Rhum</button>
+                    <button class="filter-btn" data-filter="vodka" onclick="filterCocktails('vodka')">Vodka</button>
+                    <button class="filter-btn" data-filter="tequila" onclick="filterCocktails('tequila')">Tequila</button>
+                    <button class="filter-btn" data-filter="signature" onclick="filterCocktails('signature')">Signatures</button>
+                </div>
+
+                <!-- Recipes Grid -->
+                <div class="cocktails-grid">
+                    <!-- Old Fashioned -->
+                    <article class="recipe-card" data-category="whisky signature">
+                        <div class="recipe-image">
+                            <img src="assets/img/cocktails/old-fashioned.jpg" alt="Old Fashioned">
+                            <span class="recipe-badge">Signature</span>
+                        </div>
+                        <div class="recipe-content">
+                            <h3><a href="recette-old-fashioned.html">Old Fashioned</a></h3>
+                            <div class="recipe-meta">
+                                <span class="recipe-spirit">Bourbon</span>
+                                <span>|</span>
+                                <span>Classique</span>
+                            </div>
+                            <p class="recipe-ingredients">Bourbon, sucre, Angostura bitters, zeste d'orange</p>
+                        </div>
+                    </article>
+
+                    <!-- Negroni -->
+                    <article class="recipe-card" data-category="gin">
+                        <div class="recipe-image">
+                            <img src="assets/img/cocktails/negroni.jpg" alt="Negroni">
+                        </div>
+                        <div class="recipe-content">
+                            <h3><a href="recette-negroni.html">Negroni</a></h3>
+                            <div class="recipe-meta">
+                                <span class="recipe-spirit">Gin</span>
+                                <span>|</span>
+                                <span>Classique</span>
+                            </div>
+                            <p class="recipe-ingredients">Gin, Campari, Vermouth rouge, zeste d'orange</p>
+                        </div>
+                    </article>
+
+                    <!-- Manhattan -->
+                    <article class="recipe-card" data-category="whisky">
+                        <div class="recipe-image">
+                            <img src="assets/img/cocktails/manhattan.jpg" alt="Manhattan">
+                        </div>
+                        <div class="recipe-content">
+                            <h3><a href="recette-manhattan.html">Manhattan</a></h3>
+                            <div class="recipe-meta">
+                                <span class="recipe-spirit">Rye Whiskey</span>
+                                <span>|</span>
+                                <span>Classique</span>
+                            </div>
+                            <p class="recipe-ingredients">Rye whiskey, Vermouth rouge, Angostura bitters, cerise</p>
+                        </div>
+                    </article>
+
+                    <!-- Margarita -->
+                    <article class="recipe-card" data-category="tequila">
+                        <div class="recipe-image">
+                            <img src="assets/img/cocktails/margarita.jpg" alt="Margarita">
+                        </div>
+                        <div class="recipe-content">
+                            <h3><a href="recette-margarita.html">Margarita</a></h3>
+                            <div class="recipe-meta">
+                                <span class="recipe-spirit">Tequila</span>
+                                <span>|</span>
+                                <span>Classique</span>
+                            </div>
+                            <p class="recipe-ingredients">Tequila, Triple sec, jus de citron vert, sel</p>
+                        </div>
+                    </article>
+
+                    <!-- Mojito -->
+                    <article class="recipe-card" data-category="rhum">
+                        <div class="recipe-image">
+                            <img src="assets/img/cocktails/mojito.jpg" alt="Mojito">
+                        </div>
+                        <div class="recipe-content">
+                            <h3><a href="recette-mojito.html">Mojito</a></h3>
+                            <div class="recipe-meta">
+                                <span class="recipe-spirit">Rhum blanc</span>
+                                <span>|</span>
+                                <span>Classique</span>
+                            </div>
+                            <p class="recipe-ingredients">Rhum blanc, menthe fraîche, citron vert, sucre, eau gazeuse</p>
+                        </div>
+                    </article>
+
+                    <!-- Daiquiri -->
+                    <article class="recipe-card" data-category="rhum">
+                        <div class="recipe-image">
+                            <img src="assets/img/cocktails/daiquiri.jpg" alt="Daiquiri">
+                        </div>
+                        <div class="recipe-content">
+                            <h3><a href="recette-daiquiri.html">Daiquiri</a></h3>
+                            <div class="recipe-meta">
+                                <span class="recipe-spirit">Rhum blanc</span>
+                                <span>|</span>
+                                <span>Classique</span>
+                            </div>
+                            <p class="recipe-ingredients">Rhum blanc, jus de citron vert, sirop de sucre</p>
+                        </div>
+                    </article>
+
+                    <!-- Martini -->
+                    <article class="recipe-card" data-category="gin vodka">
+                        <div class="recipe-image">
+                            <img src="assets/img/cocktails/martini.jpg" alt="Dry Martini">
+                        </div>
+                        <div class="recipe-content">
+                            <h3><a href="recette-martini.html">Dry Martini</a></h3>
+                            <div class="recipe-meta">
+                                <span class="recipe-spirit">Gin</span>
+                                <span>|</span>
+                                <span>Classique</span>
+                            </div>
+                            <p class="recipe-ingredients">Gin, Vermouth dry, olive ou zeste de citron</p>
+                        </div>
+                    </article>
+
+                    <!-- Whisky Sour -->
+                    <article class="recipe-card" data-category="whisky">
+                        <div class="recipe-image">
+                            <img src="assets/img/cocktails/whisky-sour.jpg" alt="Whisky Sour">
+                        </div>
+                        <div class="recipe-content">
+                            <h3><a href="recette-whisky-sour.html">Whisky Sour</a></h3>
+                            <div class="recipe-meta">
+                                <span class="recipe-spirit">Bourbon</span>
+                                <span>|</span>
+                                <span>Classique</span>
+                            </div>
+                            <p class="recipe-ingredients">Bourbon, jus de citron, sirop de sucre, blanc d'œuf</p>
+                        </div>
+                    </article>
+
+                    <!-- Espresso Martini -->
+                    <article class="recipe-card" data-category="vodka signature">
+                        <div class="recipe-image">
+                            <img src="assets/img/cocktails/espresso-martini.jpg" alt="Espresso Martini">
+                            <span class="recipe-badge">Signature</span>
+                        </div>
+                        <div class="recipe-content">
+                            <h3><a href="recette-espresso-martini.html">Espresso Martini</a></h3>
+                            <div class="recipe-meta">
+                                <span class="recipe-spirit">Vodka</span>
+                                <span>|</span>
+                                <span>Moderne</span>
+                            </div>
+                            <p class="recipe-ingredients">Vodka, liqueur de café, espresso frais, sirop de sucre</p>
+                        </div>
+                    </article>
+
+                    <!-- Moscow Mule -->
+                    <article class="recipe-card" data-category="vodka">
+                        <div class="recipe-image">
+                            <img src="assets/img/cocktails/moscow-mule.jpg" alt="Moscow Mule">
+                        </div>
+                        <div class="recipe-content">
+                            <h3><a href="recette-moscow-mule.html">Moscow Mule</a></h3>
+                            <div class="recipe-meta">
+                                <span class="recipe-spirit">Vodka</span>
+                                <span>|</span>
+                                <span>Classique</span>
+                            </div>
+                            <p class="recipe-ingredients">Vodka, ginger beer, jus de citron vert</p>
+                        </div>
+                    </article>
+
+                    <!-- Boulevardier -->
+                    <article class="recipe-card" data-category="whisky">
+                        <div class="recipe-image">
+                            <img src="assets/img/cocktails/boulevardier.jpg" alt="Boulevardier">
+                        </div>
+                        <div class="recipe-content">
+                            <h3><a href="recette-boulevardier.html">Boulevardier</a></h3>
+                            <div class="recipe-meta">
+                                <span class="recipe-spirit">Bourbon</span>
+                                <span>|</span>
+                                <span>Classique</span>
+                            </div>
+                            <p class="recipe-ingredients">Bourbon, Campari, Vermouth rouge</p>
+                        </div>
+                    </article>
+
+                    <!-- Paloma -->
+                    <article class="recipe-card" data-category="tequila">
+                        <div class="recipe-image">
+                            <img src="assets/img/cocktails/paloma.jpg" alt="Paloma">
+                        </div>
+                        <div class="recipe-content">
+                            <h3><a href="recette-paloma.html">Paloma</a></h3>
+                            <div class="recipe-meta">
+                                <span class="recipe-spirit">Tequila</span>
+                                <span>|</span>
+                                <span>Classique</span>
+                            </div>
+                            <p class="recipe-ingredients">Tequila, pamplemousse, citron vert, soda</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <h3>Le Old Fashioned</h3>
+                        <p>Bar à cocktails</p>
+                        <p class="footer-tagline">L'art du cocktail, simplement.</p>
+                    </div>
+
+                    <div class="footer-nav">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="recettes.html">Recettes</a></li>
+                            <li><a href="spiritueux.html">Spiritueux</a></li>
+                            <li><a href="bar-basics.html">L'Art du Cocktail</a></li>
+                            <li><a href="notre-bar.html">Notre Bar</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-nav">
+                        <h4>Spiritueux</h4>
+                        <ul>
+                            <li><a href="spiritueux.html#whisky">Whisky</a></li>
+                            <li><a href="spiritueux.html#gin">Gin</a></li>
+                            <li><a href="spiritueux.html#rhum">Rhum</a></li>
+                            <li><a href="spiritueux.html#vodka">Vodka</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-contact">
+                        <h4>Contact</h4>
+                        <p>Adresse à définir</p>
+                        <p>Paris, France</p>
+                        <p class="footer-hours">Mar-Dim: 18h-02h</p>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Le Old Fashioned. Tous droits réservés.</p>
+                    <p class="footer-legal">L'abus d'alcool est dangereux pour la santé. À consommer avec modération.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
