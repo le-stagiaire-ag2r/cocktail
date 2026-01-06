@@ -297,18 +297,27 @@ export const RecettesPage: React.FC = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  // Charger les cocktails (par ingrédient si spécifié dans l'URL ou populaires)
+  // Charger les cocktails (par ingrédient, recherche ou populaires)
   useEffect(() => {
     const loadCocktails = async () => {
       setLoading(true);
       const ingredientParam = searchParams.get('ingredient');
+      const searchParam = searchParams.get('search');
 
-      if (ingredientParam) {
+      if (searchParam) {
+        // Recherche par nom de cocktail
+        const results = await searchCocktails(searchParam);
+        setCocktails(results);
+        setSearchQuery(searchParam);
+        setActiveFilter('all');
+      } else if (ingredientParam) {
+        // Recherche par ingrédient
         const results = await getCocktailsByIngredient(ingredientParam);
         setCocktails(results);
         setSearchQuery('');
         setActiveFilter('all');
       } else {
+        // Cocktails populaires par défaut
         const popular = await getPopularCocktails();
         setCocktails(popular);
       }
