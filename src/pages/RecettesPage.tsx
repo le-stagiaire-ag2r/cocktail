@@ -3,7 +3,14 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { gsap } from 'gsap';
 import { colors, typography, spacing } from '../styles/designTokens';
-import { searchCocktails, getPopularCocktails, getCocktailsByIngredient, Cocktail } from '../services/cocktailAPI';
+import {
+  searchCocktails,
+  getPopularCocktails,
+  getCocktailsByIngredient,
+  getCocktailsByLetter,
+  getRandomCocktail,
+  Cocktail
+} from '../services/cocktailAPI';
 import { translateIngredient, translateCategory, translateGlass } from '../utils/translations';
 
 const PageHeader = styled.section`
@@ -135,10 +142,36 @@ const SearchButton = styled.button`
   text-transform: uppercase;
   color: ${colors.background.primary};
   background: ${colors.accent.primary};
+  border: none;
   transition: all 0.2s ease;
 
   &:hover {
     background: ${colors.accent.secondary};
+  }
+`;
+
+const RandomButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${spacing[2]};
+  margin: ${spacing[4]} auto 0;
+  padding: ${spacing[3]} ${spacing[6]};
+  font-size: ${typography.fontSize.sm};
+  font-weight: ${typography.fontWeight.medium};
+  color: ${colors.accent.primary};
+  background: transparent;
+  border: 1px solid ${colors.accent.primary};
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: ${colors.accent.primary};
+    color: ${colors.background.primary};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 `;
 
@@ -168,10 +201,70 @@ const FilterButton = styled.button<{ $active: boolean }>`
   }
 `;
 
+const AlphabetNav = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: ${spacing[1]};
+  max-width: 900px;
+  margin: ${spacing[6]} auto 0;
+  padding-top: ${spacing[6]};
+  border-top: 1px solid ${colors.border.default};
+`;
+
+const AlphabetLabel = styled.span`
+  width: 100%;
+  text-align: center;
+  font-size: ${typography.fontSize.xs};
+  color: ${colors.text.tertiary};
+  text-transform: uppercase;
+  letter-spacing: ${typography.letterSpacing.wide};
+  margin-bottom: ${spacing[2]};
+`;
+
+const LetterButton = styled.button<{ $active: boolean }>`
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: ${typography.fontSize.sm};
+  font-weight: ${typography.fontWeight.medium};
+  color: ${props => props.$active ? colors.accent.primary : colors.text.secondary};
+  background: ${props => props.$active ? colors.accent.subtle : 'transparent'};
+  border: 1px solid ${props => props.$active ? colors.accent.primary : 'transparent'};
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: ${colors.accent.primary};
+    border-color: ${colors.accent.primary};
+  }
+`;
+
 const ContentSection = styled.section`
   padding: ${spacing[12]} ${spacing[8]};
   max-width: 1400px;
   margin: 0 auto;
+`;
+
+const ResultsHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${spacing[8]};
+  padding-bottom: ${spacing[4]};
+  border-bottom: 1px solid ${colors.border.default};
+`;
+
+const ResultsCount = styled.span`
+  font-size: ${typography.fontSize.sm};
+  color: ${colors.text.tertiary};
+`;
+
+const ResultsTitle = styled.h2`
+  font-family: ${typography.fontFamily.display};
+  font-size: ${typography.fontSize.xl};
+  color: ${colors.text.primary};
 `;
 
 const LoadingContainer = styled.div`
@@ -180,9 +273,23 @@ const LoadingContainer = styled.div`
   color: ${colors.text.tertiary};
 `;
 
+const Spinner = styled.div`
+  width: 40px;
+  height: 40px;
+  margin: 0 auto ${spacing[4]};
+  border: 3px solid ${colors.border.default};
+  border-top-color: ${colors.accent.primary};
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+`;
+
 const CocktailsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: ${spacing[6]};
 `;
 
@@ -276,7 +383,7 @@ const NoResults = styled.div`
 `;
 
 const spiritFilters = [
-  { id: 'all', label: 'Tous', ingredient: '' },
+  { id: 'all', label: 'Populaires', ingredient: '' },
   { id: 'vodka', label: 'Vodka', ingredient: 'Vodka' },
   { id: 'gin', label: 'Gin', ingredient: 'Gin' },
   { id: 'rum', label: 'Rhum', ingredient: 'Rum' },
@@ -285,6 +392,8 @@ const spiritFilters = [
   { id: 'bourbon', label: 'Bourbon', ingredient: 'Bourbon' },
 ];
 
+const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
 export const RecettesPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -292,34 +401,47 @@ export const RecettesPage: React.FC = () => {
   const [suggestions, setSuggestions] = useState<Cocktail[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadingRandom, setLoadingRandom] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
+  const [activeLetter, setActiveLetter] = useState('');
+  const [currentView, setCurrentView] = useState<'filter' | 'letter' | 'search'>('filter');
   const gridRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  // Charger les cocktails (par ingrédient, recherche ou populaires)
+  // Charger les cocktails (par ingrédient, recherche, lettre ou populaires)
   useEffect(() => {
     const loadCocktails = async () => {
       setLoading(true);
       const ingredientParam = searchParams.get('ingredient');
       const searchParam = searchParams.get('search');
+      const letterParam = searchParams.get('letter');
 
       if (searchParam) {
-        // Recherche par nom de cocktail
         const results = await searchCocktails(searchParam);
         setCocktails(results);
         setSearchQuery(searchParam);
         setActiveFilter('all');
+        setActiveLetter('');
+        setCurrentView('search');
+      } else if (letterParam) {
+        const results = await getCocktailsByLetter(letterParam);
+        setCocktails(results);
+        setActiveLetter(letterParam.toUpperCase());
+        setActiveFilter('all');
+        setSearchQuery('');
+        setCurrentView('letter');
       } else if (ingredientParam) {
-        // Recherche par ingrédient
         const results = await getCocktailsByIngredient(ingredientParam);
         setCocktails(results);
         setSearchQuery('');
         setActiveFilter('all');
+        setActiveLetter('');
+        setCurrentView('filter');
       } else {
-        // Cocktails populaires par défaut
         const popular = await getPopularCocktails();
         setCocktails(popular);
+        setCurrentView('filter');
       }
       setLoading(false);
     };
@@ -378,11 +500,14 @@ export const RecettesPage: React.FC = () => {
     if (!searchQuery.trim()) {
       const popular = await getPopularCocktails();
       setCocktails(popular);
+      setCurrentView('filter');
       return;
     }
 
     setLoading(true);
     setActiveFilter('all');
+    setActiveLetter('');
+    setCurrentView('search');
     const results = await searchCocktails(searchQuery);
     setCocktails(results);
     setLoading(false);
@@ -397,7 +522,9 @@ export const RecettesPage: React.FC = () => {
   // Filtrer par spiritueux
   const handleFilterChange = async (filterId: string, ingredient: string) => {
     setActiveFilter(filterId);
+    setActiveLetter('');
     setSearchQuery('');
+    setCurrentView('filter');
     setLoading(true);
 
     if (filterId === 'all') {
@@ -411,13 +538,52 @@ export const RecettesPage: React.FC = () => {
     setLoading(false);
   };
 
+  // Navigation par lettre
+  const handleLetterClick = async (letter: string) => {
+    setActiveLetter(letter);
+    setActiveFilter('all');
+    setSearchQuery('');
+    setCurrentView('letter');
+    setLoading(true);
+
+    const results = await getCocktailsByLetter(letter);
+    setCocktails(results);
+    setLoading(false);
+  };
+
+  // Cocktail aléatoire
+  const handleRandomCocktail = async () => {
+    setLoadingRandom(true);
+    const random = await getRandomCocktail();
+    setLoadingRandom(false);
+
+    if (random) {
+      navigate(`/cocktail/${random.id}`);
+    }
+  };
+
+  // Titre dynamique selon le contexte
+  const getResultsTitle = () => {
+    if (currentView === 'letter' && activeLetter) {
+      return `Cocktails commençant par "${activeLetter}"`;
+    }
+    if (currentView === 'search' && searchQuery) {
+      return `Résultats pour "${searchQuery}"`;
+    }
+    if (activeFilter !== 'all') {
+      const filter = spiritFilters.find(f => f.id === activeFilter);
+      return `Cocktails à base de ${filter?.label}`;
+    }
+    return 'Cocktails populaires';
+  };
+
   return (
     <>
       <PageHeader>
         <PageLabel>Collection</PageLabel>
         <PageTitle>Nos Recettes</PageTitle>
         <PageDesc>
-          Découvrez des centaines de recettes de cocktails du monde entier.
+          Explorez des centaines de recettes de cocktails du monde entier.
           Classiques intemporels et créations modernes.
         </PageDesc>
       </PageHeader>
@@ -452,59 +618,84 @@ export const RecettesPage: React.FC = () => {
           </SuggestionsDropdown>
         </SearchContainer>
 
+        <RandomButton onClick={handleRandomCocktail} disabled={loadingRandom}>
+          {loadingRandom ? 'Chargement...' : '🎲 Cocktail aléatoire'}
+        </RandomButton>
+
         <FiltersContainer>
           {spiritFilters.map(filter => (
             <FilterButton
               key={filter.id}
-              $active={activeFilter === filter.id}
+              $active={activeFilter === filter.id && currentView === 'filter'}
               onClick={() => handleFilterChange(filter.id, filter.ingredient)}
             >
               {filter.label}
             </FilterButton>
           ))}
         </FiltersContainer>
+
+        <AlphabetNav>
+          <AlphabetLabel>Parcourir par lettre</AlphabetLabel>
+          {alphabet.map(letter => (
+            <LetterButton
+              key={letter}
+              $active={activeLetter === letter}
+              onClick={() => handleLetterClick(letter)}
+            >
+              {letter}
+            </LetterButton>
+          ))}
+        </AlphabetNav>
       </SearchSection>
 
       <ContentSection>
         {loading ? (
           <LoadingContainer>
+            <Spinner />
             <p>Chargement des cocktails...</p>
           </LoadingContainer>
         ) : cocktails.length === 0 ? (
           <NoResults>
             <h3>Aucun résultat</h3>
-            <p>Essayez une autre recherche ou un autre filtre.</p>
+            <p>Essayez une autre recherche, un autre filtre ou une autre lettre.</p>
           </NoResults>
         ) : (
-          <CocktailsGrid ref={gridRef}>
-            {cocktails.map((cocktail) => (
-              <CocktailCard
-                key={cocktail.id}
-                className="cocktail-card"
-                onClick={() => navigate(`/cocktail/${cocktail.id}`)}
-              >
-                <CardImage $src={cocktail.image + '/preview'} />
-                <CardContent>
-                  <CardCategory>{translateCategory(cocktail.category)}</CardCategory>
-                  <CardTitle>{cocktail.name}</CardTitle>
+          <>
+            <ResultsHeader>
+              <ResultsTitle>{getResultsTitle()}</ResultsTitle>
+              <ResultsCount>{cocktails.length} cocktail{cocktails.length > 1 ? 's' : ''}</ResultsCount>
+            </ResultsHeader>
 
-                  <CardIngredients>
-                    {cocktail.ingredients.slice(0, 4).map((ing, i) => (
-                      <IngredientTag key={i}>{translateIngredient(ing.ingredient)}</IngredientTag>
-                    ))}
-                    {cocktail.ingredients.length > 4 && (
-                      <IngredientTag>+{cocktail.ingredients.length - 4}</IngredientTag>
-                    )}
-                  </CardIngredients>
+            <CocktailsGrid ref={gridRef}>
+              {cocktails.map((cocktail) => (
+                <CocktailCard
+                  key={cocktail.id}
+                  className="cocktail-card"
+                  onClick={() => navigate(`/cocktail/${cocktail.id}`)}
+                >
+                  <CardImage $src={cocktail.image + '/preview'} />
+                  <CardContent>
+                    <CardCategory>{translateCategory(cocktail.category)}</CardCategory>
+                    <CardTitle>{cocktail.name}</CardTitle>
 
-                  <CardMeta>
-                    <span>{translateGlass(cocktail.glass)}</span>
-                    <span>{cocktail.isAlcoholic ? 'Alcoolisé' : 'Sans alcool'}</span>
-                  </CardMeta>
-                </CardContent>
-              </CocktailCard>
-            ))}
-          </CocktailsGrid>
+                    <CardIngredients>
+                      {cocktail.ingredients.slice(0, 4).map((ing, i) => (
+                        <IngredientTag key={i}>{translateIngredient(ing.ingredient)}</IngredientTag>
+                      ))}
+                      {cocktail.ingredients.length > 4 && (
+                        <IngredientTag>+{cocktail.ingredients.length - 4}</IngredientTag>
+                      )}
+                    </CardIngredients>
+
+                    <CardMeta>
+                      <span>{translateGlass(cocktail.glass)}</span>
+                      <span>{cocktail.isAlcoholic ? 'Alcoolisé' : 'Sans alcool'}</span>
+                    </CardMeta>
+                  </CardContent>
+                </CocktailCard>
+              ))}
+            </CocktailsGrid>
+          </>
         )}
       </ContentSection>
     </>
