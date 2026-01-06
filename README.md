@@ -1,51 +1,57 @@
 # Le Old Fashioned
 
-Site web pour le bar à cocktails "Le Old Fashioned".
+Site web moderne pour le bar à cocktails "Le Old Fashioned".
 
-## Structure du site
+## Stack Technique
 
-- `index.html` - Page d'accueil
-- `recettes.html` - Catalogue des recettes de cocktails
-- `spiritueux.html` - Guide des spiritueux (whisky, gin, rhum, vodka, tequila, liqueurs)
-- `bar-basics.html` - L'art du cocktail (techniques, outils, verrerie)
-- `notre-bar.html` - Présentation du bar et de l'équipe
-- `contact.html` - Informations de contact et formulaire
+- **React 18** + TypeScript
+- **GSAP** + ScrollTrigger - Animations professionnelles
+- **Lenis** - Smooth scroll fluide
+- **Styled Components** - CSS-in-JS
+- **React Router** - Navigation SPA
 
-## Assets
+## Fonctionnalités
 
-```
-assets/
-├── css/
-│   └── main.css      # Styles principaux
-├── js/
-│   └── main.js       # JavaScript (navigation, recherche, animations)
-└── img/
-    └── cocktails/    # Images des cocktails
-```
+- Smooth scroll fluide style Casper
+- Animations au scroll (fade, parallax, stagger)
+- Background flottant avec mots animés
+- Design sombre et élégant (thème bar à cocktails)
+- Responsive (mobile, tablette, desktop)
+- Navigation sticky animée
 
-## Technologies
+## Pages
 
-- HTML5 / CSS3 / JavaScript vanilla
-- Google Fonts (Playfair Display, Raleway)
-- Design responsive (mobile, tablette, desktop)
+- `/` - Page d'accueil avec hero animé
+- `/recettes` - Catalogue des cocktails avec filtres
+- `/spiritueux` - Guide des spiritueux
+- `/bar-basics` - Techniques et outils de bartending
+- `/contact` - Formulaire de contact
+
+## Installation
+
+\`\`\`bash
+npm install
+npm start
+\`\`\`
+
+## Build
+
+\`\`\`bash
+npm run build
+\`\`\`
+
+## Déploiement Vercel
+
+Le projet est configuré pour Vercel. Il suffit de :
+1. Connecter le repo GitHub à Vercel
+2. Framework : Create React App
+3. Deploy !
 
 ## Informations du bar
 
 - **Nom** : Le Old Fashioned
 - **Horaires** : Mardi - Dimanche, 18h00 - 02h00
 - **Adresse** : À définir
-
-## Développement
-
-Pour visualiser le site localement, ouvrez simplement `index.html` dans un navigateur ou utilisez un serveur local :
-
-```bash
-# Avec Python
-python -m http.server 8000
-
-# Avec Node.js (npx)
-npx serve
-```
 
 ## Licence
 
