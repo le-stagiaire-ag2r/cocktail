@@ -94,7 +94,7 @@ const SpiritInfo = styled.div`
 
 const SpiritContent = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: ${spacing[10]};
 
   @media (max-width: 968px) {
@@ -111,68 +111,106 @@ const SpiritDescription = styled.div`
   }
 `;
 
-const CocktailTags = styled.div`
-  h4 {
-    font-size: ${typography.fontSize.sm};
-    color: ${colors.text.tertiary};
-    text-transform: uppercase;
-    letter-spacing: ${typography.letterSpacing.wide};
-    margin-bottom: ${spacing[4]};
-  }
-
-  div {
-    display: flex;
-    flex-wrap: wrap;
-    gap: ${spacing[2]};
-  }
+const CocktailsSection = styled.div`
+  margin-top: ${spacing[8]};
 `;
 
-const CocktailTag = styled.span`
-  display: inline-block;
-  padding: ${spacing[2]} ${spacing[4]};
+const SectionSubtitle = styled.h4`
   font-size: ${typography.fontSize.sm};
-  color: ${colors.text.secondary};
+  color: ${colors.accent.primary};
+  text-transform: uppercase;
+  letter-spacing: ${typography.letterSpacing.wide};
+  margin-bottom: ${spacing[4]};
+`;
+
+const CocktailsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${spacing[3]};
+`;
+
+const CocktailItem = styled.a`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: ${spacing[4]};
   background: ${colors.background.card};
   border: 1px solid ${colors.border.default};
-  transition: all 0.2s ease;
+  cursor: pointer;
+  transition: all 0.3s ease;
 
   &:hover {
     border-color: ${colors.accent.primary};
-    color: ${colors.accent.primary};
+    transform: translateX(5px);
+  }
+
+  .name {
+    font-family: ${typography.fontFamily.display};
+    font-size: ${typography.fontSize.base};
+    color: ${colors.text.primary};
+  }
+
+  .technique {
+    font-size: ${typography.fontSize.xs};
+    color: ${colors.text.tertiary};
+    text-transform: uppercase;
   }
 `;
 
-const TypesColumn = styled.div`
-  h4 {
-    font-size: ${typography.fontSize.sm};
+const TypesColumn = styled.div``;
+
+const TypesGrid = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${spacing[3]};
+`;
+
+const TypeCard = styled.div`
+  padding: ${spacing[4]};
+  background: ${colors.background.card};
+  border: 1px solid ${colors.border.default};
+  border-left: 3px solid ${colors.accent.primary};
+
+  .name {
+    font-size: ${typography.fontSize.base};
+    font-weight: ${typography.fontWeight.semibold};
     color: ${colors.text.primary};
+    margin-bottom: ${spacing[1]};
+  }
+
+  .origin {
+    font-size: ${typography.fontSize.xs};
+    color: ${colors.accent.primary};
     text-transform: uppercase;
     letter-spacing: ${typography.letterSpacing.wide};
-    margin-bottom: ${spacing[4]};
-    padding-bottom: ${spacing[2]};
-    border-bottom: 1px solid ${colors.border.default};
+    margin-bottom: ${spacing[2]};
+  }
+
+  .notes {
+    font-size: ${typography.fontSize.sm};
+    color: ${colors.text.tertiary};
   }
 `;
 
-const TypesList = styled.ul`
-  li {
-    padding: ${spacing[3]} 0;
-    border-bottom: 1px solid ${colors.border.default};
+const FactsBox = styled.div`
+  margin-top: ${spacing[6]};
+  padding: ${spacing[5]};
+  background: ${colors.accent.subtle};
+  border: 1px solid ${colors.accent.muted};
 
-    &:last-child {
-      border-bottom: none;
-    }
+  h5 {
+    font-size: ${typography.fontSize.xs};
+    color: ${colors.accent.primary};
+    text-transform: uppercase;
+    letter-spacing: ${typography.letterSpacing.wide};
+    margin-bottom: ${spacing[3]};
+  }
 
-    strong {
-      display: block;
-      color: ${colors.text.primary};
-      margin-bottom: ${spacing[1]};
-    }
-
-    span {
-      font-size: ${typography.fontSize.sm};
-      color: ${colors.text.tertiary};
-    }
+  p {
+    font-size: ${typography.fontSize.sm};
+    color: ${colors.text.secondary};
+    line-height: ${typography.lineHeight.relaxed};
+    margin: 0;
   }
 `;
 
@@ -206,6 +244,17 @@ export const SpiriteuxPage: React.FC = () => {
     return cocktails.filter(c => c.category === spiritId).slice(0, 5);
   };
 
+  const getSpiritFact = (spiritId: string): string => {
+    const facts: Record<string, string> = {
+      whisky: "Le whisky le plus cher jamais vendu est une bouteille de Macallan 1926 à 1,9 million de dollars. Le bourbon doit être produit aux États-Unis et contenir au moins 51% de maïs.",
+      gin: "Le gin tonic a été inventé par les soldats britanniques en Inde pour masquer le goût amer de la quinine, utilisée contre le paludisme. London Dry ne signifie pas que le gin est fait à Londres.",
+      rhum: "Le rhum agricole AOC Martinique est le seul spiritueux français avec une appellation d'origine contrôlée. La marine britannique donnait une ration quotidienne de rhum jusqu'en 1970.",
+      vodka: "La vodka peut être distillée à partir de presque n'importe quoi : pommes de terre, raisins, betteraves, et même du lait. En Russie, le mot 'vodka' signifie 'petite eau'.",
+      tequila: "La vraie tequila ne doit être produite que dans 5 régions du Mexique, principalement Jalisco. Le mezcal avec un ver est un mythe marketing - les vraies bouteilles n'en contiennent pas.",
+    };
+    return facts[spiritId] || "Chaque spiritueux a son histoire unique et ses traditions de fabrication qui lui confèrent son caractère distinctif.";
+  };
+
   return (
     <div ref={containerRef}>
       <PageHeader>
@@ -237,26 +286,35 @@ export const SpiriteuxPage: React.FC = () => {
               <SpiritDescription>
                 <p>{spirit.fullDescription}</p>
 
-                <CocktailTags>
-                  <h4>Cocktails emblématiques</h4>
-                  <div>
+                <CocktailsSection>
+                  <SectionSubtitle>Cocktails emblématiques</SectionSubtitle>
+                  <CocktailsList>
                     {getCocktailsBySpirit(spirit.id).map(c => (
-                      <CocktailTag key={c.id}>{c.name}</CocktailTag>
+                      <CocktailItem key={c.id} href={`/recettes?search=${c.name}`}>
+                        <span className="name">{c.name}</span>
+                        <span className="technique">{c.technique}</span>
+                      </CocktailItem>
                     ))}
-                  </div>
-                </CocktailTags>
+                  </CocktailsList>
+                </CocktailsSection>
               </SpiritDescription>
 
               <TypesColumn>
-                <h4>Types de {spirit.name}</h4>
-                <TypesList>
+                <SectionSubtitle>Types de {spirit.name}</SectionSubtitle>
+                <TypesGrid>
                   {spirit.types.map((type, i) => (
-                    <li key={i}>
-                      <strong>{type.name}</strong>
-                      <span>{type.origin} • {type.notes}</span>
-                    </li>
+                    <TypeCard key={i}>
+                      <div className="name">{type.name}</div>
+                      <div className="origin">{type.origin}</div>
+                      <div className="notes">{type.notes}</div>
+                    </TypeCard>
                   ))}
-                </TypesList>
+                </TypesGrid>
+
+                <FactsBox>
+                  <h5>Le saviez-vous ?</h5>
+                  <p>{getSpiritFact(spirit.id)}</p>
+                </FactsBox>
               </TypesColumn>
             </SpiritContent>
           </SpiritContainer>

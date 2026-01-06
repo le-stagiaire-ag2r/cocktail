@@ -38,9 +38,6 @@ const PageDesc = styled.p`
 
 const SearchSection = styled.div`
   padding: ${spacing[8]};
-  position: sticky;
-  top: 70px;
-  z-index: 100;
   background: ${colors.background.primary};
   border-bottom: 1px solid ${colors.border.default};
 `;
@@ -48,6 +45,10 @@ const SearchSection = styled.div`
 const SearchContainer = styled.div`
   max-width: 600px;
   margin: 0 auto;
+  position: relative;
+`;
+
+const SearchInputWrapper = styled.div`
   display: flex;
   gap: ${spacing[3]};
 `;
@@ -67,6 +68,61 @@ const SearchInput = styled.input`
   }
 
   &::placeholder {
+    color: ${colors.text.tertiary};
+  }
+`;
+
+const SuggestionsDropdown = styled.div<{ $show: boolean }>`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: ${spacing[1]};
+  background: ${colors.background.card};
+  border: 1px solid ${colors.border.default};
+  max-height: 300px;
+  overflow-y: auto;
+  display: ${props => props.$show ? 'block' : 'none'};
+  z-index: 200;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+`;
+
+const SuggestionItem = styled.button`
+  width: 100%;
+  padding: ${spacing[3]} ${spacing[4]};
+  text-align: left;
+  font-size: ${typography.fontSize.sm};
+  color: ${colors.text.primary};
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid ${colors.border.subtle};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: ${spacing[3]};
+  transition: background 0.2s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: ${colors.background.secondary};
+  }
+
+  img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .name {
+    font-weight: ${typography.fontWeight.medium};
+  }
+
+  .category {
+    font-size: ${typography.fontSize.xs};
     color: ${colors.text.tertiary};
   }
 `;
@@ -232,10 +288,13 @@ export const RecettesPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [cocktails, setCocktails] = useState<Cocktail[]>([]);
+  const [suggestions, setSuggestions] = useState<Cocktail[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const gridRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   // Charger les cocktails (par ingrédient si spécifié dans l'URL ou populaires)
   useEffect(() => {
@@ -257,6 +316,35 @@ export const RecettesPage: React.FC = () => {
     loadCocktails();
   }, [searchParams]);
 
+  // Autocomplétion lors de la frappe
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (searchQuery.length < 2) {
+        setSuggestions([]);
+        setShowSuggestions(false);
+        return;
+      }
+
+      const results = await searchCocktails(searchQuery);
+      setSuggestions(results.slice(0, 6));
+      setShowSuggestions(results.length > 0);
+    };
+
+    const debounce = setTimeout(fetchSuggestions, 300);
+    return () => clearTimeout(debounce);
+  }, [searchQuery]);
+
+  // Fermer les suggestions en cliquant ailleurs
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   // Animation quand les cocktails changent
   useEffect(() => {
     if (gridRef.current && cocktails.length > 0) {
@@ -276,6 +364,7 @@ export const RecettesPage: React.FC = () => {
 
   // Recherche de cocktails
   const handleSearch = async () => {
+    setShowSuggestions(false);
     if (!searchQuery.trim()) {
       const popular = await getPopularCocktails();
       setCocktails(popular);
@@ -287,6 +376,12 @@ export const RecettesPage: React.FC = () => {
     const results = await searchCocktails(searchQuery);
     setCocktails(results);
     setLoading(false);
+  };
+
+  // Sélectionner une suggestion
+  const handleSelectSuggestion = (cocktail: Cocktail) => {
+    setShowSuggestions(false);
+    navigate(`/cocktail/${cocktail.id}`);
   };
 
   // Filtrer par spiritueux
@@ -318,15 +413,33 @@ export const RecettesPage: React.FC = () => {
       </PageHeader>
 
       <SearchSection>
-        <SearchContainer>
-          <SearchInput
-            type="text"
-            placeholder="Rechercher un cocktail..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-          />
-          <SearchButton onClick={handleSearch}>Rechercher</SearchButton>
+        <SearchContainer ref={searchRef}>
+          <SearchInputWrapper>
+            <SearchInput
+              type="text"
+              placeholder="Rechercher un cocktail..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+            />
+            <SearchButton onClick={handleSearch}>Rechercher</SearchButton>
+          </SearchInputWrapper>
+
+          <SuggestionsDropdown $show={showSuggestions}>
+            {suggestions.map((cocktail) => (
+              <SuggestionItem
+                key={cocktail.id}
+                onClick={() => handleSelectSuggestion(cocktail)}
+              >
+                <img src={cocktail.image + '/preview'} alt={cocktail.name} />
+                <div>
+                  <div className="name">{cocktail.name}</div>
+                  <div className="category">{cocktail.category}</div>
+                </div>
+              </SuggestionItem>
+            ))}
+          </SuggestionsDropdown>
         </SearchContainer>
 
         <FiltersContainer>

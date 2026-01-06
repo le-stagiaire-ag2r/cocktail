@@ -82,25 +82,10 @@ const ScrollIndicator = styled.div`
   bottom: ${spacing[10]};
   left: 50%;
   transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: ${spacing[2]};
   opacity: 0;
-
-  span {
-    font-size: ${typography.fontSize.xs};
-    text-transform: uppercase;
-    letter-spacing: ${typography.letterSpacing.widest};
-    color: ${colors.text.tertiary};
-  }
-
-  &::after {
-    content: '';
-    width: 1px;
-    height: 60px;
-    background: linear-gradient(to bottom, ${colors.accent.primary}, transparent);
-  }
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, ${colors.accent.primary}, transparent);
 `;
 
 const Section = styled.section`
@@ -132,10 +117,14 @@ const SectionTitle = styled.h2`
 
 const CocktailsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: ${spacing[6]};
-  max-width: 1400px;
+  max-width: 1000px;
   margin: 0 auto;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const CocktailCard = styled(Link)`
@@ -395,9 +384,7 @@ export const HomePage: React.FC = () => {
             Découvrir nos cocktails
           </HeroButton>
         </HeroContent>
-        <ScrollIndicator className="scroll-indicator">
-          <span>Scroll</span>
-        </ScrollIndicator>
+        <ScrollIndicator className="scroll-indicator" />
       </Hero>
 
       <Section ref={cocktailsRef}>
