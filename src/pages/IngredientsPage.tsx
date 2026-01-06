@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { gsap } from 'gsap';
 import { colors, typography, spacing } from '../styles/designTokens';
 import { getIngredients } from '../services/cocktailAPI';
+import { translateIngredient } from '../utils/translations';
 
 const PageHeader = styled.section`
   padding: 180px ${spacing[8]} ${spacing[16]};
@@ -380,12 +381,12 @@ export const IngredientsPage: React.FC = () => {
               >
                 <img
                   src={getIngredientImageUrl(ingredient)}
-                  alt={ingredient}
+                  alt={translateIngredient(ingredient)}
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none';
                   }}
                 />
-                {ingredient}
+                {translateIngredient(ingredient)}
               </SuggestionItem>
             ))}
           </SuggestionsDropdown>
@@ -431,12 +432,12 @@ export const IngredientsPage: React.FC = () => {
                   >
                     <IngredientImage
                       src={getIngredientImageUrl(ingredient)}
-                      alt={ingredient}
+                      alt={translateIngredient(ingredient)}
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none';
                       }}
                     />
-                    <IngredientName>{ingredient}</IngredientName>
+                    <IngredientName>{translateIngredient(ingredient)}</IngredientName>
                   </IngredientCard>
                 ))}
               </IngredientsGrid>

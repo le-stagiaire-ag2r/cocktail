@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { gsap } from 'gsap';
 import { colors, typography, spacing } from '../styles/designTokens';
 import { searchCocktails, getPopularCocktails, getCocktailsByIngredient, Cocktail } from '../services/cocktailAPI';
+import { translateIngredient, translateCategory, translateGlass } from '../utils/translations';
 
 const PageHeader = styled.section`
   padding: 180px ${spacing[8]} ${spacing[16]};
@@ -435,7 +436,7 @@ export const RecettesPage: React.FC = () => {
                 <img src={cocktail.image + '/preview'} alt={cocktail.name} />
                 <div>
                   <div className="name">{cocktail.name}</div>
-                  <div className="category">{cocktail.category}</div>
+                  <div className="category">{translateCategory(cocktail.category)}</div>
                 </div>
               </SuggestionItem>
             ))}
@@ -475,12 +476,12 @@ export const RecettesPage: React.FC = () => {
               >
                 <CardImage $src={cocktail.image + '/preview'} />
                 <CardContent>
-                  <CardCategory>{cocktail.category}</CardCategory>
+                  <CardCategory>{translateCategory(cocktail.category)}</CardCategory>
                   <CardTitle>{cocktail.name}</CardTitle>
 
                   <CardIngredients>
                     {cocktail.ingredients.slice(0, 4).map((ing, i) => (
-                      <IngredientTag key={i}>{ing.ingredient}</IngredientTag>
+                      <IngredientTag key={i}>{translateIngredient(ing.ingredient)}</IngredientTag>
                     ))}
                     {cocktail.ingredients.length > 4 && (
                       <IngredientTag>+{cocktail.ingredients.length - 4}</IngredientTag>
@@ -488,7 +489,7 @@ export const RecettesPage: React.FC = () => {
                   </CardIngredients>
 
                   <CardMeta>
-                    <span>{cocktail.glass}</span>
+                    <span>{translateGlass(cocktail.glass)}</span>
                     <span>{cocktail.isAlcoholic ? 'Alcoolisé' : 'Sans alcool'}</span>
                   </CardMeta>
                 </CardContent>

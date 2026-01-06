@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { gsap } from 'gsap';
 import { colors, typography, spacing } from '../styles/designTokens';
 import { getCocktailById, Cocktail } from '../services/cocktailAPI';
+import { translateIngredient, translateCategory, translateGlass } from '../utils/translations';
 
 const PageContainer = styled.div`
   padding-top: 100px;
@@ -313,13 +314,13 @@ export const CocktailDetailPage: React.FC = () => {
         </ImageContainer>
 
         <ContentContainer>
-          <Category>{cocktail.category}</Category>
+          <Category>{translateCategory(cocktail.category)}</Category>
           <CocktailName>{cocktail.name}</CocktailName>
 
           <Meta>
             <MetaItem>
               <span>Verre</span>
-              <strong>{cocktail.glass}</strong>
+              <strong>{translateGlass(cocktail.glass)}</strong>
             </MetaItem>
             <MetaItem>
               <span>Type</span>
@@ -335,7 +336,7 @@ export const CocktailDetailPage: React.FC = () => {
           <IngredientsList>
             {cocktail.ingredients.map((ing, i) => (
               <IngredientItem key={i}>
-                <IngredientName>{ing.ingredient}</IngredientName>
+                <IngredientName>{translateIngredient(ing.ingredient)}</IngredientName>
                 <IngredientMeasure>{ing.measure}</IngredientMeasure>
               </IngredientItem>
             ))}
