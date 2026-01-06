@@ -177,12 +177,14 @@ const TypesList = styled.ul`
 `;
 
 export const SpiriteuxPage: React.FC = () => {
-  const sectionsRef = useRef<HTMLDivElement[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    sectionsRef.current.forEach((section, i) => {
-      if (!section) return;
+    if (!containerRef.current) return;
 
+    const sections = containerRef.current.querySelectorAll('.spirit-section');
+
+    sections.forEach((section) => {
       gsap.fromTo(
         section,
         { opacity: 0, y: 50 },
@@ -205,7 +207,7 @@ export const SpiriteuxPage: React.FC = () => {
   };
 
   return (
-    <>
+    <div ref={containerRef}>
       <PageHeader>
         <PageLabel>Guide</PageLabel>
         <PageTitle>Les Spiritueux</PageTitle>
@@ -220,7 +222,7 @@ export const SpiriteuxPage: React.FC = () => {
           key={spirit.id}
           id={spirit.id}
           $alt={index % 2 === 1}
-          ref={(el) => { if (el) sectionsRef.current[index] = el; }}
+          className="spirit-section"
         >
           <SpiritContainer>
             <SpiritHeader>
@@ -260,7 +262,7 @@ export const SpiriteuxPage: React.FC = () => {
           </SpiritContainer>
         </SpiritSection>
       ))}
-    </>
+    </div>
   );
 };
 
