@@ -71,8 +71,12 @@ const SectionHeader = styled.div`
 
 const TechniquesGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: ${spacing[6]};
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const TechniqueCard = styled.div`
@@ -80,9 +84,13 @@ const TechniqueCard = styled.div`
   border: 1px solid ${colors.border.default};
   padding: ${spacing[8]};
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   &:hover {
     border-color: ${colors.accent.primary};
+    transform: translateY(-3px);
   }
 `;
 
@@ -153,8 +161,16 @@ const TechniqueSteps = styled.ol`
 
 const ToolsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: ${spacing[4]};
+
+  @media (max-width: 968px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const ToolCard = styled.div`
@@ -169,10 +185,17 @@ const ToolCard = styled.div`
     transform: translateY(-3px);
   }
 
-  span {
-    font-size: 2.5rem;
-    display: block;
-    margin-bottom: ${spacing[3]};
+  .icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto ${spacing[4]};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    background: ${colors.accent.subtle};
+    border: 1px solid ${colors.accent.muted};
+    border-radius: 50%;
   }
 
   h4 {
@@ -189,8 +212,12 @@ const ToolCard = styled.div`
 
 const TipsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: ${spacing[6]};
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const TipCard = styled.div`
@@ -309,7 +336,7 @@ export const BarBasicsPage: React.FC = () => {
           <ToolsGrid>
             {tools.map((tool, i) => (
               <ToolCard key={i} className="animate-item">
-                <span>{tool.icon}</span>
+                <div className="icon">{tool.icon}</div>
                 <h4>{tool.name}</h4>
                 <p>{tool.description}</p>
               </ToolCard>
