@@ -38,9 +38,6 @@ const PageDesc = styled.p`
 
 const SearchSection = styled.div`
   padding: ${spacing[6]} ${spacing[8]};
-  position: sticky;
-  top: 70px;
-  z-index: 100;
   background: ${colors.background.primary};
   border-bottom: 1px solid ${colors.border.default};
 `;
@@ -48,6 +45,7 @@ const SearchSection = styled.div`
 const SearchContainer = styled.div`
   max-width: 500px;
   margin: 0 auto;
+  position: relative;
 `;
 
 const SearchInput = styled.input`
@@ -66,6 +64,53 @@ const SearchInput = styled.input`
 
   &::placeholder {
     color: ${colors.text.tertiary};
+  }
+`;
+
+const SuggestionsDropdown = styled.div<{ $show: boolean }>`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: ${spacing[1]};
+  background: ${colors.background.card};
+  border: 1px solid ${colors.border.default};
+  max-height: 300px;
+  overflow-y: auto;
+  display: ${props => props.$show ? 'block' : 'none'};
+  z-index: 200;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+`;
+
+const SuggestionItem = styled.button`
+  width: 100%;
+  padding: ${spacing[3]} ${spacing[4]};
+  text-align: left;
+  font-size: ${typography.fontSize.sm};
+  color: ${colors.text.primary};
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid ${colors.border.subtle};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: ${spacing[3]};
+  transition: background 0.2s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: ${colors.background.secondary};
+  }
+
+  img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    background: white;
+    border-radius: 4px;
   }
 `;
 
@@ -205,10 +250,13 @@ export const IngredientsPage: React.FC = () => {
   const navigate = useNavigate();
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [filteredIngredients, setFilteredIngredients] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeLetter, setActiveLetter] = useState('');
   const contentRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const loadIngredients = async () => {
@@ -229,6 +277,12 @@ export const IngredientsPage: React.FC = () => {
       filtered = filtered.filter(ing =>
         ing.toLowerCase().includes(searchQuery.toLowerCase())
       );
+      // Mettre à jour les suggestions aussi
+      setSuggestions(filtered.slice(0, 8));
+      setShowSuggestions(filtered.length > 0 && searchQuery.length >= 1);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
     }
 
     if (activeLetter) {
@@ -239,6 +293,17 @@ export const IngredientsPage: React.FC = () => {
 
     setFilteredIngredients(filtered);
   }, [searchQuery, activeLetter, ingredients]);
+
+  // Fermer les suggestions en cliquant ailleurs
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (contentRef.current && filteredIngredients.length > 0) {
@@ -269,6 +334,11 @@ export const IngredientsPage: React.FC = () => {
     navigate(`/recettes?ingredient=${encodeURIComponent(ingredient)}`);
   };
 
+  const handleSelectSuggestion = (ingredient: string) => {
+    setShowSuggestions(false);
+    navigate(`/recettes?ingredient=${encodeURIComponent(ingredient)}`);
+  };
+
   const handleLetterClick = (letter: string) => {
     if (!lettersWithItems.has(letter)) return;
     setActiveLetter(activeLetter === letter ? '' : letter);
@@ -291,7 +361,7 @@ export const IngredientsPage: React.FC = () => {
       </PageHeader>
 
       <SearchSection>
-        <SearchContainer>
+        <SearchContainer ref={searchRef}>
           <SearchInput
             type="text"
             placeholder="Rechercher un ingrédient..."
@@ -300,7 +370,25 @@ export const IngredientsPage: React.FC = () => {
               setSearchQuery(e.target.value);
               setActiveLetter('');
             }}
+            onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
           />
+          <SuggestionsDropdown $show={showSuggestions}>
+            {suggestions.map((ingredient, i) => (
+              <SuggestionItem
+                key={i}
+                onClick={() => handleSelectSuggestion(ingredient)}
+              >
+                <img
+                  src={getIngredientImageUrl(ingredient)}
+                  alt={ingredient}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+                {ingredient}
+              </SuggestionItem>
+            ))}
+          </SuggestionsDropdown>
         </SearchContainer>
 
         <AlphabetNav>
