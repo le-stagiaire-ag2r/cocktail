@@ -6,8 +6,11 @@ import { Navigation } from './components/Navigation';
 import { GlobalStyles } from './styles/GlobalStyles';
 import HomePage from './pages/HomePage';
 import RecettesPage from './pages/RecettesPage';
+import CocktailDetailPage from './pages/CocktailDetailPage';
+import IngredientsPage from './pages/IngredientsPage';
 import SpiriteuxPage from './pages/SpiriteuxPage';
 import BarBasicsPage from './pages/BarBasicsPage';
+import BarStockPage from './pages/BarStockPage';
 import ContactPage from './pages/ContactPage';
 import styled from 'styled-components';
 import { colors, typography, spacing } from './styles/designTokens';
@@ -128,9 +131,11 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/recettes" element={<RecettesPage />} />
-              <Route path="/recettes/:id" element={<RecettesPage />} />
+              <Route path="/cocktail/:id" element={<CocktailDetailPage />} />
+              <Route path="/ingredients" element={<IngredientsPage />} />
               <Route path="/spiritueux" element={<SpiriteuxPage />} />
               <Route path="/bar-basics" element={<BarBasicsPage />} />
+              <Route path="/bar-stock" element={<BarStockPage />} />
               <Route path="/contact" element={<ContactPage />} />
             </Routes>
           </main>
@@ -148,9 +153,10 @@ function App() {
                   <h4>Navigation</h4>
                   <ul>
                     <li><a href="/recettes">Recettes</a></li>
+                    <li><a href="/ingredients">Ingrédients</a></li>
                     <li><a href="/spiritueux">Spiritueux</a></li>
-                    <li><a href="/bar-basics">L'Art du Cocktail</a></li>
-                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="/bar-stock">Le Bar</a></li>
+                    <li><a href="/bar-basics">Techniques</a></li>
                   </ul>
                 </FooterNav>
 

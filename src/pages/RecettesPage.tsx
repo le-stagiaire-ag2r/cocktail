@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { gsap } from 'gsap';
 import { colors, typography, spacing } from '../styles/designTokens';
@@ -133,6 +134,7 @@ const CocktailCard = styled.div`
   border: 1px solid ${colors.border.default};
   transition: all 0.4s ease;
   overflow: hidden;
+  cursor: pointer;
 
   &:hover {
     border-color: ${colors.accent.primary};
@@ -227,22 +229,33 @@ const spiritFilters = [
 ];
 
 export const RecettesPage: React.FC = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [cocktails, setCocktails] = useState<Cocktail[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const gridRef = useRef<HTMLDivElement>(null);
 
-  // Charger les cocktails populaires au démarrage
+  // Charger les cocktails (par ingrédient si spécifié dans l'URL ou populaires)
   useEffect(() => {
-    const loadPopular = async () => {
+    const loadCocktails = async () => {
       setLoading(true);
-      const popular = await getPopularCocktails();
-      setCocktails(popular);
+      const ingredientParam = searchParams.get('ingredient');
+
+      if (ingredientParam) {
+        const results = await getCocktailsByIngredient(ingredientParam);
+        setCocktails(results);
+        setSearchQuery('');
+        setActiveFilter('all');
+      } else {
+        const popular = await getPopularCocktails();
+        setCocktails(popular);
+      }
       setLoading(false);
     };
-    loadPopular();
-  }, []);
+    loadCocktails();
+  }, [searchParams]);
 
   // Animation quand les cocktails changent
   useEffect(() => {
@@ -342,7 +355,11 @@ export const RecettesPage: React.FC = () => {
         ) : (
           <CocktailsGrid ref={gridRef}>
             {cocktails.map((cocktail) => (
-              <CocktailCard key={cocktail.id} className="cocktail-card">
+              <CocktailCard
+                key={cocktail.id}
+                className="cocktail-card"
+                onClick={() => navigate(`/cocktail/${cocktail.id}`)}
+              >
                 <CardImage $src={cocktail.image + '/preview'} />
                 <CardContent>
                   <CardCategory>{cocktail.category}</CardCategory>

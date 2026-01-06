@@ -128,8 +128,10 @@ const MenuButton = styled.button<{ $isOpen: boolean }>`
 const navItems = [
   { path: '/', label: 'Accueil' },
   { path: '/recettes', label: 'Recettes' },
+  { path: '/ingredients', label: 'Ingrédients' },
   { path: '/spiritueux', label: 'Spiritueux' },
-  { path: '/bar-basics', label: "L'Art du Cocktail" },
+  { path: '/bar-stock', label: 'Le Bar' },
+  { path: '/bar-basics', label: 'Techniques' },
   { path: '/contact', label: 'Contact' },
 ];
 
