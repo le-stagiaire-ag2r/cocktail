@@ -32,6 +32,7 @@ export const colors = {
     default: '#222222',
     hover: '#333333',
     active: '#c9a227',
+    subtle: '#1a1a1a',
   },
 
   // Status

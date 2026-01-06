@@ -10,7 +10,6 @@ export const GlobalStyles = createGlobalStyle`
 
   html {
     font-size: 16px;
-    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

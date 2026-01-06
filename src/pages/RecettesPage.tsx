@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { colors, typography, spacing } from '../styles/designTokens';
-import { cocktails } from '../data/cocktails';
-
-gsap.registerPlugin(ScrollTrigger);
+import { searchCocktails, getPopularCocktails, getCocktailsByIngredient, Cocktail } from '../services/cocktailAPI';
 
 const PageHeader = styled.section`
   padding: 180px ${spacing[8]} ${spacing[16]};
@@ -39,7 +36,7 @@ const PageDesc = styled.p`
   margin: 0 auto;
 `;
 
-const FiltersSection = styled.div`
+const SearchSection = styled.div`
   padding: ${spacing[8]};
   position: sticky;
   top: 70px;
@@ -48,18 +45,58 @@ const FiltersSection = styled.div`
   border-bottom: 1px solid ${colors.border.default};
 `;
 
+const SearchContainer = styled.div`
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  gap: ${spacing[3]};
+`;
+
+const SearchInput = styled.input`
+  flex: 1;
+  padding: ${spacing[4]};
+  font-size: ${typography.fontSize.base};
+  color: ${colors.text.primary};
+  background: ${colors.background.card};
+  border: 1px solid ${colors.border.default};
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${colors.accent.primary};
+  }
+
+  &::placeholder {
+    color: ${colors.text.tertiary};
+  }
+`;
+
+const SearchButton = styled.button`
+  padding: ${spacing[4]} ${spacing[6]};
+  font-size: ${typography.fontSize.sm};
+  font-weight: ${typography.fontWeight.semibold};
+  text-transform: uppercase;
+  color: ${colors.background.primary};
+  background: ${colors.accent.primary};
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${colors.accent.secondary};
+  }
+`;
+
 const FiltersContainer = styled.div`
   display: flex;
   justify-content: center;
-  gap: ${spacing[3]};
+  gap: ${spacing[2]};
   flex-wrap: wrap;
   max-width: 800px;
-  margin: 0 auto;
+  margin: ${spacing[6]} auto 0;
 `;
 
 const FilterButton = styled.button<{ $active: boolean }>`
-  padding: ${spacing[2]} ${spacing[5]};
-  font-size: ${typography.fontSize.sm};
+  padding: ${spacing[2]} ${spacing[4]};
+  font-size: ${typography.fontSize.xs};
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.wide};
@@ -80,9 +117,15 @@ const ContentSection = styled.section`
   margin: 0 auto;
 `;
 
+const LoadingContainer = styled.div`
+  text-align: center;
+  padding: ${spacing[16]};
+  color: ${colors.text.tertiary};
+`;
+
 const CocktailsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: ${spacing[6]};
 `;
 
@@ -91,6 +134,7 @@ const CocktailCard = styled.div`
   border: 1px solid ${colors.border.default};
   transition: all 0.4s ease;
   overflow: hidden;
+  cursor: pointer;
 
   &:hover {
     border-color: ${colors.accent.primary};
@@ -99,27 +143,29 @@ const CocktailCard = styled.div`
   }
 `;
 
-const CardHeader = styled.div`
-  padding: ${spacing[6]};
-  border-bottom: 1px solid ${colors.border.default};
+const CardImage = styled.div<{ $src: string }>`
+  aspect-ratio: 4/3;
+  background: url(${props => props.$src}) center center / cover no-repeat;
+  background-color: ${colors.background.secondary};
   position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to top, ${colors.background.card}, transparent);
+  }
 `;
 
-const CardBadge = styled.span`
-  position: absolute;
-  top: ${spacing[4]};
-  right: ${spacing[4]};
-  font-size: ${typography.fontSize.xs};
-  font-weight: ${typography.fontWeight.semibold};
-  text-transform: uppercase;
-  letter-spacing: ${typography.letterSpacing.wide};
-  color: ${colors.background.primary};
-  background: ${colors.accent.primary};
-  padding: ${spacing[1]} ${spacing[3]};
+const CardContent = styled.div`
+  padding: ${spacing[6]};
 `;
 
-const CardSpirit = styled.span`
-  display: block;
+const CardCategory = styled.span`
+  display: inline-block;
   font-size: ${typography.fontSize.xs};
   color: ${colors.accent.primary};
   text-transform: uppercase;
@@ -129,96 +175,136 @@ const CardSpirit = styled.span`
 
 const CardTitle = styled.h3`
   font-family: ${typography.fontFamily.display};
-  font-size: ${typography.fontSize['2xl']};
+  font-size: ${typography.fontSize['xl']};
   font-weight: ${typography.fontWeight.semibold};
   color: ${colors.text.primary};
-`;
-
-const CardBody = styled.div`
-  padding: ${spacing[6]};
-`;
-
-const CardDesc = styled.p`
-  font-size: ${typography.fontSize.sm};
-  color: ${colors.text.secondary};
-  line-height: ${typography.lineHeight.relaxed};
-  margin-bottom: ${spacing[4]};
+  margin-bottom: ${spacing[3]};
 `;
 
 const CardIngredients = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${spacing[1]};
   margin-bottom: ${spacing[4]};
-
-  h4 {
-    font-size: ${typography.fontSize.xs};
-    color: ${colors.text.tertiary};
-    text-transform: uppercase;
-    letter-spacing: ${typography.letterSpacing.wide};
-    margin-bottom: ${spacing[2]};
-  }
-
-  ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: ${spacing[2]};
-  }
-
-  li {
-    font-size: ${typography.fontSize.sm};
-    color: ${colors.text.secondary};
-    background: ${colors.background.secondary};
-    padding: ${spacing[1]} ${spacing[3]};
-    border-radius: 2px;
-  }
 `;
 
-const CardFooter = styled.div`
+const IngredientTag = styled.span`
+  font-size: ${typography.fontSize.xs};
+  color: ${colors.text.tertiary};
+  background: ${colors.background.secondary};
+  padding: ${spacing[1]} ${spacing[2]};
+`;
+
+const CardMeta = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: ${spacing[4]} ${spacing[6]};
+  padding-top: ${spacing[4]};
   border-top: 1px solid ${colors.border.default};
-  background: ${colors.background.secondary};
-`;
-
-const CardMeta = styled.span`
   font-size: ${typography.fontSize.xs};
   color: ${colors.text.tertiary};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.wide};
 `;
 
-const categories = [
-  { id: 'all', label: 'Tous' },
-  { id: 'whisky', label: 'Whisky' },
-  { id: 'gin', label: 'Gin' },
-  { id: 'rhum', label: 'Rhum' },
-  { id: 'vodka', label: 'Vodka' },
-  { id: 'tequila', label: 'Tequila' },
+const NoResults = styled.div`
+  text-align: center;
+  padding: ${spacing[16]};
+  color: ${colors.text.tertiary};
+
+  h3 {
+    font-size: ${typography.fontSize.xl};
+    color: ${colors.text.secondary};
+    margin-bottom: ${spacing[2]};
+  }
+`;
+
+const spiritFilters = [
+  { id: 'all', label: 'Tous', ingredient: '' },
+  { id: 'vodka', label: 'Vodka', ingredient: 'Vodka' },
+  { id: 'gin', label: 'Gin', ingredient: 'Gin' },
+  { id: 'rum', label: 'Rhum', ingredient: 'Rum' },
+  { id: 'whiskey', label: 'Whisky', ingredient: 'Whiskey' },
+  { id: 'tequila', label: 'Tequila', ingredient: 'Tequila' },
+  { id: 'bourbon', label: 'Bourbon', ingredient: 'Bourbon' },
 ];
 
 export const RecettesPage: React.FC = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [cocktails, setCocktails] = useState<Cocktail[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const filteredCocktails = activeFilter === 'all'
-    ? cocktails
-    : cocktails.filter(c => c.category === activeFilter);
-
+  // Charger les cocktails (par ingrédient si spécifié dans l'URL ou populaires)
   useEffect(() => {
-    if (gridRef.current) {
+    const loadCocktails = async () => {
+      setLoading(true);
+      const ingredientParam = searchParams.get('ingredient');
+
+      if (ingredientParam) {
+        const results = await getCocktailsByIngredient(ingredientParam);
+        setCocktails(results);
+        setSearchQuery('');
+        setActiveFilter('all');
+      } else {
+        const popular = await getPopularCocktails();
+        setCocktails(popular);
+      }
+      setLoading(false);
+    };
+    loadCocktails();
+  }, [searchParams]);
+
+  // Animation quand les cocktails changent
+  useEffect(() => {
+    if (gridRef.current && cocktails.length > 0) {
       gsap.fromTo(
         gridRef.current.querySelectorAll('.cocktail-card'),
         { opacity: 0, y: 30 },
         {
           opacity: 1,
           y: 0,
-          stagger: 0.08,
-          duration: 0.6,
+          stagger: 0.05,
+          duration: 0.5,
           ease: 'power3.out',
         }
       );
     }
-  }, [activeFilter]);
+  }, [cocktails]);
+
+  // Recherche de cocktails
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      const popular = await getPopularCocktails();
+      setCocktails(popular);
+      return;
+    }
+
+    setLoading(true);
+    setActiveFilter('all');
+    const results = await searchCocktails(searchQuery);
+    setCocktails(results);
+    setLoading(false);
+  };
+
+  // Filtrer par spiritueux
+  const handleFilterChange = async (filterId: string, ingredient: string) => {
+    setActiveFilter(filterId);
+    setSearchQuery('');
+    setLoading(true);
+
+    if (filterId === 'all') {
+      const popular = await getPopularCocktails();
+      setCocktails(popular);
+    } else {
+      const results = await getCocktailsByIngredient(ingredient);
+      setCocktails(results);
+    }
+
+    setLoading(false);
+  };
 
   return (
     <>
@@ -226,58 +312,77 @@ export const RecettesPage: React.FC = () => {
         <PageLabel>Collection</PageLabel>
         <PageTitle>Nos Recettes</PageTitle>
         <PageDesc>
-          Découvrez notre collection de cocktails classiques et nos créations signatures.
-          Des recettes détaillées pour reproduire vos cocktails préférés.
+          Découvrez des centaines de recettes de cocktails du monde entier.
+          Classiques intemporels et créations modernes.
         </PageDesc>
       </PageHeader>
 
-      <FiltersSection>
+      <SearchSection>
+        <SearchContainer>
+          <SearchInput
+            type="text"
+            placeholder="Rechercher un cocktail..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+          />
+          <SearchButton onClick={handleSearch}>Rechercher</SearchButton>
+        </SearchContainer>
+
         <FiltersContainer>
-          {categories.map(cat => (
+          {spiritFilters.map(filter => (
             <FilterButton
-              key={cat.id}
-              $active={activeFilter === cat.id}
-              onClick={() => setActiveFilter(cat.id)}
+              key={filter.id}
+              $active={activeFilter === filter.id}
+              onClick={() => handleFilterChange(filter.id, filter.ingredient)}
             >
-              {cat.label}
+              {filter.label}
             </FilterButton>
           ))}
         </FiltersContainer>
-      </FiltersSection>
+      </SearchSection>
 
       <ContentSection>
-        <CocktailsGrid ref={gridRef}>
-          {filteredCocktails.map((cocktail) => (
-            <CocktailCard key={cocktail.id} className="cocktail-card">
-              <CardHeader>
-                {cocktail.isSignature && <CardBadge>Signature</CardBadge>}
-                <CardSpirit>{cocktail.spirit}</CardSpirit>
-                <CardTitle>{cocktail.name}</CardTitle>
-              </CardHeader>
+        {loading ? (
+          <LoadingContainer>
+            <p>Chargement des cocktails...</p>
+          </LoadingContainer>
+        ) : cocktails.length === 0 ? (
+          <NoResults>
+            <h3>Aucun résultat</h3>
+            <p>Essayez une autre recherche ou un autre filtre.</p>
+          </NoResults>
+        ) : (
+          <CocktailsGrid ref={gridRef}>
+            {cocktails.map((cocktail) => (
+              <CocktailCard
+                key={cocktail.id}
+                className="cocktail-card"
+                onClick={() => navigate(`/cocktail/${cocktail.id}`)}
+              >
+                <CardImage $src={cocktail.image + '/preview'} />
+                <CardContent>
+                  <CardCategory>{cocktail.category}</CardCategory>
+                  <CardTitle>{cocktail.name}</CardTitle>
 
-              <CardBody>
-                <CardDesc>{cocktail.description}</CardDesc>
-
-                <CardIngredients>
-                  <h4>Ingrédients</h4>
-                  <ul>
+                  <CardIngredients>
                     {cocktail.ingredients.slice(0, 4).map((ing, i) => (
-                      <li key={i}>{ing}</li>
+                      <IngredientTag key={i}>{ing.ingredient}</IngredientTag>
                     ))}
                     {cocktail.ingredients.length > 4 && (
-                      <li>+{cocktail.ingredients.length - 4}</li>
+                      <IngredientTag>+{cocktail.ingredients.length - 4}</IngredientTag>
                     )}
-                  </ul>
-                </CardIngredients>
-              </CardBody>
+                  </CardIngredients>
 
-              <CardFooter>
-                <CardMeta>{cocktail.technique}</CardMeta>
-                <CardMeta>{cocktail.glass}</CardMeta>
-              </CardFooter>
-            </CocktailCard>
-          ))}
-        </CocktailsGrid>
+                  <CardMeta>
+                    <span>{cocktail.glass}</span>
+                    <span>{cocktail.isAlcoholic ? 'Alcoolisé' : 'Sans alcool'}</span>
+                  </CardMeta>
+                </CardContent>
+              </CocktailCard>
+            ))}
+          </CocktailsGrid>
+        )}
       </ContentSection>
     </>
   );
