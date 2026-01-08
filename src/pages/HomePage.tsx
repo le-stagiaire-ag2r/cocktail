@@ -447,8 +447,8 @@ export const HomePage: React.FC = () => {
           </CTABlock>
         </CTAInfo>
 
-        <HeroButton as={Link} to="/contact" style={{ opacity: 1 }}>
-          Nous contacter
+        <HeroButton as={Link} to="/recettes" style={{ opacity: 1 }}>
+          Découvrir la carte
         </HeroButton>
       </CTASection>
     </>

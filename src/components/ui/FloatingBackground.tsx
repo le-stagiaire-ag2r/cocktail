@@ -199,13 +199,6 @@ export const FloatingBackground: React.FC = () => {
 
   return (
     <Container>
-      <GridLine $horizontal $position={25} />
-      <GridLine $horizontal $position={50} />
-      <GridLine $horizontal $position={75} />
-      <GridLine $position={25} />
-      <GridLine $position={50} />
-      <GridLine $position={75} />
-
       {glowOrbs.map((orb, i) => (
         <GlowOrb
           key={`orb-${i}`}
