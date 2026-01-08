@@ -27,7 +27,7 @@ const fadeInUp = keyframes`
 const PageHeader = styled.section`
   padding: 160px ${spacing[8]} 100px;
   text-align: center;
-  background: ${colors.gradient.burgundy};
+  background: ${colors.gradient.warm};
   position: relative;
   overflow: hidden;
 
@@ -109,7 +109,7 @@ const SearchInput = styled.input`
   font-family: ${typography.fontFamily.body};
   font-size: ${typography.fontSize.base};
   color: ${colors.text.primary};
-  background: ${colors.background.card};
+  background: rgba(247, 245, 235, 0.95);
   border: 1px solid ${colors.border.default};
   transition: all 0.3s ease;
 
@@ -117,6 +117,7 @@ const SearchInput = styled.input`
     outline: none;
     border-color: ${colors.palette.burgundy};
     box-shadow: 0 0 0 3px ${colors.accent.muted};
+    background: #fff;
   }
 
   &::placeholder {
@@ -130,7 +131,8 @@ const SuggestionsDropdown = styled.div<{ $show: boolean }>`
   left: 0;
   right: 0;
   margin-top: ${spacing[1]};
-  background: ${colors.background.card};
+  background: rgba(247, 245, 235, 0.98);
+  backdrop-filter: blur(10px);
   border: 1px solid ${colors.border.default};
   max-height: 300px;
   overflow-y: auto;

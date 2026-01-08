@@ -20,7 +20,7 @@ const fadeInUp = keyframes`
 const PageHeader = styled.section`
   padding: 160px ${spacing[8]} 100px;
   text-align: center;
-  background: linear-gradient(135deg, ${colors.palette.olive} 0%, ${colors.palette.burgundyDark} 100%);
+  background: linear-gradient(0deg, ${colors.palette.burgundyDark} 0%, ${colors.palette.olive} 100%);
   position: relative;
   overflow: hidden;
 
@@ -148,13 +148,15 @@ const ItemsGrid = styled.div`
 
 const ItemCard = styled.div`
   padding: ${spacing[6]};
-  background: ${colors.background.card};
+  background: rgba(247, 245, 235, 0.95);
   border: 1px solid ${colors.border.default};
   transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 
   &:hover {
     border-color: ${colors.accent.primary};
     transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.98);
   }
 `;
 
@@ -344,7 +346,7 @@ export const BarStockPage: React.FC = () => {
             scrollTrigger: {
               trigger: section,
               start: 'top bottom-=100',
-              toggleActions: 'play none none reverse',
+              toggleActions: 'play none none none',  // Fixed: ne plus reverser l'animation au scroll
             },
           }
         );
