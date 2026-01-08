@@ -132,6 +132,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/recettes" element={<RecettesPage />} />
               <Route path="/cocktail/:id" element={<CocktailDetailPage />} />
+              <Route path="/cocktail/boston/:id" element={<CocktailDetailPage />} />
               <Route path="/ingredients" element={<IngredientsPage />} />
               <Route path="/spiritueux" element={<SpiriteuxPage />} />
               <Route path="/bar-basics" element={<BarBasicsPage />} />
