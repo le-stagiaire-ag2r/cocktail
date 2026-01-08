@@ -23,9 +23,9 @@ export const GlobalStyles = createGlobalStyle`
     overflow-x: hidden;
   }
 
-  /* Custom scrollbar */
+  /* Custom scrollbar - style luxe */
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
   }
 
   ::-webkit-scrollbar-track {
@@ -33,8 +33,9 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${colors.border.hover};
-    border-radius: 4px;
+    background: ${colors.accent.olive};
+    border-radius: 0;
+    border: 2px solid ${colors.background.secondary};
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -51,7 +52,7 @@ export const GlobalStyles = createGlobalStyle`
   a {
     color: inherit;
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: color 0.3s ease;
   }
 
   /* Images */
@@ -74,11 +75,22 @@ export const GlobalStyles = createGlobalStyle`
     background: none;
   }
 
-  /* Headings */
+  /* Headings - Style luxe avec Cormorant Garamond */
   h1, h2, h3, h4, h5, h6 {
     font-family: ${typography.fontFamily.display};
-    font-weight: ${typography.fontWeight.bold};
+    font-weight: ${typography.fontWeight.light};
     line-height: ${typography.lineHeight.tight};
+    letter-spacing: ${typography.letterSpacing.tight};
+  }
+
+  h1 {
+    font-weight: ${typography.fontWeight.light};
+  }
+
+  /* Paragraphs */
+  p {
+    font-family: ${typography.fontFamily.body};
+    line-height: ${typography.lineHeight.relaxed};
   }
 
   /* Smooth scroll for the whole document when using Lenis */
@@ -100,6 +112,36 @@ export const GlobalStyles = createGlobalStyle`
 
   .lenis.lenis-scrolling iframe {
     pointer-events: none;
+  }
+
+  /* Animation utilities */
+  .reveal-text {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .reveal-text.revealed {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* Line decoration */
+  .gold-line {
+    width: 60px;
+    height: 1px;
+    background: ${colors.accent.primary};
+  }
+
+  /* Section spacing utilities */
+  .section-padding {
+    padding: 120px 0;
+  }
+
+  @media (max-width: 768px) {
+    .section-padding {
+      padding: 80px 0;
+    }
   }
 `;
 
