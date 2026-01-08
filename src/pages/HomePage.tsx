@@ -30,7 +30,7 @@ const Hero = styled.section`
   text-align: center;
   position: relative;
   padding: ${spacing[8]};
-  background: ${colors.gradient.sunset};
+  background: ${colors.gradient.warm};
   overflow: hidden;
 
   &::before {
@@ -354,7 +354,7 @@ const SpiritDesc = styled.p`
 const CTASection = styled.section`
   padding: 160px ${spacing[8]};
   text-align: center;
-  background: ${colors.gradient.terracotta};
+  background: ${colors.gradient.warm};
   position: relative;
   overflow: hidden;
 

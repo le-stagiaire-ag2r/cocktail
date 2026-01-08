@@ -93,7 +93,7 @@ const ContentColumn = styled.div`
   flex-direction: column;
   justify-content: center;
   padding: 140px ${spacing[12]} ${spacing[16]};
-  background: ${colors.gradient.burgundy};
+  background: ${colors.gradient.warm};
   position: relative;
   overflow: hidden;
   animation: ${slideInLeft} 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -376,7 +376,7 @@ const LoadingContainer = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: ${colors.gradient.burgundy};
+  background: ${colors.gradient.warm};
   color: ${colors.text.light};
 `;
 
@@ -403,7 +403,7 @@ const NotFound = styled.div`
   min-height: 100vh;
   text-align: center;
   padding: ${spacing[8]};
-  background: ${colors.gradient.burgundy};
+  background: ${colors.gradient.warm};
 
   h2 {
     font-family: ${typography.fontFamily.display};

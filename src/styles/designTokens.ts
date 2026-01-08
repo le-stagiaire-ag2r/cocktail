@@ -2,13 +2,15 @@
 // Style luxe inspiré de Skyline Bar Venice - Couleurs chaudes et vivantes
 
 export const colors = {
-  // Backgrounds - Palette chaude sans noir
+  // Backgrounds - Palette chaude, transparente et chaleureuse (pas de blanc)
   background: {
     primary: '#f7f5eb',
     secondary: '#efe9db',
     tertiary: '#e8e2d2',
-    card: '#ffffff',
-    cardHover: '#faf8f2',
+    card: 'rgba(255, 255, 255, 0.08)',  // Transparent au lieu de blanc
+    cardHover: 'rgba(255, 255, 255, 0.12)',
+    cardWarm: 'rgba(240, 126, 78, 0.12)',  // Cartes chaudes
+    cardDark: 'rgba(112, 42, 64, 0.2)',    // Cartes bordeaux
     warm: '#d4c4b0',
     dark: '#5A3D47',  // Burgundy foncé chaleureux pour le footer
   },
@@ -31,18 +33,25 @@ export const colors = {
     rose: '#B87D8B',
   },
 
-  // Gradients - Dégradés élégants
+  // Gradients - Dégradés verticaux (0deg) comme Skyline Venice
   gradient: {
-    burgundy: 'linear-gradient(135deg, #8B4557 0%, #6B3A4A 100%)',
-    burgundyReverse: 'linear-gradient(135deg, #6B3A4A 0%, #8B4557 100%)',
-    terracotta: 'linear-gradient(135deg, #C4704D 0%, #A65D6F 100%)',
-    warm: 'linear-gradient(135deg, #C4704D 0%, #8B4557 50%, #6B4A5E 100%)',
-    sunset: 'linear-gradient(135deg, #E8A88C 0%, #C4704D 50%, #8B4557 100%)',
-    olive: 'linear-gradient(135deg, #7D8B6A 0%, #6B7A58 100%)',
-    cream: 'linear-gradient(180deg, #f7f5eb 0%, #efe9db 100%)',
-    warmOverlay: 'linear-gradient(to right, rgba(107, 58, 74, 0.95) 0%, rgba(107, 58, 74, 0.7) 50%, transparent 100%)',
-    cardOverlay: 'linear-gradient(to top, rgba(107, 58, 74, 0.9) 0%, rgba(139, 69, 87, 0.4) 50%, transparent 100%)',
-    pageTransition: 'linear-gradient(90deg, #8B4557 0%, #C4704D 50%, #7D8B6A 100%)',
+    // Style Skyline Venice - bordeaux en bas, corail en haut
+    burgundy: 'linear-gradient(0deg, rgb(112, 42, 64) 19%, rgb(139, 69, 87) 92%)',
+    burgundyReverse: 'linear-gradient(0deg, rgb(139, 69, 87) 19%, rgb(112, 42, 64) 92%)',
+    terracotta: 'linear-gradient(0deg, rgb(139, 69, 87) 0%, rgb(196, 112, 77) 100%)',
+    // Dégradé principal page - exactement comme Skyline Venice
+    warm: 'linear-gradient(0deg, rgb(112, 42, 64) 19%, rgb(240, 126, 78) 92%)',
+    sunset: 'linear-gradient(0deg, rgb(107, 74, 94) 0%, rgb(196, 112, 77) 50%, rgb(232, 168, 140) 100%)',
+    olive: 'linear-gradient(0deg, #6B7A58 0%, #7D8B6A 100%)',
+    cream: 'linear-gradient(0deg, #efe9db 0%, #f7f5eb 100%)',
+    // Overlays
+    warmOverlay: 'linear-gradient(to right, rgba(112, 42, 64, 0.95) 0%, rgba(112, 42, 64, 0.7) 50%, transparent 100%)',
+    cardOverlay: 'linear-gradient(0deg, rgba(112, 42, 64, 0.9) 0%, rgba(196, 112, 77, 0.4) 50%, transparent 100%)',
+    pageTransition: 'linear-gradient(0deg, #702a40 0%, #C4704D 50%, #f07e4e 100%)',
+    // Nouveau: dégradé complet style Skyline Venice
+    skylineVenice: 'linear-gradient(0deg, rgb(112, 42, 64) 19%, rgb(240, 126, 78) 92%)',
+    // Dégradé pour les sections sur fond coloré
+    sectionWarm: 'linear-gradient(0deg, rgba(112, 42, 64, 0.3) 0%, rgba(240, 126, 78, 0.1) 100%)',
   },
 
   // Text
