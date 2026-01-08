@@ -4,14 +4,15 @@ import styled from 'styled-components';
 import { gsap } from 'gsap';
 import { colors, typography, spacing } from '../styles/designTokens';
 import {
-  searchCocktails,
-  getPopularCocktails,
-  getCocktailsByIngredient,
-  getCocktailsByLetter,
-  getRandomCocktail,
-  Cocktail
-} from '../services/cocktailAPI';
-import { translateIngredient, translateCategory, translateGlass } from '../utils/translations';
+  bostonCocktails,
+  searchBostonCocktails,
+  getBostonByLetter,
+  getBostonByCategory,
+  getRandomBostonCocktail,
+  bostonCategories,
+  BostonCocktail
+} from '../data/bostonCocktails';
+import { translateIngredient } from '../utils/translations';
 
 const PageHeader = styled.section`
   padding: 180px ${spacing[8]} ${spacing[16]};
@@ -42,6 +43,31 @@ const PageDesc = styled.p`
   color: ${colors.text.secondary};
   max-width: 600px;
   margin: 0 auto;
+`;
+
+const StatsRow = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: ${spacing[8]};
+  margin-top: ${spacing[6]};
+`;
+
+const StatItem = styled.div`
+  text-align: center;
+
+  .number {
+    font-family: ${typography.fontFamily.display};
+    font-size: ${typography.fontSize['3xl']};
+    font-weight: ${typography.fontWeight.bold};
+    color: ${colors.accent.primary};
+  }
+
+  .label {
+    font-size: ${typography.fontSize.xs};
+    color: ${colors.text.tertiary};
+    text-transform: uppercase;
+    letter-spacing: ${typography.letterSpacing.wide};
+  }
 `;
 
 const SearchSection = styled.div`
@@ -118,10 +144,14 @@ const SuggestionItem = styled.button`
     background: ${colors.background.secondary};
   }
 
-  img {
+  .icon {
     width: 40px;
     height: 40px;
-    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: ${colors.accent.subtle};
     border-radius: 4px;
   }
 
@@ -168,11 +198,6 @@ const RandomButton = styled.button`
     background: ${colors.accent.primary};
     color: ${colors.background.primary};
   }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
 `;
 
 const FiltersContainer = styled.div`
@@ -180,7 +205,7 @@ const FiltersContainer = styled.div`
   justify-content: center;
   gap: ${spacing[2]};
   flex-wrap: wrap;
-  max-width: 800px;
+  max-width: 1000px;
   margin: ${spacing[6]} auto 0;
 `;
 
@@ -267,26 +292,6 @@ const ResultsTitle = styled.h2`
   color: ${colors.text.primary};
 `;
 
-const LoadingContainer = styled.div`
-  text-align: center;
-  padding: ${spacing[16]};
-  color: ${colors.text.tertiary};
-`;
-
-const Spinner = styled.div`
-  width: 40px;
-  height: 40px;
-  margin: 0 auto ${spacing[4]};
-  border: 3px solid ${colors.border.default};
-  border-top-color: ${colors.accent.primary};
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-`;
-
 const CocktailsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -307,11 +312,11 @@ const CocktailCard = styled.div`
   }
 `;
 
-const CardImage = styled.div<{ $src: string }>`
+const CardImageContainer = styled.div`
   aspect-ratio: 4/3;
-  background: url(${props => props.$src}) center center / cover no-repeat;
-  background-color: ${colors.background.secondary};
   position: relative;
+  background: ${colors.background.secondary};
+  overflow: hidden;
 
   &::after {
     content: '';
@@ -321,6 +326,34 @@ const CardImage = styled.div<{ $src: string }>`
     right: 0;
     height: 50%;
     background: linear-gradient(to top, ${colors.background.card}, transparent);
+  }
+`;
+
+const CardImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const CardPlaceholder = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, ${colors.background.secondary} 0%, ${colors.background.card} 100%);
+
+  .icon {
+    font-size: 4rem;
+    margin-bottom: ${spacing[2]};
+  }
+
+  .text {
+    font-size: ${typography.fontSize.xs};
+    color: ${colors.text.tertiary};
+    text-transform: uppercase;
+    letter-spacing: ${typography.letterSpacing.wide};
   }
 `;
 
@@ -382,26 +415,99 @@ const NoResults = styled.div`
   }
 `;
 
-const spiritFilters = [
-  { id: 'all', label: 'Populaires', ingredient: '' },
-  { id: 'vodka', label: 'Vodka', ingredient: 'Vodka' },
-  { id: 'gin', label: 'Gin', ingredient: 'Gin' },
-  { id: 'rum', label: 'Rhum', ingredient: 'Rum' },
-  { id: 'whiskey', label: 'Whisky', ingredient: 'Whiskey' },
-  { id: 'tequila', label: 'Tequila', ingredient: 'Tequila' },
-  { id: 'bourbon', label: 'Bourbon', ingredient: 'Bourbon' },
-];
+// Icônes par catégorie
+const categoryIcons: Record<string, string> = {
+  'Cocktail Classics': '🍸',
+  'Whiskies': '🥃',
+  'Vodka': '🍹',
+  'Brandy': '🍷',
+  'Cordials and Liqueurs': '🍾',
+  'Rum': '🌴',
+  'Gin': '🫒',
+  'Tequila': '🌵',
+};
+
+// Traduction des catégories
+const translateBostonCategory = (category: string): string => {
+  const translations: Record<string, string> = {
+    'Cocktail Classics': 'Classiques',
+    'Whiskies': 'Whiskies',
+    'Vodka': 'Vodka',
+    'Brandy': 'Brandy & Cognac',
+    'Cordials and Liqueurs': 'Liqueurs',
+    'Rum - Daiquiris': 'Daiquiris',
+    'Tequila': 'Tequila',
+  };
+  return translations[category] || category;
+};
+
+// Composant pour image avec fallback
+const CocktailImage: React.FC<{ cocktail: BostonCocktail }> = ({ cocktail }) => {
+  const [imageError, setImageError] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Essayer de trouver l'image via TheCocktailDB
+    const fetchImage = async () => {
+      try {
+        const response = await fetch(
+          `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${encodeURIComponent(cocktail.name)}`
+        );
+        const data = await response.json();
+        if (data.drinks && data.drinks[0] && data.drinks[0].strDrinkThumb) {
+          setImageUrl(data.drinks[0].strDrinkThumb + '/preview');
+        } else {
+          setImageError(true);
+        }
+      } catch {
+        setImageError(true);
+      }
+      setLoading(false);
+    };
+
+    fetchImage();
+  }, [cocktail.name]);
+
+  if (loading) {
+    return (
+      <CardPlaceholder>
+        <div className="icon">{categoryIcons[cocktail.category] || '🍸'}</div>
+        <div className="text">Chargement...</div>
+      </CardPlaceholder>
+    );
+  }
+
+  if (imageError || !imageUrl) {
+    return (
+      <CardPlaceholder>
+        <div className="icon">{categoryIcons[cocktail.category] || '🍸'}</div>
+        <div className="text">{cocktail.category}</div>
+      </CardPlaceholder>
+    );
+  }
+
+  return <CardImage src={imageUrl} alt={cocktail.name} onError={() => setImageError(true)} />;
+};
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+// Filtres de catégories
+const categoryFilters = [
+  { id: 'all', label: 'Tous', category: '' },
+  { id: 'classics', label: 'Classiques', category: 'Cocktail Classics' },
+  { id: 'whiskies', label: 'Whiskies', category: 'Whiskies' },
+  { id: 'vodka', label: 'Vodka', category: 'Vodka' },
+  { id: 'brandy', label: 'Brandy', category: 'Brandy' },
+  { id: 'liqueurs', label: 'Liqueurs', category: 'Cordials and Liqueurs' },
+];
 
 export const RecettesPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [cocktails, setCocktails] = useState<Cocktail[]>([]);
-  const [suggestions, setSuggestions] = useState<Cocktail[]>([]);
+  const [cocktails, setCocktails] = useState<BostonCocktail[]>([]);
+  const [suggestions, setSuggestions] = useState<BostonCocktail[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [loadingRandom, setLoadingRandom] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeLetter, setActiveLetter] = useState('');
@@ -409,61 +515,43 @@ export const RecettesPage: React.FC = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  // Charger les cocktails (par ingrédient, recherche, lettre ou populaires)
+  // Initialiser avec tous les cocktails ou recherche
   useEffect(() => {
-    const loadCocktails = async () => {
-      setLoading(true);
-      const ingredientParam = searchParams.get('ingredient');
-      const searchParam = searchParams.get('search');
-      const letterParam = searchParams.get('letter');
+    const searchParam = searchParams.get('search');
+    const letterParam = searchParams.get('letter');
 
-      if (searchParam) {
-        const results = await searchCocktails(searchParam);
-        setCocktails(results);
-        setSearchQuery(searchParam);
-        setActiveFilter('all');
-        setActiveLetter('');
-        setCurrentView('search');
-      } else if (letterParam) {
-        const results = await getCocktailsByLetter(letterParam);
-        setCocktails(results);
-        setActiveLetter(letterParam.toUpperCase());
-        setActiveFilter('all');
-        setSearchQuery('');
-        setCurrentView('letter');
-      } else if (ingredientParam) {
-        const results = await getCocktailsByIngredient(ingredientParam);
-        setCocktails(results);
-        setSearchQuery('');
-        setActiveFilter('all');
-        setActiveLetter('');
-        setCurrentView('filter');
-      } else {
-        const popular = await getPopularCocktails();
-        setCocktails(popular);
-        setCurrentView('filter');
-      }
-      setLoading(false);
-    };
-    loadCocktails();
+    if (searchParam) {
+      const results = searchBostonCocktails(searchParam);
+      setCocktails(results);
+      setSearchQuery(searchParam);
+      setActiveFilter('all');
+      setActiveLetter('');
+      setCurrentView('search');
+    } else if (letterParam) {
+      const results = getBostonByLetter(letterParam);
+      setCocktails(results);
+      setActiveLetter(letterParam.toUpperCase());
+      setActiveFilter('all');
+      setSearchQuery('');
+      setCurrentView('letter');
+    } else {
+      // Afficher tous les cocktails par défaut
+      setCocktails(bostonCocktails.slice(0, 50));
+      setCurrentView('filter');
+    }
   }, [searchParams]);
 
-  // Autocomplétion lors de la frappe
+  // Autocomplétion lors de la frappe (recherche locale instantanée)
   useEffect(() => {
-    const fetchSuggestions = async () => {
-      if (searchQuery.length < 2) {
-        setSuggestions([]);
-        setShowSuggestions(false);
-        return;
-      }
+    if (searchQuery.length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
 
-      const results = await searchCocktails(searchQuery);
-      setSuggestions(results.slice(0, 6));
-      setShowSuggestions(results.length > 0);
-    };
-
-    const debounce = setTimeout(fetchSuggestions, 300);
-    return () => clearTimeout(debounce);
+    const results = searchBostonCocktails(searchQuery);
+    setSuggestions(results.slice(0, 6));
+    setShowSuggestions(results.length > 0);
   }, [searchQuery]);
 
   // Fermer les suggestions en cliquant ailleurs
@@ -486,8 +574,8 @@ export const RecettesPage: React.FC = () => {
         {
           opacity: 1,
           y: 0,
-          stagger: 0.05,
-          duration: 0.5,
+          stagger: 0.03,
+          duration: 0.4,
           ease: 'power3.out',
         }
       );
@@ -495,71 +583,58 @@ export const RecettesPage: React.FC = () => {
   }, [cocktails]);
 
   // Recherche de cocktails
-  const handleSearch = async () => {
+  const handleSearch = () => {
     setShowSuggestions(false);
     if (!searchQuery.trim()) {
-      const popular = await getPopularCocktails();
-      setCocktails(popular);
+      setCocktails(bostonCocktails.slice(0, 50));
       setCurrentView('filter');
+      setActiveFilter('all');
       return;
     }
 
-    setLoading(true);
     setActiveFilter('all');
     setActiveLetter('');
     setCurrentView('search');
-    const results = await searchCocktails(searchQuery);
+    const results = searchBostonCocktails(searchQuery);
     setCocktails(results);
-    setLoading(false);
   };
 
   // Sélectionner une suggestion
-  const handleSelectSuggestion = (cocktail: Cocktail) => {
+  const handleSelectSuggestion = (cocktail: BostonCocktail) => {
     setShowSuggestions(false);
-    navigate(`/cocktail/${cocktail.id}`);
+    navigate(`/cocktail/boston/${cocktail.id}`);
   };
 
-  // Filtrer par spiritueux
-  const handleFilterChange = async (filterId: string, ingredient: string) => {
+  // Filtrer par catégorie
+  const handleFilterChange = (filterId: string, category: string) => {
     setActiveFilter(filterId);
     setActiveLetter('');
     setSearchQuery('');
     setCurrentView('filter');
-    setLoading(true);
 
     if (filterId === 'all') {
-      const popular = await getPopularCocktails();
-      setCocktails(popular);
+      setCocktails(bostonCocktails.slice(0, 50));
     } else {
-      const results = await getCocktailsByIngredient(ingredient);
+      const results = getBostonByCategory(category);
       setCocktails(results);
     }
-
-    setLoading(false);
   };
 
   // Navigation par lettre
-  const handleLetterClick = async (letter: string) => {
+  const handleLetterClick = (letter: string) => {
     setActiveLetter(letter);
     setActiveFilter('all');
     setSearchQuery('');
     setCurrentView('letter');
-    setLoading(true);
 
-    const results = await getCocktailsByLetter(letter);
+    const results = getBostonByLetter(letter);
     setCocktails(results);
-    setLoading(false);
   };
 
   // Cocktail aléatoire
-  const handleRandomCocktail = async () => {
-    setLoadingRandom(true);
-    const random = await getRandomCocktail();
-    setLoadingRandom(false);
-
-    if (random) {
-      navigate(`/cocktail/${random.id}`);
-    }
+  const handleRandomCocktail = () => {
+    const random = getRandomBostonCocktail();
+    navigate(`/cocktail/boston/${random.id}`);
   };
 
   // Titre dynamique selon le contexte
@@ -571,21 +646,31 @@ export const RecettesPage: React.FC = () => {
       return `Résultats pour "${searchQuery}"`;
     }
     if (activeFilter !== 'all') {
-      const filter = spiritFilters.find(f => f.id === activeFilter);
-      return `Cocktails à base de ${filter?.label}`;
+      const filter = categoryFilters.find(f => f.id === activeFilter);
+      return `${filter?.label}`;
     }
-    return 'Cocktails populaires';
+    return 'Collection Mr. Boston';
   };
 
   return (
     <>
       <PageHeader>
-        <PageLabel>Collection</PageLabel>
+        <PageLabel>Collection Mr. Boston</PageLabel>
         <PageTitle>Nos Recettes</PageTitle>
         <PageDesc>
-          Explorez des centaines de recettes de cocktails du monde entier.
-          Classiques intemporels et créations modernes.
+          Explorez près de 1000 recettes de cocktails classiques.
+          La référence depuis 1935.
         </PageDesc>
+        <StatsRow>
+          <StatItem>
+            <div className="number">{bostonCocktails.length}</div>
+            <div className="label">Cocktails</div>
+          </StatItem>
+          <StatItem>
+            <div className="number">{bostonCategories.length}</div>
+            <div className="label">Catégories</div>
+          </StatItem>
+        </StatsRow>
       </PageHeader>
 
       <SearchSection>
@@ -593,7 +678,7 @@ export const RecettesPage: React.FC = () => {
           <SearchInputWrapper>
             <SearchInput
               type="text"
-              placeholder="Rechercher un cocktail..."
+              placeholder="Rechercher un cocktail ou ingrédient..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -608,26 +693,26 @@ export const RecettesPage: React.FC = () => {
                 key={cocktail.id}
                 onClick={() => handleSelectSuggestion(cocktail)}
               >
-                <img src={cocktail.image + '/preview'} alt={cocktail.name} />
+                <div className="icon">{categoryIcons[cocktail.category] || '🍸'}</div>
                 <div>
                   <div className="name">{cocktail.name}</div>
-                  <div className="category">{translateCategory(cocktail.category)}</div>
+                  <div className="category">{translateBostonCategory(cocktail.category)}</div>
                 </div>
               </SuggestionItem>
             ))}
           </SuggestionsDropdown>
         </SearchContainer>
 
-        <RandomButton onClick={handleRandomCocktail} disabled={loadingRandom}>
-          {loadingRandom ? 'Chargement...' : '🎲 Cocktail aléatoire'}
+        <RandomButton onClick={handleRandomCocktail}>
+          🎲 Cocktail aléatoire
         </RandomButton>
 
         <FiltersContainer>
-          {spiritFilters.map(filter => (
+          {categoryFilters.map(filter => (
             <FilterButton
               key={filter.id}
               $active={activeFilter === filter.id && currentView === 'filter'}
-              onClick={() => handleFilterChange(filter.id, filter.ingredient)}
+              onClick={() => handleFilterChange(filter.id, filter.category)}
             >
               {filter.label}
             </FilterButton>
@@ -649,12 +734,7 @@ export const RecettesPage: React.FC = () => {
       </SearchSection>
 
       <ContentSection>
-        {loading ? (
-          <LoadingContainer>
-            <Spinner />
-            <p>Chargement des cocktails...</p>
-          </LoadingContainer>
-        ) : cocktails.length === 0 ? (
+        {cocktails.length === 0 ? (
           <NoResults>
             <h3>Aucun résultat</h3>
             <p>Essayez une autre recherche, un autre filtre ou une autre lettre.</p>
@@ -671,11 +751,13 @@ export const RecettesPage: React.FC = () => {
                 <CocktailCard
                   key={cocktail.id}
                   className="cocktail-card"
-                  onClick={() => navigate(`/cocktail/${cocktail.id}`)}
+                  onClick={() => navigate(`/cocktail/boston/${cocktail.id}`)}
                 >
-                  <CardImage $src={cocktail.image + '/preview'} />
+                  <CardImageContainer>
+                    <CocktailImage cocktail={cocktail} />
+                  </CardImageContainer>
                   <CardContent>
-                    <CardCategory>{translateCategory(cocktail.category)}</CardCategory>
+                    <CardCategory>{translateBostonCategory(cocktail.category)}</CardCategory>
                     <CardTitle>{cocktail.name}</CardTitle>
 
                     <CardIngredients>
@@ -688,8 +770,8 @@ export const RecettesPage: React.FC = () => {
                     </CardIngredients>
 
                     <CardMeta>
-                      <span>{translateGlass(cocktail.glass)}</span>
-                      <span>{cocktail.isAlcoholic ? 'Alcoolisé' : 'Sans alcool'}</span>
+                      <span>{cocktail.ingredients.length} ingrédients</span>
+                      <span>Mr. Boston</span>
                     </CardMeta>
                   </CardContent>
                 </CocktailCard>

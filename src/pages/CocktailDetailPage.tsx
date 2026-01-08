@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { gsap } from 'gsap';
 import { colors, typography, spacing } from '../styles/designTokens';
 import { getCocktailById, Cocktail } from '../services/cocktailAPI';
+import { bostonCocktails, BostonCocktail } from '../data/bostonCocktails';
 import { translateIngredient, translateCategory, translateGlass } from '../utils/translations';
 
 const PageContainer = styled.div`
@@ -71,6 +72,29 @@ const CocktailImage = styled.img`
   }
 `;
 
+const ImagePlaceholder = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, ${colors.background.secondary} 0%, ${colors.background.card} 100%);
+  transition: background 0.6s ease;
+
+  .icon {
+    font-size: 8rem;
+    margin-bottom: ${spacing[4]};
+  }
+
+  .category {
+    font-size: ${typography.fontSize.sm};
+    color: ${colors.text.tertiary};
+    text-transform: uppercase;
+    letter-spacing: ${typography.letterSpacing.wide};
+  }
+`;
+
 const ImageOverlay = styled.div`
   position: absolute;
   bottom: 0;
@@ -117,6 +141,19 @@ const CocktailName = styled.h1`
   color: ${colors.text.primary};
   margin-bottom: ${spacing[4]};
   line-height: 1.1;
+`;
+
+const SourceBadge = styled.span`
+  display: inline-block;
+  padding: ${spacing[1]} ${spacing[3]};
+  font-size: ${typography.fontSize.xs};
+  font-weight: ${typography.fontWeight.medium};
+  text-transform: uppercase;
+  letter-spacing: ${typography.letterSpacing.wide};
+  background: ${colors.accent.subtle};
+  color: ${colors.accent.primary};
+  border: 1px solid ${colors.accent.muted};
+  margin-bottom: ${spacing[6]};
 `;
 
 const Meta = styled.div`
@@ -194,6 +231,24 @@ const Instructions = styled.div`
   }
 `;
 
+const NoInstructions = styled.div`
+  padding: ${spacing[6]};
+  background: ${colors.background.secondary};
+  border: 1px solid ${colors.border.default};
+  text-align: center;
+
+  p {
+    color: ${colors.text.tertiary};
+    font-style: italic;
+  }
+
+  .tip {
+    margin-top: ${spacing[4]};
+    font-size: ${typography.fontSize.sm};
+    color: ${colors.text.secondary};
+  }
+`;
+
 const LoadingContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -234,26 +289,129 @@ const NotFound = styled.div`
   }
 `;
 
+// Icônes par catégorie
+const categoryIcons: Record<string, string> = {
+  'Cocktail Classics': '🍸',
+  'Whiskies': '🥃',
+  'Vodka': '🍹',
+  'Brandy': '🍷',
+  'Cordials and Liqueurs': '🍾',
+  'Rum': '🌴',
+  'Gin': '🫒',
+  'Tequila': '🌵',
+  'Ordinary Drink': '🍸',
+  'Cocktail': '🍸',
+};
+
+// Traduction des catégories Boston
+const translateBostonCategory = (category: string): string => {
+  const translations: Record<string, string> = {
+    'Cocktail Classics': 'Classique',
+    'Whiskies': 'Whisky',
+    'Vodka': 'Vodka',
+    'Brandy': 'Brandy & Cognac',
+    'Cordials and Liqueurs': 'Liqueur',
+    'Rum - Daiquiris': 'Daiquiri',
+    'Tequila': 'Tequila',
+  };
+  return translations[category] || category;
+};
+
+// Composant pour image de cocktail avec fallback
+const CocktailImageWithFallback: React.FC<{
+  name: string;
+  category: string;
+  apiImage?: string;
+}> = ({ name, category, apiImage }) => {
+  const [imageUrl, setImageUrl] = useState<string | null>(apiImage || null);
+  const [loading, setLoading] = useState(!apiImage);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (apiImage) {
+      setImageUrl(apiImage);
+      setLoading(false);
+      return;
+    }
+
+    // Essayer de trouver l'image via TheCocktailDB
+    const fetchImage = async () => {
+      try {
+        const response = await fetch(
+          `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${encodeURIComponent(name)}`
+        );
+        const data = await response.json();
+        if (data.drinks && data.drinks[0] && data.drinks[0].strDrinkThumb) {
+          setImageUrl(data.drinks[0].strDrinkThumb);
+        } else {
+          setError(true);
+        }
+      } catch {
+        setError(true);
+      }
+      setLoading(false);
+    };
+
+    fetchImage();
+  }, [name, apiImage]);
+
+  if (loading) {
+    return (
+      <ImagePlaceholder>
+        <div className="icon">{categoryIcons[category] || '🍸'}</div>
+        <div className="category">Chargement...</div>
+      </ImagePlaceholder>
+    );
+  }
+
+  if (error || !imageUrl) {
+    return (
+      <ImagePlaceholder>
+        <div className="icon">{categoryIcons[category] || '🍸'}</div>
+        <div className="category">{category}</div>
+      </ImagePlaceholder>
+    );
+  }
+
+  return <CocktailImage src={imageUrl} alt={name} onError={() => setError(true)} />;
+};
+
 export const CocktailDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
   const navigate = useNavigate();
   const [cocktail, setCocktail] = useState<Cocktail | null>(null);
+  const [bostonCocktail, setBostonCocktail] = useState<BostonCocktail | null>(null);
   const [loading, setLoading] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // Déterminer si c'est un cocktail Boston
+  const isBoston = location.pathname.includes('/boston/') || (id && id.startsWith('mb_'));
 
   useEffect(() => {
     const loadCocktail = async () => {
       if (!id) return;
       setLoading(true);
-      const data = await getCocktailById(id);
-      setCocktail(data);
+
+      if (isBoston) {
+        // Chercher dans les données Boston
+        const found = bostonCocktails.find(c => c.id === id);
+        setBostonCocktail(found || null);
+        setCocktail(null);
+      } else {
+        // Chercher via l'API
+        const data = await getCocktailById(id);
+        setCocktail(data);
+        setBostonCocktail(null);
+      }
+
       setLoading(false);
     };
     loadCocktail();
-  }, [id]);
+  }, [id, isBoston]);
 
   useEffect(() => {
-    if (contentRef.current && cocktail) {
+    if (contentRef.current && (cocktail || bostonCocktail)) {
       gsap.fromTo(
         contentRef.current.children,
         { opacity: 0, y: 30 },
@@ -266,7 +424,7 @@ export const CocktailDetailPage: React.FC = () => {
         }
       );
     }
-  }, [cocktail]);
+  }, [cocktail, bostonCocktail]);
 
   if (loading) {
     return (
@@ -279,6 +437,67 @@ export const CocktailDetailPage: React.FC = () => {
     );
   }
 
+  // Affichage pour cocktail Boston
+  if (bostonCocktail) {
+    return (
+      <PageContainer>
+        <BackButton onClick={() => navigate('/recettes')}>
+          ← Retour aux recettes
+        </BackButton>
+
+        <HeroSection ref={contentRef}>
+          <ImageContainer>
+            <CocktailImageWithFallback
+              name={bostonCocktail.name}
+              category={bostonCocktail.category}
+            />
+          </ImageContainer>
+
+          <ContentContainer>
+            <Category>{translateBostonCategory(bostonCocktail.category)}</Category>
+            <CocktailName>{bostonCocktail.name}</CocktailName>
+            <SourceBadge>Collection Mr. Boston</SourceBadge>
+
+            <Meta>
+              <MetaItem>
+                <span>Catégorie</span>
+                <strong>{translateBostonCategory(bostonCocktail.category)}</strong>
+              </MetaItem>
+              <MetaItem>
+                <span>Ingrédients</span>
+                <strong>{bostonCocktail.ingredients.length}</strong>
+              </MetaItem>
+              <MetaItem>
+                <span>Source</span>
+                <strong>Mr. Boston</strong>
+              </MetaItem>
+            </Meta>
+
+            <SectionTitle>Ingrédients</SectionTitle>
+            <IngredientsList>
+              {bostonCocktail.ingredients.map((ing, i) => (
+                <IngredientItem key={i}>
+                  <IngredientName>{translateIngredient(ing.ingredient)}</IngredientName>
+                  <IngredientMeasure>{ing.measure}</IngredientMeasure>
+                </IngredientItem>
+              ))}
+            </IngredientsList>
+
+            <SectionTitle>Préparation</SectionTitle>
+            <NoInstructions>
+              <p>Les instructions de préparation ne sont pas disponibles dans le dataset Mr. Boston.</p>
+              <p className="tip">
+                Conseil: Mélangez les ingrédients selon les proportions indiquées.
+                Pour les cocktails classiques, shakez avec de la glace et servez filtré.
+              </p>
+            </NoInstructions>
+          </ContentContainer>
+        </HeroSection>
+      </PageContainer>
+    );
+  }
+
+  // Affichage pour cocktail API (TheCocktailDB)
   if (!cocktail) {
     return (
       <PageContainer>
@@ -301,7 +520,11 @@ export const CocktailDetailPage: React.FC = () => {
 
       <HeroSection ref={contentRef}>
         <ImageContainer>
-          <CocktailImage src={cocktail.image} alt={cocktail.name} />
+          <CocktailImageWithFallback
+            name={cocktail.name}
+            category={cocktail.category}
+            apiImage={cocktail.image}
+          />
           {cocktail.tags.length > 0 && (
             <ImageOverlay>
               <Tags>
