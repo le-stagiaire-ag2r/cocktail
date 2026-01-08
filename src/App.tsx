@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { SmoothScroll } from './components/ui/SmoothScroll';
 import { FloatingBackground } from './components/ui/FloatingBackground';
 import { Navigation } from './components/Navigation';
+import { ScrollToTop } from './components/ScrollToTop';
 import { GlobalStyles } from './styles/GlobalStyles';
 import HomePage from './pages/HomePage';
 import RecettesPage from './pages/RecettesPage';
@@ -121,6 +122,7 @@ const FooterBottom = styled.div`
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <GlobalStyles />
       <SmoothScroll>
         <AppWrapper>
