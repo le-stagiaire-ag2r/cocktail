@@ -1,12 +1,18 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigationType } from 'react-router-dom';
 import { useLenis } from './ui/SmoothScroll';
 
 export const ScrollToTop: React.FC = () => {
   const { pathname, hash } = useLocation();
+  const navigationType = useNavigationType();
   const { lenis } = useLenis();
 
   useEffect(() => {
+    // Si retour vers la page Ingrédients, ne pas scroller (garder position)
+    if (navigationType === 'POP' && pathname === '/ingredients') {
+      return;
+    }
+
     // Petit délai pour laisser la page se charger
     const timer = setTimeout(() => {
       if (hash) {
@@ -31,7 +37,7 @@ export const ScrollToTop: React.FC = () => {
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [pathname, hash, lenis]);
+  }, [pathname, hash, lenis, navigationType]);
 
   return null;
 };
