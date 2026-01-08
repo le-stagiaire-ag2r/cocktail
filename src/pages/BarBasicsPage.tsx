@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { colors, typography, spacing } from '../styles/designTokens';
@@ -7,36 +7,78 @@ import { techniques, tools } from '../data/cocktails';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
 const PageHeader = styled.section`
-  padding: 180px ${spacing[8]} ${spacing[16]};
+  padding: 160px ${spacing[8]} 100px;
   text-align: center;
-  background: linear-gradient(to bottom, ${colors.background.secondary}, ${colors.background.primary});
+  background: linear-gradient(135deg, ${colors.palette.burgundyDark} 0%, ${colors.palette.plum} 100%);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    right: -80px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+    border-radius: 50%;
+  }
 `;
 
 const PageLabel = styled.span`
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: ${spacing[4]};
   font-size: ${typography.fontSize.xs};
-  font-weight: ${typography.fontWeight.semibold};
+  font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
-  letter-spacing: ${typography.letterSpacing.widest};
-  color: ${colors.accent.primary};
-  margin-bottom: ${spacing[4]};
+  letter-spacing: ${typography.letterSpacing.ultrawide};
+  color: ${colors.palette.coral};
+  margin-bottom: ${spacing[6]};
+  animation: ${fadeInUp} 0.6s ease forwards;
+
+  &::before, &::after {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: ${colors.palette.coral};
+  }
 `;
 
 const PageTitle = styled.h1`
   font-family: ${typography.fontFamily.display};
-  font-size: clamp(2.5rem, 6vw, 5rem);
-  font-weight: ${typography.fontWeight.bold};
-  color: ${colors.text.primary};
-  margin-bottom: ${spacing[4]};
+  font-size: ${typography.fontSize.heroSmall};
+  font-weight: ${typography.fontWeight.light};
+  color: ${colors.text.light};
+  margin-bottom: ${spacing[6]};
+  animation: ${fadeInUp} 0.6s ease forwards;
+  animation-delay: 0.1s;
+  opacity: 0;
 `;
 
 const PageDesc = styled.p`
-  font-size: ${typography.fontSize.lg};
-  color: ${colors.text.secondary};
+  font-family: ${typography.fontFamily.serif};
+  font-size: ${typography.fontSize.xl};
+  font-style: italic;
+  color: ${colors.text.lightSecondary};
   max-width: 700px;
   margin: 0 auto;
   line-height: ${typography.lineHeight.relaxed};
+  animation: ${fadeInUp} 0.6s ease forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
 `;
 
 const Section = styled.section<{ $alt?: boolean }>`
@@ -56,13 +98,15 @@ const SectionHeader = styled.div`
   h2 {
     font-family: ${typography.fontFamily.display};
     font-size: clamp(1.75rem, 4vw, 2.5rem);
-    font-weight: ${typography.fontWeight.bold};
-    color: ${colors.accent.primary};
+    font-weight: ${typography.fontWeight.light};
+    color: ${colors.palette.burgundy};
     margin-bottom: ${spacing[4]};
   }
 
   p {
+    font-family: ${typography.fontFamily.serif};
     font-size: ${typography.fontSize.lg};
+    font-style: italic;
     color: ${colors.text.secondary};
     max-width: 600px;
     margin: 0 auto;

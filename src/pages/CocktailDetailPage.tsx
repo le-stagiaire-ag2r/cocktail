@@ -55,42 +55,45 @@ const PageContainer = styled.div`
 `;
 
 const BackButton = styled.button`
-  position: fixed;
-  top: 100px;
-  left: ${spacing[8]};
+  position: absolute;
+  top: ${spacing[6]};
+  left: ${spacing[6]};
   display: inline-flex;
   align-items: center;
-  gap: ${spacing[2]};
-  padding: ${spacing[3]} ${spacing[5]};
-  font-family: ${typography.fontFamily.body};
-  font-size: ${typography.fontSize.xs};
-  font-weight: ${typography.fontWeight.medium};
-  text-transform: uppercase;
-  letter-spacing: ${typography.letterSpacing.wider};
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-size: ${typography.fontSize.lg};
   color: ${colors.text.light};
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
-  border: 1px solid ${colors.border.light};
+  border: none;
+  border-radius: 50%;
   z-index: 50;
-  transition: all 0.4s ease;
+  transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateX(-5px);
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
   }
 
   @media (max-width: 968px) {
     position: relative;
     top: 0;
     left: 0;
-    margin: ${spacing[6]} ${spacing[6]} 0;
+    margin: ${spacing[4]};
+    width: auto;
+    height: auto;
+    padding: ${spacing[2]} ${spacing[4]};
+    border-radius: 0;
     color: ${colors.text.primary};
     background: ${colors.background.card};
-    border-color: ${colors.border.default};
+    border: 1px solid ${colors.border.default};
 
     &:hover {
       color: ${colors.palette.burgundy};
       border-color: ${colors.palette.burgundy};
+      transform: none;
     }
   }
 `;
@@ -538,12 +541,11 @@ export const CocktailDetailPage: React.FC = () => {
 
   return (
     <PageContainer>
-      <BackButton onClick={() => navigate('/recettes')}>
-        ← Retour
-      </BackButton>
-
       <HeroSection>
         <ContentColumn>
+          <BackButton onClick={() => navigate('/recettes')}>
+            ←
+          </BackButton>
           <ContentInner ref={contentRef}>
             <Category>{translateCategory(cocktail.category)}</Category>
             <CocktailName>{cocktail.name}</CocktailName>

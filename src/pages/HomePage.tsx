@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { colors, typography, spacing } from '../styles/designTokens';
-import { cocktails, spirits } from '../data/cocktails';
+import { spirits } from '../data/cocktails';
+import { getPopularCocktails, Cocktail } from '../services/cocktailAPI';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,10 +20,6 @@ const slideUp = keyframes`
   }
 `;
 
-const fadeIn = keyframes`
-  from { opacity: 0; }
-  to { opacity: 1; }
-`;
 
 const Hero = styled.section`
   min-height: 100vh;
@@ -53,28 +50,6 @@ const HeroContent = styled.div`
   max-width: 1200px;
 `;
 
-const HeroLabel = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: ${spacing[4]};
-  font-family: ${typography.fontFamily.body};
-  font-size: ${typography.fontSize.xs};
-  font-weight: ${typography.fontWeight.medium};
-  text-transform: uppercase;
-  letter-spacing: ${typography.letterSpacing.ultrawide};
-  color: ${colors.palette.cream};
-  margin-bottom: ${spacing[8]};
-  animation: ${slideUp} 0.8s ease forwards;
-  animation-delay: 0.2s;
-  opacity: 0;
-
-  &::before, &::after {
-    content: '';
-    width: 40px;
-    height: 1px;
-    background: ${colors.palette.cream};
-  }
-`;
 
 const HeroTitle = styled.h1`
   font-family: ${typography.fontFamily.display};
@@ -155,42 +130,21 @@ const HeroButton = styled(Link)`
   }
 `;
 
-const ScrollIndicator = styled.div`
-  position: absolute;
-  bottom: ${spacing[12]};
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: ${spacing[3]};
-  animation: ${fadeIn} 1s ease forwards;
-  animation-delay: 1.2s;
-  opacity: 0;
-
-  span {
-    font-size: ${typography.fontSize.xs};
-    text-transform: uppercase;
-    letter-spacing: ${typography.letterSpacing.widest};
-    color: rgba(247, 245, 235, 0.6);
-    writing-mode: vertical-rl;
-  }
-
-  &::after {
-    content: '';
-    width: 1px;
-    height: 60px;
-    background: linear-gradient(to bottom, ${colors.palette.coral}, transparent);
-  }
-`;
 
 const Section = styled.section`
   padding: 140px ${spacing[8]};
   position: relative;
+  background: ${colors.background.primary};
 
   @media (max-width: 768px) {
     padding: 100px ${spacing[6]};
   }
+`;
+
+// Transition fluide entre sections
+const SectionTransition = styled.div<{ $from: string; $to: string }>`
+  height: 150px;
+  background: linear-gradient(180deg, ${props => props.$from} 0%, ${props => props.$to} 100%);
 `;
 
 const SectionHeader = styled.div`
@@ -250,7 +204,7 @@ const CocktailsGrid = styled.div`
   }
 `;
 
-const CocktailCard = styled(Link)`
+const CocktailCard = styled.div`
   position: relative;
   height: 500px;
   overflow: hidden;
@@ -258,6 +212,7 @@ const CocktailCard = styled(Link)`
   flex-direction: column;
   justify-content: flex-end;
   background: ${colors.palette.burgundy};
+  cursor: pointer;
 
   &::before {
     content: '';
@@ -512,13 +467,24 @@ const CTAButton = styled(Link)`
 `;
 
 export const HomePage: React.FC = () => {
+  const navigate = useNavigate();
   const heroRef = useRef<HTMLDivElement>(null);
   const cocktailsRef = useRef<HTMLDivElement>(null);
   const spiritsRef = useRef<HTMLDivElement>(null);
+  const [signatureCocktails, setSignatureCocktails] = useState<Cocktail[]>([]);
+
+  useEffect(() => {
+    // Charger les cocktails depuis l'API
+    const loadCocktails = async () => {
+      const popular = await getPopularCocktails();
+      setSignatureCocktails(popular.slice(0, 6));
+    };
+    loadCocktails();
+  }, []);
 
   useEffect(() => {
     // Cocktails section animations
-    if (cocktailsRef.current) {
+    if (cocktailsRef.current && signatureCocktails.length > 0) {
       gsap.fromTo(
         cocktailsRef.current.querySelectorAll('.cocktail-card'),
         { opacity: 0, y: 80, scale: 0.95 },
@@ -556,15 +522,12 @@ export const HomePage: React.FC = () => {
         }
       );
     }
-  }, []);
-
-  const signatureCocktails = cocktails.filter(c => c.isSignature || ['old-fashioned', 'negroni', 'manhattan', 'margarita', 'martini', 'mojito'].includes(c.id)).slice(0, 6);
+  }, [signatureCocktails]);
 
   return (
     <>
       <Hero ref={heroRef}>
         <HeroContent>
-          <HeroLabel className="hero-label">Bar à Cocktails</HeroLabel>
           <HeroTitle className="hero-title">
             <span className="line">
               <span className="word">Le Old</span>
@@ -584,10 +547,10 @@ export const HomePage: React.FC = () => {
             </svg>
           </HeroButton>
         </HeroContent>
-        <ScrollIndicator className="scroll-indicator">
-          <span>Scroll</span>
-        </ScrollIndicator>
       </Hero>
+
+      {/* Transition Hero vers Section cocktails */}
+      <SectionTransition $from={colors.palette.burgundy} $to={colors.background.primary} />
 
       <Section ref={cocktailsRef}>
         <SectionHeader>
@@ -602,16 +565,16 @@ export const HomePage: React.FC = () => {
           {signatureCocktails.map((cocktail) => (
             <CocktailCard
               key={cocktail.id}
-              to={`/recettes/${cocktail.id}`}
+              onClick={() => navigate(`/cocktail/${cocktail.id}`)}
               className="cocktail-card"
             >
               <img
-                src={`https://www.thecocktaildb.com/images/media/drink/${cocktail.id === 'old-fashioned' ? 'vrn24e1515598006' : cocktail.id === 'negroni' ? 'qgdu971561574065' : cocktail.id === 'manhattan' ? 'yk70e31606771240' : cocktail.id === 'margarita' ? '5noda61589575158' : cocktail.id === 'martini' ? '71t8111504346318' : 'metwgh1606770327'}.jpg`}
+                src={cocktail.image + '/preview'}
                 alt={cocktail.name}
                 loading="lazy"
               />
               <CocktailContent>
-                <CocktailSpirit>{cocktail.spirit}</CocktailSpirit>
+                <CocktailSpirit>{cocktail.category}</CocktailSpirit>
                 <CocktailName>{cocktail.name}</CocktailName>
               </CocktailContent>
             </CocktailCard>
@@ -627,6 +590,9 @@ export const HomePage: React.FC = () => {
           </ViewAllButton>
         </div>
       </Section>
+
+      {/* Transition Section cocktails vers Spiritueux */}
+      <SectionTransition $from={colors.background.primary} $to={colors.palette.olive} />
 
       <SpiritsSection ref={spiritsRef}>
         <SectionHeader>
@@ -651,6 +617,9 @@ export const HomePage: React.FC = () => {
           ))}
         </SpiritsGrid>
       </SpiritsSection>
+
+      {/* Transition Spiritueux vers CTA */}
+      <SectionTransition $from={colors.palette.olive} $to={colors.palette.terracotta} />
 
       <CTASection>
         <CTASectionLabel>Bienvenue</CTASectionLabel>
