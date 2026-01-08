@@ -1,40 +1,81 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { gsap } from 'gsap';
 import { colors, typography, spacing } from '../styles/designTokens';
 import { ingredients as allIngredients, Ingredient, ingredientCategories } from '../data/ingredients';
-import { translateIngredient } from '../utils/translations';
+
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 const PageHeader = styled.section`
-  padding: 180px ${spacing[8]} ${spacing[16]};
+  padding: 160px ${spacing[8]} 100px;
   text-align: center;
-  background: linear-gradient(to bottom, ${colors.background.secondary}, ${colors.background.primary});
+  background: ${colors.gradient.olive};
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+    border-radius: 50%;
+  }
 `;
 
 const PageLabel = styled.span`
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: ${spacing[4]};
   font-size: ${typography.fontSize.xs};
-  font-weight: ${typography.fontWeight.semibold};
+  font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
-  letter-spacing: ${typography.letterSpacing.widest};
-  color: ${colors.accent.primary};
-  margin-bottom: ${spacing[4]};
+  letter-spacing: ${typography.letterSpacing.ultrawide};
+  color: ${colors.palette.cream};
+  margin-bottom: ${spacing[6]};
+  animation: ${fadeInUp} 0.6s ease forwards;
+
+  &::before, &::after {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: ${colors.palette.cream};
+  }
 `;
 
 const PageTitle = styled.h1`
   font-family: ${typography.fontFamily.display};
-  font-size: clamp(2.5rem, 6vw, 5rem);
-  font-weight: ${typography.fontWeight.bold};
-  color: ${colors.text.primary};
-  margin-bottom: ${spacing[4]};
+  font-size: ${typography.fontSize.heroSmall};
+  font-weight: ${typography.fontWeight.light};
+  color: ${colors.text.light};
+  margin-bottom: ${spacing[6]};
+  animation: ${fadeInUp} 0.6s ease forwards;
+  animation-delay: 0.1s;
+  opacity: 0;
 `;
 
 const PageDesc = styled.p`
-  font-size: ${typography.fontSize.lg};
-  color: ${colors.text.secondary};
+  font-family: ${typography.fontFamily.serif};
+  font-size: ${typography.fontSize.xl};
+  font-style: italic;
+  color: ${colors.text.lightSecondary};
   max-width: 600px;
   margin: 0 auto;
+  animation: ${fadeInUp} 0.6s ease forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
 `;
 
 const SearchSection = styled.div`
@@ -81,14 +122,14 @@ const ViewButton = styled.button<{ $active: boolean }>`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.wide};
-  color: ${props => props.$active ? colors.accent.primary : colors.text.tertiary};
-  background: ${props => props.$active ? colors.accent.subtle : 'transparent'};
-  border: 1px solid ${props => props.$active ? colors.accent.primary : colors.border.default};
+  color: ${props => props.$active ? colors.text.light : colors.text.tertiary};
+  background: ${props => props.$active ? colors.palette.olive : 'transparent'};
+  border: 1px solid ${props => props.$active ? colors.palette.olive : colors.border.default};
   transition: all 0.3s ease;
 
   &:hover {
-    color: ${colors.accent.primary};
-    border-color: ${colors.accent.primary};
+    color: ${props => props.$active ? colors.text.light : colors.palette.olive};
+    border-color: ${colors.palette.olive};
   }
 `;
 
@@ -107,18 +148,20 @@ const LetterButton = styled.button<{ $active: boolean; $disabled: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: ${typography.fontFamily.display};
   font-size: ${typography.fontSize.sm};
   font-weight: ${typography.fontWeight.medium};
-  color: ${props => props.$disabled ? colors.text.tertiary : props.$active ? colors.accent.primary : colors.text.secondary};
-  background: ${props => props.$active ? colors.accent.subtle : 'transparent'};
-  border: 1px solid ${props => props.$active ? colors.accent.primary : 'transparent'};
+  color: ${props => props.$disabled ? colors.text.tertiary : props.$active ? colors.text.light : colors.text.secondary};
+  background: ${props => props.$active ? colors.palette.olive : 'transparent'};
+  border: none;
+  border-radius: 50%;
   opacity: ${props => props.$disabled ? 0.3 : 1};
   cursor: ${props => props.$disabled ? 'default' : 'pointer'};
   transition: all 0.2s ease;
 
   &:hover {
-    color: ${props => !props.$disabled && colors.accent.primary};
-    border-color: ${props => !props.$disabled && colors.accent.primary};
+    color: ${props => !props.$disabled && colors.text.light};
+    background: ${props => !props.$disabled && colors.palette.oliveLight};
   }
 `;
 
@@ -142,11 +185,11 @@ const CategorySection = styled.div`
 const CategoryTitle = styled.h2`
   font-family: ${typography.fontFamily.display};
   font-size: ${typography.fontSize['2xl']};
-  font-weight: ${typography.fontWeight.bold};
-  color: ${colors.accent.primary};
+  font-weight: ${typography.fontWeight.light};
+  color: ${colors.palette.olive};
   margin-bottom: ${spacing[6]};
   padding-bottom: ${spacing[4]};
-  border-bottom: 2px solid ${colors.border.default};
+  border-bottom: 1px solid ${colors.border.default};
   display: flex;
   align-items: center;
   gap: ${spacing[3]};
@@ -159,11 +202,11 @@ const LetterSection = styled.div`
 const LetterTitle = styled.h2`
   font-family: ${typography.fontFamily.display};
   font-size: ${typography.fontSize['4xl']};
-  font-weight: ${typography.fontWeight.bold};
-  color: ${colors.accent.primary};
+  font-weight: ${typography.fontWeight.light};
+  color: ${colors.palette.olive};
   margin-bottom: ${spacing[6]};
   padding-bottom: ${spacing[4]};
-  border-bottom: 2px solid ${colors.border.default};
+  border-bottom: 1px solid ${colors.border.default};
 `;
 
 const IngredientsGrid = styled.div`
@@ -183,7 +226,8 @@ const IngredientCard = styled.button`
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: ${colors.accent.primary};
+    border-color: ${colors.palette.olive};
+    background: rgba(125, 139, 106, 0.05);
     transform: translateX(5px);
   }
 `;
