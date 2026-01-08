@@ -5,6 +5,7 @@ import { gsap } from 'gsap';
 import { colors, typography, spacing } from '../styles/designTokens';
 import { getCocktailById, Cocktail } from '../services/cocktailAPI';
 import { translateIngredient, translateCategory, translateGlass } from '../utils/translations';
+import { useLenis } from '../components/ui/SmoothScroll';
 
 const PageContainer = styled.div`
   padding-top: 100px;
@@ -240,6 +241,16 @@ export const CocktailDetailPage: React.FC = () => {
   const [cocktail, setCocktail] = useState<Cocktail | null>(null);
   const [loading, setLoading] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
+  const { lenis } = useLenis();
+
+  // Scroll en haut quand on arrive sur la page
+  useEffect(() => {
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [id, lenis]);
 
   useEffect(() => {
     const loadCocktail = async () => {

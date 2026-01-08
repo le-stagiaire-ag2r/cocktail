@@ -8,8 +8,8 @@ export const ScrollToTop: React.FC = () => {
   const { lenis } = useLenis();
 
   useEffect(() => {
-    // Si retour vers la page Ingrédients, ne pas scroller (garder position)
-    if (navigationType === 'POP' && pathname === '/ingredients') {
+    // Si retour vers Ingrédients ou Recettes, ne pas scroller (garder position)
+    if (navigationType === 'POP' && (pathname === '/ingredients' || pathname === '/recettes')) {
       return;
     }
 
