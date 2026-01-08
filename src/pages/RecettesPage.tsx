@@ -51,7 +51,7 @@ const PageLabel = styled.span`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.ultrawide};
-  color: ${colors.palette.coral};
+  color: ${colors.palette.cream};
   margin-bottom: ${spacing[6]};
   animation: ${fadeInUp} 0.6s ease forwards;
 
@@ -59,7 +59,7 @@ const PageLabel = styled.span`
     content: '';
     width: 30px;
     height: 1px;
-    background: ${colors.palette.coral};
+    background: rgba(247, 245, 235, 0.5);
   }
 `;
 
@@ -88,8 +88,8 @@ const PageDesc = styled.p`
 
 const SearchSection = styled.div`
   padding: ${spacing[10]} ${spacing[8]};
-  background: ${colors.background.primary};
-  border-bottom: 1px solid ${colors.border.default};
+  background: transparent;
+  border-bottom: 1px solid rgba(247, 245, 235, 0.15);
 `;
 
 const SearchContainer = styled.div`
@@ -210,14 +210,14 @@ const RandomButton = styled.button`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.wider};
-  color: ${colors.palette.terracotta};
+  color: ${colors.palette.cream};
   background: transparent;
-  border: 1px solid ${colors.palette.terracotta};
+  border: 1px solid rgba(247, 245, 235, 0.4);
   transition: all 0.3s ease;
 
   &:hover {
-    background: ${colors.palette.terracotta};
-    color: ${colors.text.light};
+    background: rgba(247, 238, 192, 0.2);
+    border-color: rgba(247, 245, 235, 0.6);
   }
 
   &:disabled {
@@ -242,14 +242,15 @@ const FilterButton = styled.button<{ $active: boolean }>`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.wide};
-  color: ${props => props.$active ? colors.text.light : colors.text.secondary};
-  background: ${props => props.$active ? colors.palette.burgundy : 'transparent'};
-  border: 1px solid ${props => props.$active ? colors.palette.burgundy : colors.border.default};
+  color: ${props => props.$active ? colors.text.light : 'rgba(247, 245, 235, 0.8)'};
+  background: ${props => props.$active ? 'rgba(247, 238, 192, 0.3)' : 'transparent'};
+  border: 1px solid ${props => props.$active ? 'rgba(247, 238, 192, 0.5)' : 'rgba(247, 245, 235, 0.3)'};
   transition: all 0.3s ease;
 
   &:hover {
-    color: ${props => props.$active ? colors.text.light : colors.palette.burgundy};
-    border-color: ${colors.palette.burgundy};
+    color: ${colors.text.light};
+    border-color: rgba(247, 238, 192, 0.6);
+    background: rgba(247, 238, 192, 0.15);
   }
 `;
 
@@ -261,14 +262,14 @@ const AlphabetNav = styled.div`
   max-width: 900px;
   margin: ${spacing[8]} auto 0;
   padding-top: ${spacing[6]};
-  border-top: 1px solid ${colors.border.default};
+  border-top: 1px solid rgba(247, 245, 235, 0.15);
 `;
 
 const AlphabetLabel = styled.span`
   width: 100%;
   text-align: center;
   font-size: ${typography.fontSize.xs};
-  color: ${colors.text.tertiary};
+  color: rgba(247, 245, 235, 0.6);
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.wide};
   margin-bottom: ${spacing[3]};
@@ -283,21 +284,30 @@ const LetterButton = styled.button<{ $active: boolean }>`
   font-family: ${typography.fontFamily.display};
   font-size: ${typography.fontSize.base};
   font-weight: ${typography.fontWeight.light};
-  color: ${props => props.$active ? colors.text.light : colors.text.secondary};
-  background: ${props => props.$active ? colors.palette.burgundy : 'transparent'};
+  color: ${props => props.$active ? colors.text.light : 'rgba(247, 245, 235, 0.7)'};
+  background: ${props => props.$active ? 'rgba(247, 238, 192, 0.3)' : 'transparent'};
   border: none;
   border-radius: 50%;
   transition: all 0.2s ease;
 
   &:hover {
-    color: ${props => props.$active ? colors.text.light : colors.palette.burgundy};
-    background: ${props => props.$active ? colors.palette.burgundy : colors.accent.subtle};
+    color: ${colors.text.light};
+    background: rgba(247, 238, 192, 0.15);
   }
 `;
 
+// Page entière avec gradient continu - style Skyline Venice
 const PageWrapper = styled.div`
   min-height: 100vh;
-  background: linear-gradient(180deg, ${colors.background.primary} 0%, ${colors.background.warm} 100%);
+  background: linear-gradient(
+    180deg,
+    rgb(112, 42, 64) 0%,
+    rgb(180, 80, 60) 20%,
+    rgb(196, 112, 77) 40%,
+    rgb(240, 160, 100) 60%,
+    rgb(247, 238, 192) 80%,
+    rgb(247, 245, 235) 100%
+  );
 `;
 
 const ContentSection = styled.section`
@@ -312,25 +322,25 @@ const ResultsHeader = styled.div`
   align-items: center;
   margin-bottom: ${spacing[10]};
   padding-bottom: ${spacing[6]};
-  border-bottom: 1px solid ${colors.border.default};
+  border-bottom: 1px solid rgba(61, 46, 46, 0.15);
 `;
 
 const ResultsCount = styled.span`
   font-size: ${typography.fontSize.sm};
-  color: ${colors.text.tertiary};
+  color: ${colors.text.secondary};
 `;
 
 const ResultsTitle = styled.h2`
   font-family: ${typography.fontFamily.display};
   font-size: ${typography.fontSize['2xl']};
   font-weight: ${typography.fontWeight.light};
-  color: ${colors.text.primary};
+  color: ${colors.palette.burgundy};
 `;
 
 const LoadingContainer = styled.div`
   text-align: center;
   padding: ${spacing[20]};
-  color: ${colors.text.tertiary};
+  color: ${colors.text.secondary};
 `;
 
 const Spinner = styled.div`
@@ -456,13 +466,13 @@ const CardMeta = styled.div`
 const NoResults = styled.div`
   text-align: center;
   padding: ${spacing[20]};
-  color: ${colors.text.tertiary};
+  color: ${colors.text.secondary};
 
   h3 {
     font-family: ${typography.fontFamily.display};
     font-size: ${typography.fontSize['2xl']};
     font-weight: ${typography.fontWeight.light};
-    color: ${colors.text.secondary};
+    color: ${colors.palette.burgundy};
     margin-bottom: ${spacing[3]};
   }
 `;

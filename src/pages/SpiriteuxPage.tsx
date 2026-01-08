@@ -19,10 +19,23 @@ const fadeInUp = keyframes`
   }
 `;
 
+// Page entière avec gradient continu - style Skyline Venice
+const PageWrapper = styled.div`
+  min-height: 100vh;
+  background: linear-gradient(
+    180deg,
+    rgb(180, 120, 90) 0%,
+    rgb(196, 112, 77) 15%,
+    rgb(112, 42, 64) 40%,
+    rgb(107, 74, 94) 60%,
+    rgb(125, 139, 106) 80%,
+    rgb(107, 122, 88) 100%
+  );
+`;
+
 const PageHeader = styled.section`
   padding: 160px ${spacing[8]} 100px;
   text-align: center;
-  background: ${colors.gradient.terracotta};
   position: relative;
   overflow: hidden;
 
@@ -33,7 +46,7 @@ const PageHeader = styled.section`
     right: -100px;
     width: 350px;
     height: 350px;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
     border-radius: 50%;
   }
 `;
@@ -54,7 +67,7 @@ const PageLabel = styled.span`
     content: '';
     width: 30px;
     height: 1px;
-    background: ${colors.palette.cream};
+    background: rgba(247, 245, 235, 0.5);
   }
 `;
 
@@ -73,59 +86,47 @@ const PageDesc = styled.p`
   font-family: ${typography.fontFamily.serif};
   font-size: ${typography.fontSize.xl};
   font-style: italic;
-  color: ${colors.text.lightSecondary};
+  color: rgba(247, 245, 235, 0.8);
   max-width: 600px;
   margin: 0 auto;
+  line-height: ${typography.lineHeight.relaxed};
   animation: ${fadeInUp} 0.6s ease forwards;
   animation-delay: 0.2s;
   opacity: 0;
 `;
 
-const PageWrapper = styled.div`
-  min-height: 100vh;
-  background: ${colors.gradient.cream};
-`;
+// Section spiritueux sans background - fluide
+const SpiritSection = styled.section`
+  padding: ${spacing[16]} ${spacing[8]};
+  border-bottom: 1px solid rgba(247, 245, 235, 0.1);
 
-const SpiritSection = styled.section<{ $alt?: boolean }>`
-  padding: ${spacing[20]} ${spacing[8]};
-  background: ${props => props.$alt
-    ? `linear-gradient(180deg, ${colors.background.warm} 0%, ${colors.background.secondary} 100%)`
-    : colors.background.secondary};
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 const SpiritContainer = styled.div`
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
 `;
 
 const SpiritHeader = styled.div`
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: ${spacing[8]};
+  display: flex;
   align-items: center;
-  margin-bottom: ${spacing[10]};
+  gap: ${spacing[6]};
+  margin-bottom: ${spacing[8]};
+  padding-bottom: ${spacing[6]};
+  border-bottom: 1px solid rgba(247, 245, 235, 0.15);
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     text-align: center;
   }
 `;
 
-const SpiritIcon = styled.div`
-  width: 120px;
-  height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const SpiritIcon = styled.span`
   font-size: 4rem;
-  background: ${colors.gradient.terracotta};
-  border: none;
-  border-radius: 50%;
-  box-shadow: 0 10px 30px rgba(196, 112, 77, 0.2);
-
-  @media (max-width: 768px) {
-    margin: 0 auto;
-  }
+  line-height: 1;
 `;
 
 const SpiritInfo = styled.div`
@@ -133,30 +134,31 @@ const SpiritInfo = styled.div`
     font-family: ${typography.fontFamily.display};
     font-size: clamp(2rem, 4vw, 3rem);
     font-weight: ${typography.fontWeight.light};
-    color: ${colors.palette.terracotta};
+    color: ${colors.text.light};
     margin-bottom: ${spacing[2]};
   }
 
   > p {
     font-size: ${typography.fontSize.lg};
-    color: ${colors.text.secondary};
+    color: rgba(247, 245, 235, 0.7);
   }
 `;
 
 const SpiritContent = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: ${spacing[10]};
+  gap: ${spacing[12]};
 
   @media (max-width: 968px) {
     grid-template-columns: 1fr;
+    gap: ${spacing[8]};
   }
 `;
 
 const SpiritDescription = styled.div`
   p {
     font-size: ${typography.fontSize.lg};
-    color: ${colors.text.secondary};
+    color: rgba(247, 245, 235, 0.8);
     line-height: ${typography.lineHeight.relaxed};
     margin-bottom: ${spacing[6]};
   }
@@ -167,101 +169,116 @@ const CocktailsSection = styled.div`
 `;
 
 const SectionSubtitle = styled.h4`
-  font-size: ${typography.fontSize.sm};
-  color: ${colors.accent.primary};
+  font-size: ${typography.fontSize.xs};
+  color: ${colors.palette.cream};
   text-transform: uppercase;
-  letter-spacing: ${typography.letterSpacing.wide};
+  letter-spacing: ${typography.letterSpacing.ultrawide};
   margin-bottom: ${spacing[4]};
+  opacity: 0.7;
 `;
 
+// Liste de cocktails fluide sans cartes
 const CocktailsList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${spacing[3]};
 `;
 
 const CocktailItem = styled.button`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: ${spacing[4]};
-  background: ${colors.background.card};
-  border: 1px solid ${colors.border.default};
+  padding: ${spacing[4]} 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(247, 245, 235, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
   width: 100%;
   text-align: left;
 
+  &:last-child {
+    border-bottom: none;
+  }
+
   &:hover {
-    border-color: ${colors.accent.primary};
-    transform: translateX(5px);
+    padding-left: ${spacing[3]};
+    background: rgba(255, 255, 255, 0.03);
+    margin: 0 -${spacing[3]};
+    padding-right: ${spacing[3]};
   }
 
   .name {
     font-family: ${typography.fontFamily.display};
     font-size: ${typography.fontSize.base};
-    color: ${colors.text.primary};
+    color: ${colors.text.light};
   }
 
   .technique {
     font-size: ${typography.fontSize.xs};
-    color: ${colors.text.tertiary};
+    color: rgba(247, 245, 235, 0.5);
     text-transform: uppercase;
+    letter-spacing: ${typography.letterSpacing.wide};
   }
 `;
 
 const TypesColumn = styled.div``;
 
-const TypesGrid = styled.div`
+// Types affichés en liste fluide
+const TypesList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${spacing[3]};
 `;
 
-const TypeCard = styled.div`
-  padding: ${spacing[4]};
-  background: ${colors.background.card};
-  border: 1px solid ${colors.border.default};
-  border-left: 3px solid ${colors.accent.primary};
+const TypeRow = styled.div`
+  padding: ${spacing[4]} 0;
+  border-bottom: 1px solid rgba(247, 245, 235, 0.1);
+
+  &:last-child {
+    border-bottom: none;
+  }
 
   .name {
-    font-size: ${typography.fontSize.base};
-    font-weight: ${typography.fontWeight.semibold};
-    color: ${colors.text.primary};
+    font-family: ${typography.fontFamily.display};
+    font-size: ${typography.fontSize.lg};
+    font-weight: ${typography.fontWeight.light};
+    color: ${colors.text.light};
     margin-bottom: ${spacing[1]};
   }
 
   .origin {
     font-size: ${typography.fontSize.xs};
-    color: ${colors.accent.primary};
+    color: ${colors.palette.coral};
     text-transform: uppercase;
     letter-spacing: ${typography.letterSpacing.wide};
-    margin-bottom: ${spacing[2]};
+    margin-bottom: ${spacing[1]};
   }
 
   .notes {
     font-size: ${typography.fontSize.sm};
-    color: ${colors.text.tertiary};
+    color: rgba(247, 245, 235, 0.6);
+    line-height: ${typography.lineHeight.relaxed};
   }
 `;
 
-const FactsBox = styled.div`
-  margin-top: ${spacing[6]};
-  padding: ${spacing[5]};
-  background: ${colors.accent.subtle};
-  border: 1px solid ${colors.accent.muted};
+// Facts sans box - juste texte stylé
+const FactsSection = styled.div`
+  margin-top: ${spacing[8]};
+  padding-top: ${spacing[6]};
+  border-top: 1px solid rgba(247, 245, 235, 0.15);
 
   h5 {
     font-size: ${typography.fontSize.xs};
-    color: ${colors.accent.primary};
+    color: ${colors.palette.coral};
     text-transform: uppercase;
-    letter-spacing: ${typography.letterSpacing.wide};
+    letter-spacing: ${typography.letterSpacing.ultrawide};
     margin-bottom: ${spacing[3]};
   }
 
   p {
-    font-size: ${typography.fontSize.sm};
-    color: ${colors.text.secondary};
+    font-family: ${typography.fontFamily.serif};
+    font-size: ${typography.fontSize.base};
+    font-style: italic;
+    color: rgba(247, 245, 235, 0.7);
     line-height: ${typography.lineHeight.relaxed};
     margin: 0;
   }
@@ -292,6 +309,7 @@ export const SpiriteuxPage: React.FC = () => {
           scrollTrigger: {
             trigger: section,
             start: 'top bottom-=100',
+            toggleActions: 'play none none none',
           },
         }
       );
@@ -324,11 +342,10 @@ export const SpiriteuxPage: React.FC = () => {
         </PageDesc>
       </PageHeader>
 
-      {spirits.map((spirit, index) => (
+      {spirits.map((spirit) => (
         <SpiritSection
           key={spirit.id}
           id={spirit.id}
-          $alt={index % 2 === 1}
           className="spirit-section"
         >
           <SpiritContainer>
@@ -359,20 +376,20 @@ export const SpiriteuxPage: React.FC = () => {
 
               <TypesColumn>
                 <SectionSubtitle>Types de {spirit.name}</SectionSubtitle>
-                <TypesGrid>
+                <TypesList>
                   {spirit.types.map((type, i) => (
-                    <TypeCard key={i}>
+                    <TypeRow key={i}>
                       <div className="name">{type.name}</div>
                       <div className="origin">{type.origin}</div>
                       <div className="notes">{type.notes}</div>
-                    </TypeCard>
+                    </TypeRow>
                   ))}
-                </TypesGrid>
+                </TypesList>
 
-                <FactsBox>
+                <FactsSection>
                   <h5>Le saviez-vous ?</h5>
                   <p>{getSpiritFact(spirit.id)}</p>
-                </FactsBox>
+                </FactsSection>
               </TypesColumn>
             </SpiritContent>
           </SpiritContainer>

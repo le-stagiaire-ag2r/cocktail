@@ -17,10 +17,21 @@ const fadeInUp = keyframes`
   }
 `;
 
+// Page entière avec gradient continu - style Skyline Venice
+const PageWrapper = styled.div`
+  min-height: 100vh;
+  background: linear-gradient(
+    180deg,
+    rgb(107, 122, 88) 0%,
+    rgb(125, 139, 106) 30%,
+    rgb(180, 120, 90) 60%,
+    rgb(112, 42, 64) 100%
+  );
+`;
+
 const PageHeader = styled.section`
   padding: 160px ${spacing[8]} 100px;
   text-align: center;
-  background: linear-gradient(0deg, ${colors.palette.burgundyDark} 0%, ${colors.palette.olive} 100%);
   position: relative;
   overflow: hidden;
 
@@ -31,7 +42,7 @@ const PageHeader = styled.section`
     left: -100px;
     width: 350px;
     height: 350px;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
     border-radius: 50%;
   }
 `;
@@ -52,7 +63,7 @@ const PageLabel = styled.span`
     content: '';
     width: 30px;
     height: 1px;
-    background: ${colors.palette.cream};
+    background: rgba(247, 245, 235, 0.5);
   }
 `;
 
@@ -71,7 +82,7 @@ const PageDesc = styled.p`
   font-family: ${typography.fontFamily.serif};
   font-size: ${typography.fontSize.xl};
   font-style: italic;
-  color: ${colors.text.lightSecondary};
+  color: rgba(247, 245, 235, 0.8);
   max-width: 700px;
   margin: 0 auto;
   line-height: ${typography.lineHeight.relaxed};
@@ -80,14 +91,9 @@ const PageDesc = styled.p`
   opacity: 0;
 `;
 
-const PageWrapper = styled.div`
-  min-height: 100vh;
-  background: linear-gradient(180deg, ${colors.background.secondary} 0%, ${colors.background.warm} 100%);
-`;
-
 const ContentSection = styled.section`
   padding: ${spacing[16]} ${spacing[8]};
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
 `;
 
@@ -98,21 +104,35 @@ const IntroText = styled.div`
 
   p {
     font-size: ${typography.fontSize.lg};
-    color: ${colors.text.secondary};
+    color: rgba(247, 245, 235, 0.85);
     line-height: ${typography.lineHeight.relaxed};
     margin-bottom: ${spacing[4]};
   }
 `;
 
+const EssentialBadge = styled.span`
+  display: inline-block;
+  padding: ${spacing[1]} ${spacing[3]};
+  margin-left: ${spacing[2]};
+  font-size: ${typography.fontSize.xs};
+  text-transform: uppercase;
+  letter-spacing: ${typography.letterSpacing.wide};
+  background: rgba(247, 238, 192, 0.2);
+  color: ${colors.palette.cream};
+  border: 1px solid rgba(247, 238, 192, 0.3);
+`;
+
 const CategorySection = styled.div`
-  margin-bottom: ${spacing[16]};
+  margin-bottom: ${spacing[12]};
 `;
 
 const CategoryHeader = styled.div`
   display: flex;
   align-items: center;
   gap: ${spacing[4]};
-  margin-bottom: ${spacing[8]};
+  padding-bottom: ${spacing[4]};
+  margin-bottom: ${spacing[6]};
+  border-bottom: 1px solid rgba(247, 245, 235, 0.2);
 `;
 
 const CategoryIcon = styled.span`
@@ -122,23 +142,36 @@ const CategoryIcon = styled.span`
 const CategoryTitle = styled.h2`
   font-family: ${typography.fontFamily.display};
   font-size: ${typography.fontSize['2xl']};
-  font-weight: ${typography.fontWeight.semibold};
-  color: ${colors.text.primary};
+  font-weight: ${typography.fontWeight.light};
+  color: ${colors.text.light};
 `;
 
 const CategoryDesc = styled.p`
-  font-size: ${typography.fontSize.base};
-  color: ${colors.text.tertiary};
-  margin-top: ${spacing[2]};
+  font-size: ${typography.fontSize.sm};
+  color: rgba(247, 245, 235, 0.6);
+  margin-top: ${spacing[1]};
 `;
 
-const ItemsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: ${spacing[4]};
+// Liste fluide sans cartes - style Skyline Venice
+const ItemsList = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
-  @media (max-width: 968px) {
-    grid-template-columns: repeat(2, 1fr);
+const ItemRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: ${spacing[4]};
+  padding: ${spacing[5]} 0;
+  border-bottom: 1px solid rgba(247, 245, 235, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    padding-left: ${spacing[4]};
+    background: rgba(255, 255, 255, 0.03);
+    margin: 0 -${spacing[4]};
+    padding-right: ${spacing[4]};
   }
 
   @media (max-width: 600px) {
@@ -146,94 +179,78 @@ const ItemsGrid = styled.div`
   }
 `;
 
-const ItemCard = styled.div`
-  padding: ${spacing[6]};
-  background: rgba(247, 245, 235, 0.95);
-  border: 1px solid ${colors.border.default};
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-
-  &:hover {
-    border-color: ${colors.accent.primary};
-    transform: translateY(-3px);
-    background: rgba(255, 255, 255, 0.98);
-  }
+const ItemInfo = styled.div`
+  flex: 1;
 `;
 
 const ItemName = styled.h3`
+  font-family: ${typography.fontFamily.display};
   font-size: ${typography.fontSize.lg};
-  font-weight: ${typography.fontWeight.semibold};
-  color: ${colors.text.primary};
-  margin-bottom: ${spacing[2]};
+  font-weight: ${typography.fontWeight.light};
+  color: ${colors.text.light};
+  display: inline;
 `;
 
 const ItemDesc = styled.p`
   font-size: ${typography.fontSize.sm};
-  color: ${colors.text.tertiary};
+  color: rgba(247, 245, 235, 0.6);
   line-height: ${typography.lineHeight.relaxed};
-`;
-
-const EssentialBadge = styled.span`
-  display: inline-block;
-  padding: ${spacing[1]} ${spacing[2]};
-  margin-left: ${spacing[2]};
-  font-size: ${typography.fontSize.xs};
-  text-transform: uppercase;
-  letter-spacing: ${typography.letterSpacing.wide};
-  background: ${colors.accent.subtle};
-  color: ${colors.accent.primary};
+  margin-top: ${spacing[1]};
 `;
 
 const TipsSection = styled.div`
   margin-top: ${spacing[16]};
-  padding: ${spacing[12]};
-  background: ${colors.background.secondary};
-  border: 1px solid ${colors.border.default};
+  padding-top: ${spacing[12]};
+  border-top: 1px solid rgba(247, 245, 235, 0.2);
 `;
 
 const TipsTitle = styled.h2`
   font-family: ${typography.fontFamily.display};
-  font-size: ${typography.fontSize.xl};
-  font-weight: ${typography.fontWeight.semibold};
-  color: ${colors.accent.primary};
-  margin-bottom: ${spacing[6]};
+  font-size: ${typography.fontSize['2xl']};
+  font-weight: ${typography.fontWeight.light};
+  color: ${colors.palette.cream};
+  margin-bottom: ${spacing[8]};
   text-align: center;
 `;
 
-const TipsList = styled.ul`
+const TipsList = styled.ol`
   max-width: 700px;
   margin: 0 auto;
+  counter-reset: tip-counter;
 `;
 
 const TipItem = styled.li`
   display: flex;
   gap: ${spacing[4]};
   padding: ${spacing[4]} 0;
-  border-bottom: 1px solid ${colors.border.subtle};
+  border-bottom: 1px solid rgba(247, 245, 235, 0.1);
+  counter-increment: tip-counter;
 
   &:last-child {
     border-bottom: none;
   }
-`;
 
-const TipNumber = styled.span`
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: ${typography.fontSize.sm};
-  font-weight: ${typography.fontWeight.bold};
-  color: ${colors.accent.primary};
-  background: ${colors.accent.subtle};
-  border-radius: 50%;
+  &::before {
+    content: counter(tip-counter);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: ${typography.fontSize.sm};
+    font-weight: ${typography.fontWeight.medium};
+    color: ${colors.palette.cream};
+    background: rgba(247, 238, 192, 0.15);
+    border-radius: 50%;
+  }
 `;
 
 const TipText = styled.span`
   font-size: ${typography.fontSize.base};
-  color: ${colors.text.secondary};
+  color: rgba(247, 245, 235, 0.8);
   line-height: ${typography.lineHeight.relaxed};
+  padding-top: 2px;
 `;
 
 const barCategories = [
@@ -346,7 +363,7 @@ export const BarStockPage: React.FC = () => {
             scrollTrigger: {
               trigger: section,
               start: 'top bottom-=100',
-              toggleActions: 'play none none none',  // Fixed: ne plus reverser l'animation au scroll
+              toggleActions: 'play none none none',
             },
           }
         );
@@ -361,7 +378,7 @@ export const BarStockPage: React.FC = () => {
         <PageTitle>Bar Bien Approvisionné</PageTitle>
         <PageDesc>
           Tout ce dont vous avez besoin pour créer des cocktails exceptionnels chez vous.
-          Des spiritueux de base aux garnitures, voici la liste complète pour monter votre bar.
+          Des spiritueux de base aux garnitures, voici la liste complète.
         </PageDesc>
       </PageHeader>
 
@@ -374,7 +391,7 @@ export const BarStockPage: React.FC = () => {
           </p>
           <p>
             Les éléments marqués <EssentialBadge>Essentiel</EssentialBadge> sont
-            les indispensables pour débuter. Ajoutez les autres au fur et à mesure de vos explorations.
+            les indispensables pour débuter.
           </p>
         </IntroText>
 
@@ -388,17 +405,19 @@ export const BarStockPage: React.FC = () => {
               </div>
             </CategoryHeader>
 
-            <ItemsGrid>
+            <ItemsList>
               {category.items.map((item, i) => (
-                <ItemCard key={i}>
-                  <ItemName>
-                    {item.name}
-                    {item.essential && <EssentialBadge>Essentiel</EssentialBadge>}
-                  </ItemName>
-                  <ItemDesc>{item.desc}</ItemDesc>
-                </ItemCard>
+                <ItemRow key={i}>
+                  <ItemInfo>
+                    <ItemName>
+                      {item.name}
+                      {item.essential && <EssentialBadge>Essentiel</EssentialBadge>}
+                    </ItemName>
+                    <ItemDesc>{item.desc}</ItemDesc>
+                  </ItemInfo>
+                </ItemRow>
               ))}
-            </ItemsGrid>
+            </ItemsList>
           </CategorySection>
         ))}
 
@@ -407,7 +426,6 @@ export const BarStockPage: React.FC = () => {
           <TipsList>
             {tips.map((tip, i) => (
               <TipItem key={i}>
-                <TipNumber>{i + 1}</TipNumber>
                 <TipText>{tip}</TipText>
               </TipItem>
             ))}
