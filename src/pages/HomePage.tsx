@@ -1,12 +1,28 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { colors, typography, spacing } from '../styles/designTokens';
 import { cocktails, spirits } from '../data/cocktails';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const slideUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
 
 const Hero = styled.section`
   min-height: 100vh;
@@ -17,7 +33,18 @@ const Hero = styled.section`
   text-align: center;
   position: relative;
   padding: ${spacing[8]};
+  background: ${colors.gradient.sunset};
   overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.1) 0%, transparent 50%);
+  }
 `;
 
 const HeroContent = styled.div`
@@ -35,15 +62,17 @@ const HeroLabel = styled.span`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.ultrawide};
-  color: ${colors.accent.olive};
+  color: ${colors.palette.cream};
   margin-bottom: ${spacing[8]};
+  animation: ${slideUp} 0.8s ease forwards;
+  animation-delay: 0.2s;
   opacity: 0;
 
   &::before, &::after {
     content: '';
     width: 40px;
     height: 1px;
-    background: ${colors.accent.primary};
+    background: ${colors.palette.cream};
   }
 `;
 
@@ -52,7 +81,7 @@ const HeroTitle = styled.h1`
   font-size: ${typography.fontSize.hero};
   font-weight: ${typography.fontWeight.light};
   line-height: 0.95;
-  color: ${colors.text.primary};
+  color: ${colors.text.light};
   margin-bottom: ${spacing[8]};
 
   .line {
@@ -62,13 +91,18 @@ const HeroTitle = styled.h1`
 
   .word {
     display: inline-block;
+    animation: ${slideUp} 1s ease forwards;
     opacity: 0;
-    transform: translateY(100%);
+  }
+
+  .word:nth-child(1) {
+    animation-delay: 0.3s;
   }
 
   .accent {
-    color: ${colors.accent.primary};
+    color: ${colors.palette.coral};
     font-style: italic;
+    animation-delay: 0.5s;
   }
 `;
 
@@ -77,9 +111,11 @@ const HeroSubtitle = styled.p`
   font-size: ${typography.fontSize['2xl']};
   font-weight: ${typography.fontWeight.light};
   font-style: italic;
-  color: ${colors.text.secondary};
+  color: rgba(247, 245, 235, 0.9);
   max-width: 600px;
   margin: 0 auto ${spacing[12]};
+  animation: ${slideUp} 0.8s ease forwards;
+  animation-delay: 0.7s;
   opacity: 0;
 `;
 
@@ -93,15 +129,19 @@ const HeroButton = styled(Link)`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.widest};
-  color: ${colors.text.light};
-  background: ${colors.text.primary};
+  color: ${colors.palette.burgundy};
+  background: ${colors.palette.cream};
   border: none;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation: ${slideUp} 0.8s ease forwards;
+  animation-delay: 0.9s;
   opacity: 0;
 
   &:hover {
-    background: ${colors.accent.primary};
-    transform: translateY(-2px);
+    background: ${colors.palette.coral};
+    color: ${colors.text.light};
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(139, 69, 87, 0.3);
   }
 
   svg {
@@ -111,7 +151,7 @@ const HeroButton = styled(Link)`
   }
 
   &:hover svg {
-    transform: translateX(4px);
+    transform: translateX(5px);
   }
 `;
 
@@ -124,13 +164,15 @@ const ScrollIndicator = styled.div`
   flex-direction: column;
   align-items: center;
   gap: ${spacing[3]};
+  animation: ${fadeIn} 1s ease forwards;
+  animation-delay: 1.2s;
   opacity: 0;
 
   span {
     font-size: ${typography.fontSize.xs};
     text-transform: uppercase;
     letter-spacing: ${typography.letterSpacing.widest};
-    color: ${colors.text.tertiary};
+    color: rgba(247, 245, 235, 0.6);
     writing-mode: vertical-rl;
   }
 
@@ -138,7 +180,7 @@ const ScrollIndicator = styled.div`
     content: '';
     width: 1px;
     height: 60px;
-    background: linear-gradient(to bottom, ${colors.accent.primary}, transparent);
+    background: linear-gradient(to bottom, ${colors.palette.coral}, transparent);
   }
 `;
 
@@ -164,14 +206,14 @@ const SectionLabel = styled.span`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.ultrawide};
-  color: ${colors.accent.primary};
+  color: ${colors.palette.terracotta};
   margin-bottom: ${spacing[6]};
 
   &::before, &::after {
     content: '';
     width: 30px;
     height: 1px;
-    background: ${colors.accent.primary};
+    background: ${colors.palette.terracotta};
   }
 `;
 
@@ -215,7 +257,7 @@ const CocktailCard = styled(Link)`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  background: ${colors.background.dark};
+  background: ${colors.palette.burgundy};
 
   &::before {
     content: '';
@@ -224,7 +266,7 @@ const CocktailCard = styled(Link)`
     left: 0;
     right: 0;
     bottom: 0;
-    background: ${colors.gradient.overlay};
+    background: ${colors.gradient.cardOverlay};
     z-index: 1;
     transition: opacity 0.4s ease;
   }
@@ -240,11 +282,11 @@ const CocktailCard = styled(Link)`
   }
 
   &:hover img {
-    transform: scale(1.08);
+    transform: scale(1.1);
   }
 
   &:hover::before {
-    opacity: 0.7;
+    opacity: 0.8;
   }
 `;
 
@@ -260,7 +302,7 @@ const CocktailSpirit = styled.span`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.widest};
-  color: ${colors.accent.primary};
+  color: ${colors.palette.coral};
   margin-bottom: ${spacing[2]};
 `;
 
@@ -282,19 +324,27 @@ const ViewAllButton = styled(Link)`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.widest};
-  color: ${colors.text.primary};
+  color: ${colors.palette.burgundy};
   background: transparent;
-  border: 1px solid ${colors.text.primary};
+  border: 1px solid ${colors.palette.burgundy};
   transition: all 0.4s ease;
 
   &:hover {
-    background: ${colors.text.primary};
+    background: ${colors.palette.burgundy};
     color: ${colors.text.light};
   }
 `;
 
 const SpiritsSection = styled(Section)`
-  background: ${colors.background.dark};
+  background: ${colors.gradient.olive};
+`;
+
+const SpiritsSectionLabel = styled(SectionLabel)`
+  color: ${colors.palette.cream};
+
+  &::before, &::after {
+    background: ${colors.palette.cream};
+  }
 `;
 
 const SpiritsSectionTitle = styled(SectionTitle)`
@@ -318,12 +368,12 @@ const SpiritCard = styled(Link)`
   text-align: center;
   border: 1px solid ${colors.border.light};
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  background: transparent;
+  background: rgba(255, 255, 255, 0.05);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: ${colors.accent.primary};
-    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: ${colors.palette.cream};
+    transform: translateY(-8px);
   }
 `;
 
@@ -331,14 +381,13 @@ const SpiritIcon = styled.span`
   font-size: 3.5rem;
   display: block;
   margin-bottom: ${spacing[5]};
-  filter: grayscale(0.3);
 `;
 
 const SpiritName = styled.h4`
   font-family: ${typography.fontFamily.display};
   font-size: ${typography.fontSize['2xl']};
   font-weight: ${typography.fontWeight.light};
-  color: ${colors.accent.primary};
+  color: ${colors.palette.cream};
   margin-bottom: ${spacing[2]};
 `;
 
@@ -350,16 +399,35 @@ const SpiritDesc = styled.p`
 const CTASection = styled.section`
   padding: 160px ${spacing[8]};
   text-align: center;
-  background: ${colors.background.secondary};
+  background: ${colors.gradient.terracotta};
   position: relative;
   overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    border-radius: 50%;
+  }
+`;
+
+const CTASectionLabel = styled(SectionLabel)`
+  color: ${colors.palette.cream};
+
+  &::before, &::after {
+    background: ${colors.palette.cream};
+  }
 `;
 
 const CTATitle = styled.h2`
   font-family: ${typography.fontFamily.display};
   font-size: ${typography.fontSize.heroSmall};
   font-weight: ${typography.fontWeight.light};
-  color: ${colors.text.primary};
+  color: ${colors.text.light};
   margin-bottom: ${spacing[6]};
 `;
 
@@ -367,7 +435,7 @@ const CTAText = styled.p`
   font-family: ${typography.fontFamily.serif};
   font-size: ${typography.fontSize.xl};
   font-style: italic;
-  color: ${colors.text.secondary};
+  color: ${colors.text.lightSecondary};
   margin-bottom: ${spacing[12]};
   max-width: 600px;
   margin-left: auto;
@@ -388,7 +456,7 @@ const CTABlock = styled.div`
   h4 {
     font-size: ${typography.fontSize.xs};
     font-weight: ${typography.fontWeight.medium};
-    color: ${colors.accent.primary};
+    color: ${colors.palette.cream};
     text-transform: uppercase;
     letter-spacing: ${typography.letterSpacing.widest};
     margin-bottom: ${spacing[3]};
@@ -398,7 +466,7 @@ const CTABlock = styled.div`
     font-family: ${typography.fontFamily.display};
     font-size: ${typography.fontSize['3xl']};
     font-weight: ${typography.fontWeight.light};
-    color: ${colors.text.primary};
+    color: ${colors.text.light};
   }
 
   span {
@@ -406,8 +474,40 @@ const CTABlock = styled.div`
     font-family: ${typography.fontFamily.serif};
     font-size: ${typography.fontSize.base};
     font-style: italic;
-    color: ${colors.text.tertiary};
+    color: rgba(247, 245, 235, 0.7);
     margin-top: ${spacing[1]};
+  }
+`;
+
+const CTAButton = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  gap: ${spacing[3]};
+  padding: ${spacing[5]} ${spacing[10]};
+  font-family: ${typography.fontFamily.body};
+  font-size: ${typography.fontSize.xs};
+  font-weight: ${typography.fontWeight.medium};
+  text-transform: uppercase;
+  letter-spacing: ${typography.letterSpacing.widest};
+  color: ${colors.palette.terracotta};
+  background: ${colors.palette.cream};
+  border: none;
+  transition: all 0.4s ease;
+
+  &:hover {
+    background: ${colors.text.light};
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover svg {
+    transform: translateX(5px);
   }
 `;
 
@@ -417,58 +517,15 @@ export const HomePage: React.FC = () => {
   const spiritsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-
-    const tl = gsap.timeline({ delay: 0.3 });
-
-    // Set initial states
-    gsap.set(hero.querySelectorAll('.word'), { opacity: 0, y: '100%' });
-    gsap.set(hero.querySelector('.hero-label'), { opacity: 0, y: 20 });
-    gsap.set(hero.querySelector('.hero-subtitle'), { opacity: 0, y: 30 });
-    gsap.set(hero.querySelector('.hero-button'), { opacity: 0, y: 20 });
-    gsap.set(hero.querySelector('.scroll-indicator'), { opacity: 0 });
-
-    // Animate
-    tl.to(hero.querySelector('.hero-label'), {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: 'power3.out',
-    })
-    .to(hero.querySelectorAll('.word'), {
-      opacity: 1,
-      y: 0,
-      stagger: 0.12,
-      duration: 1.2,
-      ease: 'power3.out',
-    }, '-=0.6')
-    .to(hero.querySelector('.hero-subtitle'), {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: 'power3.out',
-    }, '-=0.8')
-    .to(hero.querySelector('.hero-button'), {
-      opacity: 1,
-      y: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-    }, '-=0.6')
-    .to(hero.querySelector('.scroll-indicator'), {
-      opacity: 1,
-      duration: 1,
-      ease: 'power2.out',
-    }, '-=0.3');
-
     // Cocktails section animations
     if (cocktailsRef.current) {
       gsap.fromTo(
         cocktailsRef.current.querySelectorAll('.cocktail-card'),
-        { opacity: 0, y: 60 },
+        { opacity: 0, y: 80, scale: 0.95 },
         {
           opacity: 1,
           y: 0,
+          scale: 1,
           stagger: 0.15,
           duration: 1,
           ease: 'power3.out',
@@ -484,10 +541,11 @@ export const HomePage: React.FC = () => {
     if (spiritsRef.current) {
       gsap.fromTo(
         spiritsRef.current.querySelectorAll('.spirit-card'),
-        { opacity: 0, y: 40 },
+        { opacity: 0, y: 50, scale: 0.9 },
         {
           opacity: 1,
           y: 0,
+          scale: 1,
           stagger: 0.1,
           duration: 0.8,
           ease: 'power3.out',
@@ -572,7 +630,7 @@ export const HomePage: React.FC = () => {
 
       <SpiritsSection ref={spiritsRef}>
         <SectionHeader>
-          <SectionLabel style={{ color: colors.accent.primary }}>Explorer</SectionLabel>
+          <SpiritsSectionLabel>Explorer</SpiritsSectionLabel>
           <SpiritsSectionTitle>Les Spiritueux</SpiritsSectionTitle>
           <SpiritsSubtitle>
             Découvrez l'univers des spiritueux et leur rôle essentiel dans l'art du cocktail.
@@ -595,7 +653,7 @@ export const HomePage: React.FC = () => {
       </SpiritsSection>
 
       <CTASection>
-        <SectionLabel>Bienvenue</SectionLabel>
+        <CTASectionLabel>Bienvenue</CTASectionLabel>
         <CTATitle>Venez Nous Découvrir</CTATitle>
         <CTAText>
           Nous serions ravis de vous accueillir et de vous faire
@@ -615,12 +673,12 @@ export const HomePage: React.FC = () => {
           </CTABlock>
         </CTAInfo>
 
-        <HeroButton as={Link} to="/recettes" style={{ opacity: 1 }}>
+        <CTAButton to="/recettes">
           Découvrir la carte
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
-        </HeroButton>
+        </CTAButton>
       </CTASection>
     </>
   );

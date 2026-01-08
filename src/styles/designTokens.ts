@@ -1,62 +1,87 @@
 // Design Tokens - Le Old Fashioned
-// Style luxe inspiré de Skyline Bar Venice
+// Style luxe inspiré de Skyline Bar Venice - Couleurs chaudes et vivantes
 
 export const colors = {
-  // Backgrounds - Palette crème luxe
+  // Backgrounds - Palette chaude sans noir
   background: {
     primary: '#f7f5eb',
     secondary: '#efe9db',
     tertiary: '#e8e2d2',
     card: '#ffffff',
-    cardHover: '#f9f7f0',
-    dark: '#1a1815',
-    darkSecondary: '#252220',
+    cardHover: '#faf8f2',
+    warm: '#d4c4b0',
+    dark: '#5A3D47',  // Burgundy foncé chaleureux pour le footer
+  },
+
+  // Couleurs principales - Palette chaude
+  palette: {
+    burgundy: '#8B4557',
+    burgundyDark: '#6B3A4A',
+    burgundyLight: '#A65D6F',
+    terracotta: '#C4704D',
+    terracottaLight: '#D4896A',
+    coral: '#E8A88C',
+    olive: '#7D8B6A',
+    oliveLight: '#9AAA82',
+    cream: '#F7F5EB',
+    sand: '#E5DED0',
+    gold: '#C9A227',
+    goldLight: '#DEBC4F',
+    plum: '#6B4A5E',
+    rose: '#B87D8B',
+  },
+
+  // Gradients - Dégradés élégants
+  gradient: {
+    burgundy: 'linear-gradient(135deg, #8B4557 0%, #6B3A4A 100%)',
+    burgundyReverse: 'linear-gradient(135deg, #6B3A4A 0%, #8B4557 100%)',
+    terracotta: 'linear-gradient(135deg, #C4704D 0%, #A65D6F 100%)',
+    warm: 'linear-gradient(135deg, #C4704D 0%, #8B4557 50%, #6B4A5E 100%)',
+    sunset: 'linear-gradient(135deg, #E8A88C 0%, #C4704D 50%, #8B4557 100%)',
+    olive: 'linear-gradient(135deg, #7D8B6A 0%, #6B7A58 100%)',
+    cream: 'linear-gradient(180deg, #f7f5eb 0%, #efe9db 100%)',
+    warmOverlay: 'linear-gradient(to right, rgba(107, 58, 74, 0.95) 0%, rgba(107, 58, 74, 0.7) 50%, transparent 100%)',
+    cardOverlay: 'linear-gradient(to top, rgba(107, 58, 74, 0.9) 0%, rgba(139, 69, 87, 0.4) 50%, transparent 100%)',
+    pageTransition: 'linear-gradient(90deg, #8B4557 0%, #C4704D 50%, #7D8B6A 100%)',
   },
 
   // Text
   text: {
-    primary: '#1a1815',
-    secondary: '#5a5652',
-    tertiary: '#8a8580',
-    muted: '#b0aba5',
-    light: '#f7f5eb',
-    lightSecondary: '#d0ccc5',
+    primary: '#3D2E2E',
+    secondary: '#5A4A4A',
+    tertiary: '#7A6A6A',
+    muted: '#9A8A8A',
+    light: '#F7F5EB',
+    lightSecondary: 'rgba(247, 245, 235, 0.8)',
+    onDark: '#F7F5EB',
+    onWarm: '#F7F5EB',
   },
 
-  // Accent - Or luxe
+  // Accent
   accent: {
-    primary: '#cc9900',
-    secondary: '#daa520',
-    muted: 'rgba(204, 153, 0, 0.2)',
-    subtle: 'rgba(204, 153, 0, 0.08)',
-    olive: '#69673a',
-    terracotta: '#933a21',
+    primary: '#C9A227',
+    secondary: '#DEBC4F',
+    muted: 'rgba(201, 162, 39, 0.2)',
+    subtle: 'rgba(201, 162, 39, 0.08)',
+    olive: '#7D8B6A',
+    terracotta: '#C4704D',
   },
 
   // Borders
   border: {
-    default: 'rgba(26, 24, 21, 0.1)',
-    hover: 'rgba(26, 24, 21, 0.2)',
-    active: '#cc9900',
-    subtle: 'rgba(26, 24, 21, 0.05)',
+    default: 'rgba(61, 46, 46, 0.1)',
+    hover: 'rgba(61, 46, 46, 0.2)',
+    active: '#C9A227',
+    subtle: 'rgba(61, 46, 46, 0.05)',
     light: 'rgba(247, 245, 235, 0.2)',
+    warm: 'rgba(139, 69, 87, 0.3)',
   },
 
   // Status
   status: {
-    success: '#4a7c59',
-    error: '#a63d2f',
-    warning: '#c9a227',
-  },
-
-  // Gradients
-  gradient: {
-    gold: 'linear-gradient(135deg, #cc9900 0%, #daa520 50%, #cc9900 100%)',
-    cream: 'linear-gradient(180deg, #f7f5eb 0%, #efe9db 100%)',
-    dark: 'linear-gradient(180deg, #1a1815 0%, #252220 100%)',
-    overlay: 'linear-gradient(to top, rgba(26, 24, 21, 0.95) 0%, rgba(26, 24, 21, 0.6) 50%, transparent 100%)',
-    overlayLight: 'linear-gradient(to top, rgba(247, 245, 235, 0.95) 0%, rgba(247, 245, 235, 0) 100%)',
-    heroOverlay: 'linear-gradient(135deg, rgba(147, 58, 33, 0.8) 0%, rgba(105, 103, 58, 0.6) 50%, rgba(204, 153, 0, 0.4) 100%)',
+    success: '#7D8B6A',
+    error: '#A65D6F',
+    warning: '#C9A227',
   },
 };
 
@@ -149,17 +174,21 @@ export const transitions = {
   slower: '0.8s ease',
   elegant: '0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   smooth: '0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+  morph: '0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+  slideIn: '0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+  reveal: '1s cubic-bezier(0.77, 0, 0.175, 1)',
 };
 
 export const shadows = {
-  sm: '0 1px 2px 0 rgba(26, 24, 21, 0.05)',
-  md: '0 4px 6px -1px rgba(26, 24, 21, 0.08)',
-  lg: '0 10px 15px -3px rgba(26, 24, 21, 0.1)',
-  xl: '0 20px 25px -5px rgba(26, 24, 21, 0.1)',
-  '2xl': '0 25px 50px -12px rgba(26, 24, 21, 0.2)',
-  gold: '0 0 40px rgba(204, 153, 0, 0.2)',
-  glow: '0 0 60px rgba(204, 153, 0, 0.15)',
-  elegant: '0 20px 60px rgba(26, 24, 21, 0.15)',
+  sm: '0 1px 2px 0 rgba(61, 46, 46, 0.05)',
+  md: '0 4px 6px -1px rgba(61, 46, 46, 0.08)',
+  lg: '0 10px 15px -3px rgba(61, 46, 46, 0.1)',
+  xl: '0 20px 25px -5px rgba(61, 46, 46, 0.1)',
+  '2xl': '0 25px 50px -12px rgba(61, 46, 46, 0.2)',
+  warm: '0 20px 60px rgba(139, 69, 87, 0.2)',
+  gold: '0 0 40px rgba(201, 162, 39, 0.2)',
+  glow: '0 0 60px rgba(201, 162, 39, 0.15)',
+  elegant: '0 20px 60px rgba(61, 46, 46, 0.15)',
 };
 
 export const zIndex = {

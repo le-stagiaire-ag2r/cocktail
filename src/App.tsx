@@ -22,8 +22,21 @@ const AppWrapper = styled.div`
 
 const Footer = styled.footer`
   padding: 100px ${spacing[8]} ${spacing[12]};
-  background: ${colors.background.dark};
+  background: linear-gradient(135deg, ${colors.background.dark} 0%, ${colors.palette.burgundyDark} 100%);
   color: ${colors.text.light};
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -150px;
+    right: -150px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(232, 168, 140, 0.1) 0%, transparent 60%);
+    border-radius: 50%;
+  }
 `;
 
 const FooterContainer = styled.div`
@@ -57,7 +70,7 @@ const FooterBrand = styled.div`
     margin-bottom: ${spacing[2]};
 
     span {
-      color: ${colors.accent.primary};
+      color: ${colors.palette.coral};
       font-style: italic;
     }
   }
@@ -80,7 +93,7 @@ const FooterNav = styled.div`
   h4 {
     font-size: ${typography.fontSize.xs};
     font-weight: ${typography.fontWeight.medium};
-    color: ${colors.accent.primary};
+    color: ${colors.palette.coral};
     text-transform: uppercase;
     letter-spacing: ${typography.letterSpacing.widest};
     margin-bottom: ${spacing[6]};
@@ -98,7 +111,7 @@ const FooterNav = styled.div`
     transition: color 0.3s ease;
 
     &:hover {
-      color: ${colors.accent.primary};
+      color: ${colors.palette.coral};
     }
   }
 
