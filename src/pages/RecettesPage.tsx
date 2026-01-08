@@ -405,7 +405,8 @@ export const RecettesPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeLetter, setActiveLetter] = useState('');
-  const [currentView, setCurrentView] = useState<'filter' | 'letter' | 'search'>('filter');
+  const [currentView, setCurrentView] = useState<'filter' | 'letter' | 'search' | 'ingredient'>('filter');
+  const [currentIngredient, setCurrentIngredient] = useState('');
   const gridRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
@@ -437,7 +438,8 @@ export const RecettesPage: React.FC = () => {
         setSearchQuery('');
         setActiveFilter('all');
         setActiveLetter('');
-        setCurrentView('filter');
+        setCurrentIngredient(ingredientParam);
+        setCurrentView('ingredient');
       } else {
         const popular = await getPopularCocktails();
         setCocktails(popular);
@@ -507,6 +509,7 @@ export const RecettesPage: React.FC = () => {
     setLoading(true);
     setActiveFilter('all');
     setActiveLetter('');
+    setCurrentIngredient('');
     setCurrentView('search');
     const results = await searchCocktails(searchQuery);
     setCocktails(results);
@@ -524,6 +527,7 @@ export const RecettesPage: React.FC = () => {
     setActiveFilter(filterId);
     setActiveLetter('');
     setSearchQuery('');
+    setCurrentIngredient('');
     setCurrentView('filter');
     setLoading(true);
 
@@ -543,6 +547,7 @@ export const RecettesPage: React.FC = () => {
     setActiveLetter(letter);
     setActiveFilter('all');
     setSearchQuery('');
+    setCurrentIngredient('');
     setCurrentView('letter');
     setLoading(true);
 
@@ -569,6 +574,9 @@ export const RecettesPage: React.FC = () => {
     }
     if (currentView === 'search' && searchQuery) {
       return `Résultats pour "${searchQuery}"`;
+    }
+    if (currentView === 'ingredient' && currentIngredient) {
+      return `Cocktails avec ${translateIngredient(currentIngredient)}`;
     }
     if (activeFilter !== 'all') {
       const filter = spiritFilters.find(f => f.id === activeFilter);
@@ -648,7 +656,7 @@ export const RecettesPage: React.FC = () => {
         </AlphabetNav>
       </SearchSection>
 
-      <ContentSection>
+      <ContentSection id="resultats">
         {loading ? (
           <LoadingContainer>
             <Spinner />

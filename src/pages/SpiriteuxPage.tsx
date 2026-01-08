@@ -222,7 +222,7 @@ export const SpiriteuxPage: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleCocktailClick = (cocktailName: string) => {
-    navigate(`/recettes?search=${encodeURIComponent(cocktailName)}`);
+    navigate(`/recettes?search=${encodeURIComponent(cocktailName)}#resultats`);
   };
 
   useEffect(() => {

@@ -132,7 +132,6 @@ const navItems = [
   { path: '/spiritueux', label: 'Spiritueux' },
   { path: '/bar-stock', label: 'Le Bar' },
   { path: '/bar-basics', label: 'Techniques' },
-  { path: '/contact', label: 'Contact' },
 ];
 
 export const Navigation: React.FC = () => {
