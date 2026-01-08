@@ -223,17 +223,30 @@ const LetterTitle = styled.h2`
   border-bottom: 1px solid rgba(247, 245, 235, 0.15);
 `;
 
-// Liste fluide d'ingrédients sans cartes boxées
-const IngredientsList = styled.div`
-  display: flex;
-  flex-direction: column;
+// Grille d'ingrédients pour réduire le scroll
+const IngredientsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: ${spacing[2]};
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 800px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
-const IngredientRow = styled.button`
+const IngredientItem = styled.button`
   display: flex;
   align-items: center;
-  gap: ${spacing[4]};
-  padding: ${spacing[4]} 0;
+  gap: ${spacing[3]};
+  padding: ${spacing[3]};
   background: transparent;
   border: none;
   border-bottom: 1px solid rgba(247, 245, 235, 0.1);
@@ -241,15 +254,8 @@ const IngredientRow = styled.button`
   transition: all 0.3s ease;
   cursor: pointer;
 
-  &:last-child {
-    border-bottom: none;
-  }
-
   &:hover {
-    padding-left: ${spacing[3]};
-    background: rgba(255, 255, 255, 0.03);
-    margin: 0 -${spacing[3]};
-    padding-right: ${spacing[3]};
+    background: rgba(255, 255, 255, 0.05);
   }
 `;
 
@@ -503,17 +509,17 @@ export const IngredientsPage: React.FC = () => {
                     <span>{categoryIcons[category]}</span>
                     {category}
                   </CategoryTitle>
-                  <IngredientsList>
+                  <IngredientsGrid>
                     {ingredients.map((ingredient) => (
-                      <IngredientRow
+                      <IngredientItem
                         key={ingredient.nameEN}
                         onClick={() => handleIngredientClick(ingredient)}
                       >
                         <IngredientImageWithPlaceholder ingredient={ingredient} />
                         <IngredientName>{ingredient.name}</IngredientName>
-                      </IngredientRow>
+                      </IngredientItem>
                     ))}
-                  </IngredientsList>
+                  </IngredientsGrid>
                 </CategorySection>
               ))
             ) : (
@@ -523,17 +529,17 @@ export const IngredientsPage: React.FC = () => {
                 .map(([letter, ingredients]) => (
                   <LetterSection key={letter} className="section-animate">
                     <LetterTitle>{letter}</LetterTitle>
-                    <IngredientsList>
+                    <IngredientsGrid>
                       {ingredients.map((ingredient) => (
-                        <IngredientRow
+                        <IngredientItem
                           key={ingredient.nameEN}
                           onClick={() => handleIngredientClick(ingredient)}
                         >
                           <IngredientImageWithPlaceholder ingredient={ingredient} />
                           <IngredientName>{ingredient.name}</IngredientName>
-                        </IngredientRow>
+                        </IngredientItem>
                       ))}
-                    </IngredientsList>
+                    </IngredientsGrid>
                   </LetterSection>
                 ))
             )}
