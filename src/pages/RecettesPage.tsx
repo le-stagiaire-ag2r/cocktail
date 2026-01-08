@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { gsap } from 'gsap';
 import { colors, typography, spacing } from '../styles/designTokens';
 import {
@@ -13,10 +13,34 @@ import {
 } from '../services/cocktailAPI';
 import { translateIngredient, translateCategory, translateGlass } from '../utils/translations';
 
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
 const PageHeader = styled.section`
   padding: 160px ${spacing[8]} 100px;
   text-align: center;
-  background: ${colors.background.secondary};
+  background: ${colors.gradient.burgundy};
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    right: -100px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+    border-radius: 50%;
+  }
 `;
 
 const PageLabel = styled.span`
@@ -27,14 +51,15 @@ const PageLabel = styled.span`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.ultrawide};
-  color: ${colors.accent.primary};
+  color: ${colors.palette.coral};
   margin-bottom: ${spacing[6]};
+  animation: ${fadeInUp} 0.6s ease forwards;
 
   &::before, &::after {
     content: '';
     width: 30px;
     height: 1px;
-    background: ${colors.accent.primary};
+    background: ${colors.palette.coral};
   }
 `;
 
@@ -42,17 +67,23 @@ const PageTitle = styled.h1`
   font-family: ${typography.fontFamily.display};
   font-size: ${typography.fontSize.heroSmall};
   font-weight: ${typography.fontWeight.light};
-  color: ${colors.text.primary};
+  color: ${colors.text.light};
   margin-bottom: ${spacing[6]};
+  animation: ${fadeInUp} 0.6s ease forwards;
+  animation-delay: 0.1s;
+  opacity: 0;
 `;
 
 const PageDesc = styled.p`
   font-family: ${typography.fontFamily.serif};
   font-size: ${typography.fontSize.xl};
   font-style: italic;
-  color: ${colors.text.secondary};
+  color: ${colors.text.lightSecondary};
   max-width: 600px;
   margin: 0 auto;
+  animation: ${fadeInUp} 0.6s ease forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
 `;
 
 const SearchSection = styled.div`
@@ -84,7 +115,8 @@ const SearchInput = styled.input`
 
   &:focus {
     outline: none;
-    border-color: ${colors.accent.primary};
+    border-color: ${colors.palette.burgundy};
+    box-shadow: 0 0 0 3px ${colors.accent.muted};
   }
 
   &::placeholder {
@@ -104,7 +136,7 @@ const SuggestionsDropdown = styled.div<{ $show: boolean }>`
   overflow-y: auto;
   display: ${props => props.$show ? 'block' : 'none'};
   z-index: 200;
-  box-shadow: ${props => props.$show ? '0 10px 40px rgba(26, 24, 21, 0.15)' : 'none'};
+  box-shadow: 0 10px 40px rgba(61, 46, 46, 0.15);
 `;
 
 const SuggestionItem = styled.button`
@@ -154,12 +186,13 @@ const SearchButton = styled.button`
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.wider};
   color: ${colors.text.light};
-  background: ${colors.text.primary};
+  background: ${colors.palette.burgundy};
   border: none;
   transition: all 0.3s ease;
 
   &:hover {
-    background: ${colors.accent.primary};
+    background: ${colors.palette.burgundyDark};
+    transform: translateY(-2px);
   }
 `;
 
@@ -175,13 +208,13 @@ const RandomButton = styled.button`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.wider};
-  color: ${colors.accent.primary};
+  color: ${colors.palette.terracotta};
   background: transparent;
-  border: 1px solid ${colors.accent.primary};
+  border: 1px solid ${colors.palette.terracotta};
   transition: all 0.3s ease;
 
   &:hover {
-    background: ${colors.accent.primary};
+    background: ${colors.palette.terracotta};
     color: ${colors.text.light};
   }
 
@@ -208,13 +241,13 @@ const FilterButton = styled.button<{ $active: boolean }>`
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.wide};
   color: ${props => props.$active ? colors.text.light : colors.text.secondary};
-  background: ${props => props.$active ? colors.text.primary : 'transparent'};
-  border: 1px solid ${props => props.$active ? colors.text.primary : colors.border.default};
+  background: ${props => props.$active ? colors.palette.burgundy : 'transparent'};
+  border: 1px solid ${props => props.$active ? colors.palette.burgundy : colors.border.default};
   transition: all 0.3s ease;
 
   &:hover {
-    color: ${props => props.$active ? colors.text.light : colors.accent.primary};
-    border-color: ${props => props.$active ? colors.text.primary : colors.accent.primary};
+    color: ${props => props.$active ? colors.text.light : colors.palette.burgundy};
+    border-color: ${colors.palette.burgundy};
   }
 `;
 
@@ -249,12 +282,14 @@ const LetterButton = styled.button<{ $active: boolean }>`
   font-size: ${typography.fontSize.base};
   font-weight: ${typography.fontWeight.light};
   color: ${props => props.$active ? colors.text.light : colors.text.secondary};
-  background: ${props => props.$active ? colors.text.primary : 'transparent'};
+  background: ${props => props.$active ? colors.palette.burgundy : 'transparent'};
   border: none;
+  border-radius: 50%;
   transition: all 0.2s ease;
 
   &:hover {
-    color: ${props => props.$active ? colors.text.light : colors.accent.primary};
+    color: ${props => props.$active ? colors.text.light : colors.palette.burgundy};
+    background: ${props => props.$active ? colors.palette.burgundy : colors.accent.subtle};
   }
 `;
 
@@ -296,7 +331,7 @@ const Spinner = styled.div`
   height: 40px;
   margin: 0 auto ${spacing[4]};
   border: 2px solid ${colors.border.default};
-  border-top-color: ${colors.accent.primary};
+  border-top-color: ${colors.palette.burgundy};
   border-radius: 50%;
   animation: spin 1s linear infinite;
 
@@ -324,7 +359,7 @@ const CocktailCard = styled.div`
   height: 420px;
   overflow: hidden;
   cursor: pointer;
-  background: ${colors.background.dark};
+  background: ${colors.palette.burgundy};
 
   &::before {
     content: '';
@@ -333,13 +368,13 @@ const CocktailCard = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: ${colors.gradient.overlay};
+    background: ${colors.gradient.cardOverlay};
     z-index: 1;
     transition: opacity 0.4s ease;
   }
 
   &:hover::before {
-    opacity: 0.6;
+    opacity: 0.7;
   }
 `;
 
@@ -350,11 +385,11 @@ const CardImage = styled.div<{ $src: string }>`
   right: 0;
   bottom: 0;
   background: url(${props => props.$src}) center center / cover no-repeat;
-  background-color: ${colors.background.tertiary};
+  background-color: ${colors.palette.burgundyLight};
   transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
   ${CocktailCard}:hover & {
-    transform: scale(1.08);
+    transform: scale(1.1);
   }
 `;
 
@@ -371,7 +406,7 @@ const CardCategory = styled.span`
   display: inline-block;
   font-size: ${typography.fontSize.xs};
   font-weight: ${typography.fontWeight.medium};
-  color: ${colors.accent.primary};
+  color: ${colors.palette.coral};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.widest};
   margin-bottom: ${spacing[2]};
@@ -396,7 +431,7 @@ const CardIngredients = styled.div`
 const IngredientTag = styled.span`
   font-size: ${typography.fontSize.xs};
   color: ${colors.text.lightSecondary};
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
   padding: ${spacing[1]} ${spacing[2]};
 `;
 
@@ -523,10 +558,11 @@ export const RecettesPage: React.FC = () => {
     if (gridRef.current && cocktails.length > 0) {
       gsap.fromTo(
         gridRef.current.querySelectorAll('.cocktail-card'),
-        { opacity: 0, y: 40 },
+        { opacity: 0, y: 50, scale: 0.95 },
         {
           opacity: 1,
           y: 0,
+          scale: 1,
           stagger: 0.08,
           duration: 0.6,
           ease: 'power3.out',
