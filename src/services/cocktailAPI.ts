@@ -61,6 +61,16 @@ export interface Cocktail {
   tags: string[];
 }
 
+// Vérifier si un cocktail est complet (image + instructions)
+export const isCompleteCocktail = (cocktail: Cocktail): boolean => {
+  return !!(
+    cocktail.image &&
+    cocktail.image.trim() !== '' &&
+    cocktail.instructions &&
+    cocktail.instructions.trim() !== ''
+  );
+};
+
 // Transformer les données de l'API en format utilisable
 export const transformCocktail = (drink: CocktailAPI): Cocktail => {
   const ingredients: { ingredient: string; measure: string }[] = [];
@@ -99,7 +109,7 @@ export const searchCocktails = async (query: string): Promise<Cocktail[]> => {
 
     if (!data.drinks) return [];
 
-    return data.drinks.map(transformCocktail);
+    return data.drinks.map(transformCocktail).filter(isCompleteCocktail);
   } catch (error) {
     console.error('Error searching cocktails:', error);
     return [];
@@ -121,19 +131,27 @@ export const getCocktailById = async (id: string): Promise<Cocktail | null> => {
   }
 };
 
-// Récupérer un cocktail aléatoire
+// Récupérer un cocktail aléatoire (réessaie si incomplet)
 export const getRandomCocktail = async (): Promise<Cocktail | null> => {
-  try {
-    const response = await fetch(`${API_BASE}/random.php`);
-    const data = await response.json();
+  const maxRetries = 5;
 
-    if (!data.drinks || !data.drinks[0]) return null;
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const response = await fetch(`${API_BASE}/random.php`);
+      const data = await response.json();
 
-    return transformCocktail(data.drinks[0]);
-  } catch (error) {
-    console.error('Error fetching random cocktail:', error);
-    return null;
+      if (!data.drinks || !data.drinks[0]) continue;
+
+      const cocktail = transformCocktail(data.drinks[0]);
+      if (isCompleteCocktail(cocktail)) {
+        return cocktail;
+      }
+    } catch (error) {
+      console.error('Error fetching random cocktail:', error);
+    }
   }
+
+  return null;
 };
 
 // Récupérer les cocktails par première lettre
@@ -144,7 +162,7 @@ export const getCocktailsByLetter = async (letter: string): Promise<Cocktail[]> 
 
     if (!data.drinks) return [];
 
-    return data.drinks.map(transformCocktail);
+    return data.drinks.map(transformCocktail).filter(isCompleteCocktail);
   } catch (error) {
     console.error('Error fetching cocktails by letter:', error);
     return [];
@@ -162,12 +180,12 @@ export const getCocktailsByIngredient = async (ingredient: string): Promise<Cock
 
     // Récupérer les détails complets pour chaque cocktail
     const cocktails = await Promise.all(
-      data.drinks.slice(0, 20).map(async (drink: { idDrink: string }) => {
+      data.drinks.slice(0, 30).map(async (drink: { idDrink: string }) => {
         return getCocktailById(drink.idDrink);
       })
     );
 
-    return cocktails.filter((c): c is Cocktail => c !== null);
+    return cocktails.filter((c): c is Cocktail => c !== null && isCompleteCocktail(c));
   } catch (error) {
     console.error('Error fetching cocktails by ingredient:', error);
     return [];
@@ -187,6 +205,7 @@ export const getPopularCocktails = async (): Promise<Cocktail[]> => {
 
   for (const name of popularNames) {
     const cocktails = await searchCocktails(name);
+    // searchCocktails filtre déjà les cocktails incomplets
     if (cocktails.length > 0) {
       results.push(cocktails[0]);
     }
@@ -248,14 +267,14 @@ export const getCocktailsByCategory = async (category: string): Promise<Cocktail
 
     if (!data.drinks) return [];
 
-    // Récupérer les détails complets pour les 20 premiers
+    // Récupérer les détails complets pour les 30 premiers
     const cocktails = await Promise.all(
-      data.drinks.slice(0, 20).map(async (drink: { idDrink: string }) => {
+      data.drinks.slice(0, 30).map(async (drink: { idDrink: string }) => {
         return getCocktailById(drink.idDrink);
       })
     );
 
-    return cocktails.filter((c): c is Cocktail => c !== null);
+    return cocktails.filter((c): c is Cocktail => c !== null && isCompleteCocktail(c));
   } catch (error) {
     console.error('Error fetching cocktails by category:', error);
     return [];
