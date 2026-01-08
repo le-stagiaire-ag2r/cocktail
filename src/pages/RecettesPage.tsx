@@ -648,7 +648,7 @@ export const RecettesPage: React.FC = () => {
         </AlphabetNav>
       </SearchSection>
 
-      <ContentSection>
+      <ContentSection id="resultats">
         {loading ? (
           <LoadingContainer>
             <Spinner />

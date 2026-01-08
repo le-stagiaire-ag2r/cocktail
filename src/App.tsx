@@ -12,7 +12,6 @@ import IngredientsPage from './pages/IngredientsPage';
 import SpiriteuxPage from './pages/SpiriteuxPage';
 import BarBasicsPage from './pages/BarBasicsPage';
 import BarStockPage from './pages/BarStockPage';
-import ContactPage from './pages/ContactPage';
 import styled from 'styled-components';
 import { colors, typography, spacing } from './styles/designTokens';
 
@@ -34,7 +33,7 @@ const FooterContainer = styled.div`
 
 const FooterGrid = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
   gap: ${spacing[10]};
   margin-bottom: ${spacing[12]};
 
@@ -122,9 +121,9 @@ const FooterBottom = styled.div`
 function App() {
   return (
     <Router>
-      <ScrollToTop />
       <GlobalStyles />
       <SmoothScroll>
+        <ScrollToTop />
         <AppWrapper>
           <FloatingBackground />
           <Navigation />
@@ -138,7 +137,6 @@ function App() {
               <Route path="/spiritueux" element={<SpiriteuxPage />} />
               <Route path="/bar-basics" element={<BarBasicsPage />} />
               <Route path="/bar-stock" element={<BarStockPage />} />
-              <Route path="/contact" element={<ContactPage />} />
             </Routes>
           </main>
 
@@ -169,15 +167,6 @@ function App() {
                     <li><a href="/spiritueux#gin">Gin</a></li>
                     <li><a href="/spiritueux#rhum">Rhum</a></li>
                     <li><a href="/spiritueux#vodka">Vodka</a></li>
-                  </ul>
-                </FooterNav>
-
-                <FooterNav>
-                  <h4>Contact</h4>
-                  <ul>
-                    <li><span style={{ color: colors.text.tertiary }}>Adresse à définir</span></li>
-                    <li><span style={{ color: colors.text.tertiary }}>Paris, France</span></li>
-                    <li><span style={{ color: colors.accent.primary }}>Mar-Dim: 18h-02h</span></li>
                   </ul>
                 </FooterNav>
               </FooterGrid>
