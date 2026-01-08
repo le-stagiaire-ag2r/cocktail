@@ -55,46 +55,25 @@ const PageContainer = styled.div`
 `;
 
 const BackButton = styled.button`
-  position: absolute;
-  top: ${spacing[6]};
-  left: ${spacing[6]};
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  font-size: ${typography.fontSize.lg};
-  color: ${colors.text.light};
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border: none;
-  border-radius: 50%;
-  z-index: 50;
+  gap: ${spacing[2]};
+  padding: ${spacing[2]} ${spacing[4]};
+  margin-bottom: ${spacing[6]};
+  font-family: ${typography.fontFamily.body};
+  font-size: ${typography.fontSize.xs};
+  font-weight: ${typography.fontWeight.medium};
+  text-transform: uppercase;
+  letter-spacing: ${typography.letterSpacing.wider};
+  color: rgba(247, 245, 235, 0.7);
+  background: transparent;
+  border: 1px solid rgba(247, 245, 235, 0.3);
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: scale(1.1);
-  }
-
-  @media (max-width: 968px) {
-    position: relative;
-    top: 0;
-    left: 0;
-    margin: ${spacing[4]};
-    width: auto;
-    height: auto;
-    padding: ${spacing[2]} ${spacing[4]};
-    border-radius: 0;
-    color: ${colors.text.primary};
-    background: ${colors.background.card};
-    border: 1px solid ${colors.border.default};
-
-    &:hover {
-      color: ${colors.palette.burgundy};
-      border-color: ${colors.palette.burgundy};
-      transform: none;
-    }
+    color: ${colors.palette.cream};
+    border-color: ${colors.palette.cream};
+    transform: translateX(-5px);
   }
 `;
 
@@ -543,10 +522,10 @@ export const CocktailDetailPage: React.FC = () => {
     <PageContainer>
       <HeroSection>
         <ContentColumn>
-          <BackButton onClick={() => navigate('/recettes')}>
-            ←
-          </BackButton>
           <ContentInner ref={contentRef}>
+            <BackButton onClick={() => navigate('/recettes')}>
+              ← Retour aux cocktails
+            </BackButton>
             <Category>{translateCategory(cocktail.category)}</Category>
             <CocktailName>{cocktail.name}</CocktailName>
 

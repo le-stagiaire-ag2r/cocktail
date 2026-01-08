@@ -9,10 +9,11 @@ const Header = styled.header<{ $scrolled: boolean }>`
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: ${props => props.$scrolled ? spacing[3] : spacing[6]} ${spacing[8]};
-  background: ${props => props.$scrolled ? 'rgba(247, 245, 235, 0.95)' : 'transparent'};
+  padding: ${props => props.$scrolled ? spacing[3] : spacing[5]} ${spacing[8]};
+  background: ${props => props.$scrolled
+    ? 'rgba(107, 58, 74, 0.98)'
+    : 'linear-gradient(180deg, rgba(107, 58, 74, 0.9) 0%, rgba(107, 58, 74, 0.7) 50%, transparent 100%)'};
   backdrop-filter: ${props => props.$scrolled ? 'blur(20px)' : 'none'};
-  border-bottom: 1px solid ${props => props.$scrolled ? colors.border.default : 'transparent'};
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 `;
 
@@ -28,16 +29,17 @@ const Logo = styled(Link)`
   font-family: ${typography.fontFamily.display};
   font-size: ${typography.fontSize['2xl']};
   font-weight: ${typography.fontWeight.light};
-  color: ${colors.text.primary};
+  color: ${colors.palette.cream};
   letter-spacing: ${typography.letterSpacing.wide};
   transition: color 0.3s ease;
 
   span {
-    color: ${colors.accent.primary};
+    color: ${colors.palette.coral};
+    font-style: italic;
   }
 
   &:hover {
-    color: ${colors.accent.olive};
+    color: ${colors.palette.coral};
   }
 `;
 
@@ -55,7 +57,7 @@ const NavLinks = styled.ul<{ $isOpen: boolean }>`
     flex-direction: column;
     justify-content: center;
     gap: ${spacing[6]};
-    background: ${colors.background.primary};
+    background: ${colors.gradient.burgundy};
     transform: translateX(${props => props.$isOpen ? '0' : '100%'});
     transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
@@ -67,7 +69,7 @@ const NavLink = styled(Link)<{ $active: boolean }>`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.widest};
-  color: ${props => props.$active ? colors.accent.primary : colors.text.secondary};
+  color: ${props => props.$active ? colors.palette.coral : 'rgba(247, 245, 235, 0.8)'};
   position: relative;
   padding: ${spacing[2]} 0;
 
@@ -78,12 +80,12 @@ const NavLink = styled(Link)<{ $active: boolean }>`
     left: 0;
     width: ${props => props.$active ? '100%' : '0'};
     height: 1px;
-    background: ${colors.accent.primary};
+    background: ${colors.palette.coral};
     transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   &:hover {
-    color: ${colors.accent.primary};
+    color: ${colors.palette.coral};
 
     &::after {
       width: 100%;
@@ -93,6 +95,7 @@ const NavLink = styled(Link)<{ $active: boolean }>`
   @media (max-width: 968px) {
     font-size: ${typography.fontSize.lg};
     letter-spacing: ${typography.letterSpacing.ultrawide};
+    color: ${colors.palette.cream};
   }
 `;
 
@@ -113,7 +116,7 @@ const MenuButton = styled.button<{ $isOpen: boolean }>`
     display: block;
     width: 28px;
     height: 1px;
-    background: ${colors.text.primary};
+    background: ${colors.palette.cream};
     transition: all 0.3s ease;
 
     &:nth-child(1) {

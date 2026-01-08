@@ -165,6 +165,11 @@ const LetterButton = styled.button<{ $active: boolean; $disabled: boolean }>`
   }
 `;
 
+const PageWrapper = styled.div`
+  min-height: 100vh;
+  background: linear-gradient(180deg, ${colors.background.secondary} 0%, ${colors.background.warm} 100%);
+`;
+
 const ContentSection = styled.section`
   padding: ${spacing[12]} ${spacing[8]};
   max-width: 1400px;
@@ -402,7 +407,7 @@ export const IngredientsPage: React.FC = () => {
   };
 
   return (
-    <>
+    <PageWrapper>
       <PageHeader>
         <PageLabel>Guide Complet</PageLabel>
         <PageTitle>Ingrédients</PageTitle>
@@ -515,7 +520,7 @@ export const IngredientsPage: React.FC = () => {
           </>
         )}
       </ContentSection>
-    </>
+    </PageWrapper>
   );
 };
 

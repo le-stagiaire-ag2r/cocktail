@@ -293,6 +293,11 @@ const LetterButton = styled.button<{ $active: boolean }>`
   }
 `;
 
+const PageWrapper = styled.div`
+  min-height: 100vh;
+  background: linear-gradient(180deg, ${colors.background.primary} 0%, ${colors.background.warm} 100%);
+`;
+
 const ContentSection = styled.section`
   padding: ${spacing[16]} ${spacing[8]};
   max-width: 1400px;
@@ -655,7 +660,7 @@ export const RecettesPage: React.FC = () => {
   };
 
   return (
-    <>
+    <PageWrapper>
       <PageHeader>
         <PageLabel>Collection</PageLabel>
         <PageTitle>Nos Cocktails</PageTitle>
@@ -777,7 +782,7 @@ export const RecettesPage: React.FC = () => {
           </>
         )}
       </ContentSection>
-    </>
+    </PageWrapper>
   );
 };
 
