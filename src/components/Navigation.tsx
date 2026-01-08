@@ -9,11 +9,11 @@ const Header = styled.header<{ $scrolled: boolean }>`
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: ${spacing[4]} ${spacing[8]};
-  background: ${props => props.$scrolled ? 'rgba(10, 10, 10, 0.95)' : 'transparent'};
+  padding: ${props => props.$scrolled ? spacing[3] : spacing[6]} ${spacing[8]};
+  background: ${props => props.$scrolled ? 'rgba(247, 245, 235, 0.95)' : 'transparent'};
   backdrop-filter: ${props => props.$scrolled ? 'blur(20px)' : 'none'};
   border-bottom: 1px solid ${props => props.$scrolled ? colors.border.default : 'transparent'};
-  transition: all 0.4s ease;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 `;
 
 const Nav = styled.nav`
@@ -27,13 +27,17 @@ const Nav = styled.nav`
 const Logo = styled(Link)`
   font-family: ${typography.fontFamily.display};
   font-size: ${typography.fontSize['2xl']};
-  font-weight: ${typography.fontWeight.bold};
-  color: ${colors.accent.primary};
-  letter-spacing: ${typography.letterSpacing.tight};
-  transition: opacity 0.3s ease;
+  font-weight: ${typography.fontWeight.light};
+  color: ${colors.text.primary};
+  letter-spacing: ${typography.letterSpacing.wide};
+  transition: color 0.3s ease;
+
+  span {
+    color: ${colors.accent.primary};
+  }
 
   &:hover {
-    opacity: 0.8;
+    color: ${colors.accent.olive};
   }
 `;
 
@@ -42,7 +46,7 @@ const NavLinks = styled.ul<{ $isOpen: boolean }>`
   align-items: center;
   gap: ${spacing[8]};
 
-  @media (max-width: 768px) {
+  @media (max-width: 968px) {
     position: fixed;
     top: 0;
     left: 0;
@@ -50,18 +54,19 @@ const NavLinks = styled.ul<{ $isOpen: boolean }>`
     bottom: 0;
     flex-direction: column;
     justify-content: center;
-    gap: ${spacing[8]};
+    gap: ${spacing[6]};
     background: ${colors.background.primary};
     transform: translateX(${props => props.$isOpen ? '0' : '100%'});
-    transition: transform 0.4s ease;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 `;
 
 const NavLink = styled(Link)<{ $active: boolean }>`
-  font-size: ${typography.fontSize.sm};
+  font-family: ${typography.fontFamily.body};
+  font-size: ${typography.fontSize.xs};
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
-  letter-spacing: ${typography.letterSpacing.wider};
+  letter-spacing: ${typography.letterSpacing.widest};
   color: ${props => props.$active ? colors.accent.primary : colors.text.secondary};
   position: relative;
   padding: ${spacing[2]} 0;
@@ -74,7 +79,7 @@ const NavLink = styled(Link)<{ $active: boolean }>`
     width: ${props => props.$active ? '100%' : '0'};
     height: 1px;
     background: ${colors.accent.primary};
-    transition: width 0.3s ease;
+    transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   &:hover {
@@ -85,8 +90,9 @@ const NavLink = styled(Link)<{ $active: boolean }>`
     }
   }
 
-  @media (max-width: 768px) {
-    font-size: ${typography.fontSize.xl};
+  @media (max-width: 968px) {
+    font-size: ${typography.fontSize.lg};
+    letter-spacing: ${typography.letterSpacing.ultrawide};
   }
 `;
 
@@ -95,18 +101,18 @@ const MenuButton = styled.button<{ $isOpen: boolean }>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   z-index: 1001;
 
-  @media (max-width: 768px) {
+  @media (max-width: 968px) {
     display: flex;
   }
 
   span {
     display: block;
-    width: 24px;
-    height: 2px;
+    width: 28px;
+    height: 1px;
     background: ${colors.text.primary};
     transition: all 0.3s ease;
 
@@ -116,7 +122,7 @@ const MenuButton = styled.button<{ $isOpen: boolean }>`
 
     &:nth-child(2) {
       opacity: ${props => props.$isOpen ? 0 : 1};
-      margin: 6px 0;
+      margin: 8px 0;
     }
 
     &:nth-child(3) {
@@ -127,7 +133,7 @@ const MenuButton = styled.button<{ $isOpen: boolean }>`
 
 const navItems = [
   { path: '/', label: 'Accueil' },
-  { path: '/recettes', label: 'Recettes' },
+  { path: '/recettes', label: 'Cocktails' },
   { path: '/ingredients', label: 'Ingrédients' },
   { path: '/spiritueux', label: 'Spiritueux' },
   { path: '/bar-stock', label: 'Le Bar' },
@@ -155,7 +161,7 @@ export const Navigation: React.FC = () => {
   return (
     <Header $scrolled={scrolled}>
       <Nav>
-        <Logo to="/">Le Old Fashioned</Logo>
+        <Logo to="/">Le Old <span>Fashioned</span></Logo>
 
         <MenuButton $isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
           <span />

@@ -1,59 +1,70 @@
 // Design Tokens - Le Old Fashioned
-// Inspired by classic cocktail bars with a modern touch
+// Style luxe inspiré de Skyline Bar Venice
 
 export const colors = {
-  // Backgrounds
+  // Backgrounds - Palette crème luxe
   background: {
-    primary: '#0a0a0a',
-    secondary: '#111111',
-    tertiary: '#1a1a1a',
-    card: '#141414',
-    cardHover: '#1f1f1f',
+    primary: '#f7f5eb',
+    secondary: '#efe9db',
+    tertiary: '#e8e2d2',
+    card: '#ffffff',
+    cardHover: '#f9f7f0',
+    dark: '#1a1815',
+    darkSecondary: '#252220',
   },
 
   // Text
   text: {
-    primary: '#ffffff',
-    secondary: '#a0a0a0',
-    tertiary: '#666666',
-    muted: '#444444',
+    primary: '#1a1815',
+    secondary: '#5a5652',
+    tertiary: '#8a8580',
+    muted: '#b0aba5',
+    light: '#f7f5eb',
+    lightSecondary: '#d0ccc5',
   },
 
-  // Accent - Gold/Amber (whisky inspired)
+  // Accent - Or luxe
   accent: {
-    primary: '#c9a227',
-    secondary: '#e6c355',
-    muted: 'rgba(201, 162, 39, 0.3)',
-    subtle: 'rgba(201, 162, 39, 0.1)',
+    primary: '#cc9900',
+    secondary: '#daa520',
+    muted: 'rgba(204, 153, 0, 0.2)',
+    subtle: 'rgba(204, 153, 0, 0.08)',
+    olive: '#69673a',
+    terracotta: '#933a21',
   },
 
   // Borders
   border: {
-    default: '#222222',
-    hover: '#333333',
-    active: '#c9a227',
-    subtle: '#1a1a1a',
+    default: 'rgba(26, 24, 21, 0.1)',
+    hover: 'rgba(26, 24, 21, 0.2)',
+    active: '#cc9900',
+    subtle: 'rgba(26, 24, 21, 0.05)',
+    light: 'rgba(247, 245, 235, 0.2)',
   },
 
   // Status
   status: {
-    success: '#22c55e',
-    error: '#ef4444',
-    warning: '#f59e0b',
+    success: '#4a7c59',
+    error: '#a63d2f',
+    warning: '#c9a227',
   },
 
   // Gradients
   gradient: {
-    gold: 'linear-gradient(135deg, #c9a227 0%, #e6c355 50%, #c9a227 100%)',
-    dark: 'linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%)',
-    radial: 'radial-gradient(ellipse at center, rgba(201, 162, 39, 0.15) 0%, transparent 70%)',
+    gold: 'linear-gradient(135deg, #cc9900 0%, #daa520 50%, #cc9900 100%)',
+    cream: 'linear-gradient(180deg, #f7f5eb 0%, #efe9db 100%)',
+    dark: 'linear-gradient(180deg, #1a1815 0%, #252220 100%)',
+    overlay: 'linear-gradient(to top, rgba(26, 24, 21, 0.95) 0%, rgba(26, 24, 21, 0.6) 50%, transparent 100%)',
+    overlayLight: 'linear-gradient(to top, rgba(247, 245, 235, 0.95) 0%, rgba(247, 245, 235, 0) 100%)',
+    heroOverlay: 'linear-gradient(135deg, rgba(147, 58, 33, 0.8) 0%, rgba(105, 103, 58, 0.6) 50%, rgba(204, 153, 0, 0.4) 100%)',
   },
 };
 
 export const typography = {
   fontFamily: {
-    display: "'Playfair Display', Georgia, serif",
+    display: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
     body: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+    serif: "'Cormorant Garamond', Georgia, serif",
     mono: "'JetBrains Mono', 'Fira Code', monospace",
   },
   fontSize: {
@@ -70,6 +81,9 @@ export const typography = {
     '7xl': '4.5rem',
     '8xl': '6rem',
     '9xl': '8rem',
+    '10xl': '10rem',
+    hero: 'clamp(4rem, 12vw, 9rem)',
+    heroSmall: 'clamp(2.5rem, 8vw, 5rem)',
   },
   fontWeight: {
     light: 300,
@@ -95,6 +109,7 @@ export const typography = {
     wide: '0.025em',
     wider: '0.05em',
     widest: '0.1em',
+    ultrawide: '0.2em',
   },
 };
 
@@ -132,16 +147,19 @@ export const transitions = {
   normal: '0.3s ease',
   slow: '0.5s ease',
   slower: '0.8s ease',
+  elegant: '0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+  smooth: '0.4s cubic-bezier(0.4, 0, 0.2, 1)',
 };
 
 export const shadows = {
-  sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-  md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-  lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-  xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
-  '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-  gold: '0 0 40px rgba(201, 162, 39, 0.3)',
-  glow: '0 0 60px rgba(201, 162, 39, 0.2)',
+  sm: '0 1px 2px 0 rgba(26, 24, 21, 0.05)',
+  md: '0 4px 6px -1px rgba(26, 24, 21, 0.08)',
+  lg: '0 10px 15px -3px rgba(26, 24, 21, 0.1)',
+  xl: '0 20px 25px -5px rgba(26, 24, 21, 0.1)',
+  '2xl': '0 25px 50px -12px rgba(26, 24, 21, 0.2)',
+  gold: '0 0 40px rgba(204, 153, 0, 0.2)',
+  glow: '0 0 60px rgba(204, 153, 0, 0.15)',
+  elegant: '0 20px 60px rgba(26, 24, 21, 0.15)',
 };
 
 export const zIndex = {

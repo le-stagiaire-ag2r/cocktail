@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { SmoothScroll } from './components/ui/SmoothScroll';
 import { FloatingBackground } from './components/ui/FloatingBackground';
 import { Navigation } from './components/Navigation';
@@ -21,9 +21,9 @@ const AppWrapper = styled.div`
 `;
 
 const Footer = styled.footer`
-  padding: ${spacing[16]} ${spacing[8]};
-  background: ${colors.background.secondary};
-  border-top: 1px solid ${colors.border.default};
+  padding: 100px ${spacing[8]} ${spacing[12]};
+  background: ${colors.background.dark};
+  color: ${colors.text.light};
 `;
 
 const FooterContainer = styled.div`
@@ -31,14 +31,15 @@ const FooterContainer = styled.div`
   margin: 0 auto;
 `;
 
-const FooterGrid = styled.div`
+const FooterTop = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: ${spacing[10]};
-  margin-bottom: ${spacing[12]};
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: ${spacing[12]};
+  margin-bottom: ${spacing[16]};
 
   @media (max-width: 968px) {
     grid-template-columns: 1fr 1fr;
+    gap: ${spacing[8]};
   }
 
   @media (max-width: 600px) {
@@ -50,44 +51,51 @@ const FooterGrid = styled.div`
 const FooterBrand = styled.div`
   h3 {
     font-family: ${typography.fontFamily.display};
-    font-size: ${typography.fontSize['2xl']};
-    color: ${colors.accent.primary};
+    font-size: ${typography.fontSize['3xl']};
+    font-weight: ${typography.fontWeight.light};
+    color: ${colors.text.light};
     margin-bottom: ${spacing[2]};
-  }
 
-  p {
-    color: ${colors.text.tertiary};
-    font-size: ${typography.fontSize.sm};
-    margin-bottom: ${spacing[1]};
+    span {
+      color: ${colors.accent.primary};
+      font-style: italic;
+    }
   }
 
   .tagline {
+    font-family: ${typography.fontFamily.serif};
+    font-size: ${typography.fontSize.base};
     font-style: italic;
-    color: ${colors.text.secondary};
+    color: ${colors.text.lightSecondary};
     margin-top: ${spacing[4]};
+    max-width: 280px;
+
+    @media (max-width: 600px) {
+      margin: ${spacing[4]} auto 0;
+    }
   }
 `;
 
 const FooterNav = styled.div`
   h4 {
-    font-size: ${typography.fontSize.sm};
-    font-weight: ${typography.fontWeight.semibold};
-    color: ${colors.text.primary};
+    font-size: ${typography.fontSize.xs};
+    font-weight: ${typography.fontWeight.medium};
+    color: ${colors.accent.primary};
     text-transform: uppercase;
-    letter-spacing: ${typography.letterSpacing.wide};
-    margin-bottom: ${spacing[4]};
+    letter-spacing: ${typography.letterSpacing.widest};
+    margin-bottom: ${spacing[6]};
   }
 
   ul {
     display: flex;
     flex-direction: column;
-    gap: ${spacing[2]};
+    gap: ${spacing[3]};
   }
 
   a {
     font-size: ${typography.fontSize.sm};
-    color: ${colors.text.tertiary};
-    transition: color 0.2s ease;
+    color: ${colors.text.lightSecondary};
+    transition: color 0.3s ease;
 
     &:hover {
       color: ${colors.accent.primary};
@@ -103,19 +111,29 @@ const FooterNav = styled.div`
 
 const FooterBottom = styled.div`
   padding-top: ${spacing[8]};
-  border-top: 1px solid ${colors.border.default};
-  text-align: center;
+  border-top: 1px solid ${colors.border.light};
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: ${spacing[4]};
 
-  p {
-    font-size: ${typography.fontSize.xs};
-    color: ${colors.text.tertiary};
-    margin-bottom: ${spacing[2]};
+  @media (max-width: 600px) {
+    flex-direction: column;
+    text-align: center;
   }
+`;
 
-  .legal {
-    font-style: italic;
-    opacity: 0.7;
-  }
+const Copyright = styled.p`
+  font-size: ${typography.fontSize.xs};
+  color: ${colors.text.lightSecondary};
+`;
+
+const Legal = styled.p`
+  font-family: ${typography.fontFamily.serif};
+  font-size: ${typography.fontSize.xs};
+  font-style: italic;
+  color: ${colors.text.muted};
 `;
 
 function App() {
@@ -142,38 +160,48 @@ function App() {
 
           <Footer>
             <FooterContainer>
-              <FooterGrid>
+              <FooterTop>
                 <FooterBrand>
-                  <h3>Le Old Fashioned</h3>
-                  <p>Bar à cocktails</p>
-                  <p className="tagline">L'art du cocktail, simplement.</p>
+                  <h3>Le Old <span>Fashioned</span></h3>
+                  <p className="tagline">
+                    L'art du cocktail, simplement. Une expérience raffinée au coeur de la mixologie.
+                  </p>
                 </FooterBrand>
 
                 <FooterNav>
                   <h4>Navigation</h4>
                   <ul>
-                    <li><a href="/recettes">Recettes</a></li>
-                    <li><a href="/ingredients">Ingrédients</a></li>
-                    <li><a href="/spiritueux">Spiritueux</a></li>
-                    <li><a href="/bar-stock">Le Bar</a></li>
-                    <li><a href="/bar-basics">Techniques</a></li>
+                    <li><Link to="/">Accueil</Link></li>
+                    <li><Link to="/recettes">Cocktails</Link></li>
+                    <li><Link to="/ingredients">Ingrédients</Link></li>
+                    <li><Link to="/bar-stock">Le Bar</Link></li>
                   </ul>
                 </FooterNav>
 
                 <FooterNav>
                   <h4>Spiritueux</h4>
                   <ul>
-                    <li><a href="/spiritueux#whisky">Whisky</a></li>
-                    <li><a href="/spiritueux#gin">Gin</a></li>
-                    <li><a href="/spiritueux#rhum">Rhum</a></li>
-                    <li><a href="/spiritueux#vodka">Vodka</a></li>
+                    <li><Link to="/spiritueux#whisky">Whisky</Link></li>
+                    <li><Link to="/spiritueux#gin">Gin</Link></li>
+                    <li><Link to="/spiritueux#rhum">Rhum</Link></li>
+                    <li><Link to="/spiritueux#vodka">Vodka</Link></li>
                   </ul>
                 </FooterNav>
-              </FooterGrid>
+
+                <FooterNav>
+                  <h4>Techniques</h4>
+                  <ul>
+                    <li><Link to="/bar-basics">Les bases</Link></li>
+                    <li><Link to="/bar-basics#shaking">Shaking</Link></li>
+                    <li><Link to="/bar-basics#stirring">Stirring</Link></li>
+                    <li><Link to="/bar-basics#muddling">Muddling</Link></li>
+                  </ul>
+                </FooterNav>
+              </FooterTop>
 
               <FooterBottom>
-                <p>&copy; 2024 Le Old Fashioned. Tous droits réservés.</p>
-                <p className="legal">L'abus d'alcool est dangereux pour la santé. À consommer avec modération.</p>
+                <Copyright>&copy; 2024 Le Old Fashioned. Tous droits réservés.</Copyright>
+                <Legal>L'abus d'alcool est dangereux pour la santé. À consommer avec modération.</Legal>
               </FooterBottom>
             </FooterContainer>
           </Footer>

@@ -14,38 +14,49 @@ import {
 import { translateIngredient, translateCategory, translateGlass } from '../utils/translations';
 
 const PageHeader = styled.section`
-  padding: 180px ${spacing[8]} ${spacing[16]};
+  padding: 160px ${spacing[8]} 100px;
   text-align: center;
-  background: linear-gradient(to bottom, ${colors.background.secondary}, ${colors.background.primary});
+  background: ${colors.background.secondary};
 `;
 
 const PageLabel = styled.span`
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: ${spacing[4]};
   font-size: ${typography.fontSize.xs};
-  font-weight: ${typography.fontWeight.semibold};
+  font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
-  letter-spacing: ${typography.letterSpacing.widest};
+  letter-spacing: ${typography.letterSpacing.ultrawide};
   color: ${colors.accent.primary};
-  margin-bottom: ${spacing[4]};
+  margin-bottom: ${spacing[6]};
+
+  &::before, &::after {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: ${colors.accent.primary};
+  }
 `;
 
 const PageTitle = styled.h1`
   font-family: ${typography.fontFamily.display};
-  font-size: clamp(2.5rem, 6vw, 5rem);
-  font-weight: ${typography.fontWeight.bold};
+  font-size: ${typography.fontSize.heroSmall};
+  font-weight: ${typography.fontWeight.light};
   color: ${colors.text.primary};
-  margin-bottom: ${spacing[4]};
+  margin-bottom: ${spacing[6]};
 `;
 
 const PageDesc = styled.p`
-  font-size: ${typography.fontSize.lg};
+  font-family: ${typography.fontFamily.serif};
+  font-size: ${typography.fontSize.xl};
+  font-style: italic;
   color: ${colors.text.secondary};
   max-width: 600px;
   margin: 0 auto;
 `;
 
 const SearchSection = styled.div`
-  padding: ${spacing[8]};
+  padding: ${spacing[10]} ${spacing[8]};
   background: ${colors.background.primary};
   border-bottom: 1px solid ${colors.border.default};
 `;
@@ -63,12 +74,13 @@ const SearchInputWrapper = styled.div`
 
 const SearchInput = styled.input`
   flex: 1;
-  padding: ${spacing[4]};
+  padding: ${spacing[4]} ${spacing[5]};
+  font-family: ${typography.fontFamily.body};
   font-size: ${typography.fontSize.base};
   color: ${colors.text.primary};
   background: ${colors.background.card};
   border: 1px solid ${colors.border.default};
-  transition: border-color 0.2s ease;
+  transition: all 0.3s ease;
 
   &:focus {
     outline: none;
@@ -76,7 +88,7 @@ const SearchInput = styled.input`
   }
 
   &::placeholder {
-    color: ${colors.text.tertiary};
+    color: ${colors.text.muted};
   }
 `;
 
@@ -92,7 +104,7 @@ const SuggestionsDropdown = styled.div<{ $show: boolean }>`
   overflow-y: auto;
   display: ${props => props.$show ? 'block' : 'none'};
   z-index: 200;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: ${props => props.$show ? '0 10px 40px rgba(26, 24, 21, 0.15)' : 'none'};
 `;
 
 const SuggestionItem = styled.button`
@@ -119,10 +131,9 @@ const SuggestionItem = styled.button`
   }
 
   img {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     object-fit: cover;
-    border-radius: 4px;
   }
 
   .name {
@@ -137,28 +148,33 @@ const SuggestionItem = styled.button`
 
 const SearchButton = styled.button`
   padding: ${spacing[4]} ${spacing[6]};
-  font-size: ${typography.fontSize.sm};
-  font-weight: ${typography.fontWeight.semibold};
+  font-family: ${typography.fontFamily.body};
+  font-size: ${typography.fontSize.xs};
+  font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
-  color: ${colors.background.primary};
-  background: ${colors.accent.primary};
+  letter-spacing: ${typography.letterSpacing.wider};
+  color: ${colors.text.light};
+  background: ${colors.text.primary};
   border: none;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 
   &:hover {
-    background: ${colors.accent.secondary};
+    background: ${colors.accent.primary};
   }
 `;
 
 const RandomButton = styled.button`
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: ${spacing[2]};
-  margin: ${spacing[4]} auto 0;
+  margin: ${spacing[6]} auto 0;
   padding: ${spacing[3]} ${spacing[6]};
-  font-size: ${typography.fontSize.sm};
+  font-family: ${typography.fontFamily.body};
+  font-size: ${typography.fontSize.xs};
   font-weight: ${typography.fontWeight.medium};
+  text-transform: uppercase;
+  letter-spacing: ${typography.letterSpacing.wider};
   color: ${colors.accent.primary};
   background: transparent;
   border: 1px solid ${colors.accent.primary};
@@ -166,7 +182,7 @@ const RandomButton = styled.button`
 
   &:hover {
     background: ${colors.accent.primary};
-    color: ${colors.background.primary};
+    color: ${colors.text.light};
   }
 
   &:disabled {
@@ -181,23 +197,24 @@ const FiltersContainer = styled.div`
   gap: ${spacing[2]};
   flex-wrap: wrap;
   max-width: 800px;
-  margin: ${spacing[6]} auto 0;
+  margin: ${spacing[8]} auto 0;
 `;
 
 const FilterButton = styled.button<{ $active: boolean }>`
   padding: ${spacing[2]} ${spacing[4]};
+  font-family: ${typography.fontFamily.body};
   font-size: ${typography.fontSize.xs};
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.wide};
-  color: ${props => props.$active ? colors.accent.primary : colors.text.tertiary};
-  background: ${props => props.$active ? colors.accent.subtle : 'transparent'};
-  border: 1px solid ${props => props.$active ? colors.accent.primary : colors.border.default};
+  color: ${props => props.$active ? colors.text.light : colors.text.secondary};
+  background: ${props => props.$active ? colors.text.primary : 'transparent'};
+  border: 1px solid ${props => props.$active ? colors.text.primary : colors.border.default};
   transition: all 0.3s ease;
 
   &:hover {
-    color: ${colors.accent.primary};
-    border-color: ${colors.accent.primary};
+    color: ${props => props.$active ? colors.text.light : colors.accent.primary};
+    border-color: ${props => props.$active ? colors.text.primary : colors.accent.primary};
   }
 `;
 
@@ -207,7 +224,7 @@ const AlphabetNav = styled.div`
   flex-wrap: wrap;
   gap: ${spacing[1]};
   max-width: 900px;
-  margin: ${spacing[6]} auto 0;
+  margin: ${spacing[8]} auto 0;
   padding-top: ${spacing[6]};
   border-top: 1px solid ${colors.border.default};
 `;
@@ -219,7 +236,7 @@ const AlphabetLabel = styled.span`
   color: ${colors.text.tertiary};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.wide};
-  margin-bottom: ${spacing[2]};
+  margin-bottom: ${spacing[3]};
 `;
 
 const LetterButton = styled.button<{ $active: boolean }>`
@@ -228,21 +245,21 @@ const LetterButton = styled.button<{ $active: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: ${typography.fontSize.sm};
-  font-weight: ${typography.fontWeight.medium};
-  color: ${props => props.$active ? colors.accent.primary : colors.text.secondary};
-  background: ${props => props.$active ? colors.accent.subtle : 'transparent'};
-  border: 1px solid ${props => props.$active ? colors.accent.primary : 'transparent'};
+  font-family: ${typography.fontFamily.display};
+  font-size: ${typography.fontSize.base};
+  font-weight: ${typography.fontWeight.light};
+  color: ${props => props.$active ? colors.text.light : colors.text.secondary};
+  background: ${props => props.$active ? colors.text.primary : 'transparent'};
+  border: none;
   transition: all 0.2s ease;
 
   &:hover {
-    color: ${colors.accent.primary};
-    border-color: ${colors.accent.primary};
+    color: ${props => props.$active ? colors.text.light : colors.accent.primary};
   }
 `;
 
 const ContentSection = styled.section`
-  padding: ${spacing[12]} ${spacing[8]};
+  padding: ${spacing[16]} ${spacing[8]};
   max-width: 1400px;
   margin: 0 auto;
 `;
@@ -251,8 +268,8 @@ const ResultsHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: ${spacing[8]};
-  padding-bottom: ${spacing[4]};
+  margin-bottom: ${spacing[10]};
+  padding-bottom: ${spacing[6]};
   border-bottom: 1px solid ${colors.border.default};
 `;
 
@@ -263,13 +280,14 @@ const ResultsCount = styled.span`
 
 const ResultsTitle = styled.h2`
   font-family: ${typography.fontFamily.display};
-  font-size: ${typography.fontSize.xl};
+  font-size: ${typography.fontSize['2xl']};
+  font-weight: ${typography.fontWeight.light};
   color: ${colors.text.primary};
 `;
 
 const LoadingContainer = styled.div`
   text-align: center;
-  padding: ${spacing[16]};
+  padding: ${spacing[20]};
   color: ${colors.text.tertiary};
 `;
 
@@ -277,7 +295,7 @@ const Spinner = styled.div`
   width: 40px;
   height: 40px;
   margin: 0 auto ${spacing[4]};
-  border: 3px solid ${colors.border.default};
+  border: 2px solid ${colors.border.default};
   border-top-color: ${colors.accent.primary};
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -289,60 +307,83 @@ const Spinner = styled.div`
 
 const CocktailsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: ${spacing[6]};
+  grid-template-columns: repeat(3, 1fr);
+  gap: ${spacing[4]};
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const CocktailCard = styled.div`
-  background: ${colors.background.card};
-  border: 1px solid ${colors.border.default};
-  transition: all 0.4s ease;
+  position: relative;
+  height: 420px;
   overflow: hidden;
   cursor: pointer;
+  background: ${colors.background.dark};
 
-  &:hover {
-    border-color: ${colors.accent.primary};
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: ${colors.gradient.overlay};
+    z-index: 1;
+    transition: opacity 0.4s ease;
+  }
+
+  &:hover::before {
+    opacity: 0.6;
   }
 `;
 
 const CardImage = styled.div<{ $src: string }>`
-  aspect-ratio: 4/3;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: url(${props => props.$src}) center center / cover no-repeat;
-  background-color: ${colors.background.secondary};
-  position: relative;
+  background-color: ${colors.background.tertiary};
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(to top, ${colors.background.card}, transparent);
+  ${CocktailCard}:hover & {
+    transform: scale(1.08);
   }
 `;
 
 const CardContent = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   padding: ${spacing[6]};
+  z-index: 2;
 `;
 
 const CardCategory = styled.span`
   display: inline-block;
   font-size: ${typography.fontSize.xs};
+  font-weight: ${typography.fontWeight.medium};
   color: ${colors.accent.primary};
   text-transform: uppercase;
-  letter-spacing: ${typography.letterSpacing.wider};
+  letter-spacing: ${typography.letterSpacing.widest};
   margin-bottom: ${spacing[2]};
 `;
 
 const CardTitle = styled.h3`
   font-family: ${typography.fontFamily.display};
-  font-size: ${typography.fontSize['xl']};
-  font-weight: ${typography.fontWeight.semibold};
-  color: ${colors.text.primary};
+  font-size: ${typography.fontSize['2xl']};
+  font-weight: ${typography.fontWeight.light};
+  color: ${colors.text.light};
   margin-bottom: ${spacing[3]};
+  line-height: 1.2;
 `;
 
 const CardIngredients = styled.div`
@@ -354,8 +395,8 @@ const CardIngredients = styled.div`
 
 const IngredientTag = styled.span`
   font-size: ${typography.fontSize.xs};
-  color: ${colors.text.tertiary};
-  background: ${colors.background.secondary};
+  color: ${colors.text.lightSecondary};
+  background: rgba(255, 255, 255, 0.1);
   padding: ${spacing[1]} ${spacing[2]};
 `;
 
@@ -363,22 +404,24 @@ const CardMeta = styled.div`
   display: flex;
   justify-content: space-between;
   padding-top: ${spacing[4]};
-  border-top: 1px solid ${colors.border.default};
+  border-top: 1px solid ${colors.border.light};
   font-size: ${typography.fontSize.xs};
-  color: ${colors.text.tertiary};
+  color: ${colors.text.lightSecondary};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.wide};
 `;
 
 const NoResults = styled.div`
   text-align: center;
-  padding: ${spacing[16]};
+  padding: ${spacing[20]};
   color: ${colors.text.tertiary};
 
   h3 {
-    font-size: ${typography.fontSize.xl};
+    font-family: ${typography.fontFamily.display};
+    font-size: ${typography.fontSize['2xl']};
+    font-weight: ${typography.fontWeight.light};
     color: ${colors.text.secondary};
-    margin-bottom: ${spacing[2]};
+    margin-bottom: ${spacing[3]};
   }
 `;
 
@@ -410,7 +453,6 @@ export const RecettesPage: React.FC = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  // Charger les cocktails (par ingrédient, recherche, lettre ou populaires)
   useEffect(() => {
     const loadCocktails = async () => {
       setLoading(true);
@@ -450,7 +492,6 @@ export const RecettesPage: React.FC = () => {
     loadCocktails();
   }, [searchParams]);
 
-  // Autocomplétion lors de la frappe
   useEffect(() => {
     const fetchSuggestions = async () => {
       if (searchQuery.length < 2) {
@@ -468,7 +509,6 @@ export const RecettesPage: React.FC = () => {
     return () => clearTimeout(debounce);
   }, [searchQuery]);
 
-  // Fermer les suggestions en cliquant ailleurs
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
@@ -479,24 +519,22 @@ export const RecettesPage: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Animation quand les cocktails changent
   useEffect(() => {
     if (gridRef.current && cocktails.length > 0) {
       gsap.fromTo(
         gridRef.current.querySelectorAll('.cocktail-card'),
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
-          stagger: 0.05,
-          duration: 0.5,
+          stagger: 0.08,
+          duration: 0.6,
           ease: 'power3.out',
         }
       );
     }
   }, [cocktails]);
 
-  // Recherche de cocktails
   const handleSearch = async () => {
     setShowSuggestions(false);
     if (!searchQuery.trim()) {
@@ -516,13 +554,11 @@ export const RecettesPage: React.FC = () => {
     setLoading(false);
   };
 
-  // Sélectionner une suggestion
   const handleSelectSuggestion = (cocktail: Cocktail) => {
     setShowSuggestions(false);
     navigate(`/cocktail/${cocktail.id}`);
   };
 
-  // Filtrer par spiritueux
   const handleFilterChange = async (filterId: string, ingredient: string) => {
     setActiveFilter(filterId);
     setActiveLetter('');
@@ -542,7 +578,6 @@ export const RecettesPage: React.FC = () => {
     setLoading(false);
   };
 
-  // Navigation par lettre
   const handleLetterClick = async (letter: string) => {
     setActiveLetter(letter);
     setActiveFilter('all');
@@ -556,7 +591,6 @@ export const RecettesPage: React.FC = () => {
     setLoading(false);
   };
 
-  // Cocktail aléatoire
   const handleRandomCocktail = async () => {
     setLoadingRandom(true);
     const random = await getRandomCocktail();
@@ -567,7 +601,6 @@ export const RecettesPage: React.FC = () => {
     }
   };
 
-  // Titre dynamique selon le contexte
   const getResultsTitle = () => {
     if (currentView === 'letter' && activeLetter) {
       return `Cocktails commençant par "${activeLetter}"`;
@@ -589,7 +622,7 @@ export const RecettesPage: React.FC = () => {
     <>
       <PageHeader>
         <PageLabel>Collection</PageLabel>
-        <PageTitle>Nos Recettes</PageTitle>
+        <PageTitle>Nos Cocktails</PageTitle>
         <PageDesc>
           Explorez des centaines de recettes de cocktails du monde entier.
           Classiques intemporels et créations modernes.
@@ -626,9 +659,11 @@ export const RecettesPage: React.FC = () => {
           </SuggestionsDropdown>
         </SearchContainer>
 
-        <RandomButton onClick={handleRandomCocktail} disabled={loadingRandom}>
-          {loadingRandom ? 'Chargement...' : '🎲 Cocktail aléatoire'}
-        </RandomButton>
+        <div style={{ textAlign: 'center' }}>
+          <RandomButton onClick={handleRandomCocktail} disabled={loadingRandom}>
+            {loadingRandom ? 'Chargement...' : 'Cocktail aléatoire'}
+          </RandomButton>
+        </div>
 
         <FiltersContainer>
           {spiritFilters.map(filter => (
@@ -687,11 +722,11 @@ export const RecettesPage: React.FC = () => {
                     <CardTitle>{cocktail.name}</CardTitle>
 
                     <CardIngredients>
-                      {cocktail.ingredients.slice(0, 4).map((ing, i) => (
+                      {cocktail.ingredients.slice(0, 3).map((ing, i) => (
                         <IngredientTag key={i}>{translateIngredient(ing.ingredient)}</IngredientTag>
                       ))}
-                      {cocktail.ingredients.length > 4 && (
-                        <IngredientTag>+{cocktail.ingredients.length - 4}</IngredientTag>
+                      {cocktail.ingredients.length > 3 && (
+                        <IngredientTag>+{cocktail.ingredients.length - 3}</IngredientTag>
                       )}
                     </CardIngredients>
 

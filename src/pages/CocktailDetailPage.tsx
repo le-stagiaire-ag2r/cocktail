@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { gsap } from 'gsap';
 import { colors, typography, spacing } from '../styles/designTokens';
@@ -8,20 +8,23 @@ import { translateIngredient, translateCategory, translateGlass } from '../utils
 import { useLenis } from '../components/ui/SmoothScroll';
 
 const PageContainer = styled.div`
-  padding-top: 100px;
   min-height: 100vh;
+  background: ${colors.background.primary};
 `;
 
 const BackButton = styled.button`
   position: fixed;
   top: 100px;
-  left: ${spacing[6]};
-  display: flex;
+  left: ${spacing[8]};
+  display: inline-flex;
   align-items: center;
   gap: ${spacing[2]};
-  padding: ${spacing[3]} ${spacing[4]};
-  font-size: ${typography.fontSize.sm};
+  padding: ${spacing[3]} ${spacing[5]};
+  font-family: ${typography.fontFamily.body};
+  font-size: ${typography.fontSize.xs};
   font-weight: ${typography.fontWeight.medium};
+  text-transform: uppercase;
+  letter-spacing: ${typography.letterSpacing.wider};
   color: ${colors.text.secondary};
   background: ${colors.background.card};
   border: 1px solid ${colors.border.default};
@@ -33,99 +36,107 @@ const BackButton = styled.button`
     border-color: ${colors.accent.primary};
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 968px) {
     position: relative;
     top: 0;
     left: 0;
-    margin: ${spacing[4]};
+    margin: ${spacing[6]} ${spacing[6]} 0;
   }
 `;
 
 const HeroSection = styled.section`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: ${spacing[12]};
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: ${spacing[12]} ${spacing[8]};
+  min-height: 100vh;
 
   @media (max-width: 968px) {
     grid-template-columns: 1fr;
+    min-height: auto;
   }
 `;
 
-const ImageContainer = styled.div`
-  position: relative;
-  aspect-ratio: 1;
-  overflow: hidden;
-  border: 1px solid ${colors.border.default};
-`;
-
-const CocktailImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-`;
-
-const ImageOverlay = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: ${spacing[6]};
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-`;
-
-const Tags = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: ${spacing[2]};
-`;
-
-const Tag = styled.span`
-  padding: ${spacing[1]} ${spacing[3]};
-  font-size: ${typography.fontSize.xs};
-  text-transform: uppercase;
-  letter-spacing: ${typography.letterSpacing.wide};
-  background: ${colors.accent.muted};
-  color: ${colors.accent.primary};
-`;
-
-const ContentContainer = styled.div`
+const ContentColumn = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  padding: 140px ${spacing[12]} ${spacing[16]};
+
+  @media (max-width: 1200px) {
+    padding: 140px ${spacing[8]} ${spacing[12]};
+  }
+
+  @media (max-width: 968px) {
+    padding: ${spacing[8]} ${spacing[6]};
+    order: 2;
+  }
+`;
+
+const ImageColumn = styled.div`
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+
+  @media (max-width: 968px) {
+    position: relative;
+    height: 60vh;
+    order: 1;
+  }
+`;
+
+const CocktailImage = styled.div<{ $src: string }>`
+  width: 100%;
+  height: 100%;
+  background: url(${props => props.$src}) center center / cover no-repeat;
+  background-color: ${colors.background.dark};
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: ${colors.gradient.heroOverlay};
+    opacity: 0.4;
+  }
 `;
 
 const Category = styled.span`
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: ${spacing[3]};
   font-size: ${typography.fontSize.xs};
-  font-weight: ${typography.fontWeight.semibold};
+  font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
-  letter-spacing: ${typography.letterSpacing.widest};
+  letter-spacing: ${typography.letterSpacing.ultrawide};
   color: ${colors.accent.primary};
-  margin-bottom: ${spacing[4]};
+  margin-bottom: ${spacing[6]};
+
+  &::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: ${colors.accent.primary};
+  }
 `;
 
 const CocktailName = styled.h1`
   font-family: ${typography.fontFamily.display};
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: ${typography.fontWeight.bold};
+  font-size: ${typography.fontSize.heroSmall};
+  font-weight: ${typography.fontWeight.light};
   color: ${colors.text.primary};
-  margin-bottom: ${spacing[4]};
+  margin-bottom: ${spacing[6]};
   line-height: 1.1;
 `;
 
 const Meta = styled.div`
   display: flex;
-  gap: ${spacing[6]};
-  margin-bottom: ${spacing[8]};
-  padding-bottom: ${spacing[6]};
+  gap: ${spacing[8]};
+  margin-bottom: ${spacing[10]};
+  padding-bottom: ${spacing[8]};
   border-bottom: 1px solid ${colors.border.default};
+  flex-wrap: wrap;
 `;
 
 const MetaItem = styled.div`
@@ -133,29 +144,56 @@ const MetaItem = styled.div`
     display: block;
     font-size: ${typography.fontSize.xs};
     text-transform: uppercase;
-    letter-spacing: ${typography.letterSpacing.wide};
+    letter-spacing: ${typography.letterSpacing.widest};
     color: ${colors.text.tertiary};
-    margin-bottom: ${spacing[1]};
+    margin-bottom: ${spacing[2]};
   }
 
   strong {
-    font-size: ${typography.fontSize.base};
+    font-family: ${typography.fontFamily.display};
+    font-size: ${typography.fontSize.xl};
+    font-weight: ${typography.fontWeight.light};
     color: ${colors.text.primary};
   }
 `;
 
+const Tags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${spacing[2]};
+  margin-bottom: ${spacing[8]};
+`;
+
+const Tag = styled.span`
+  padding: ${spacing[2]} ${spacing[4]};
+  font-size: ${typography.fontSize.xs};
+  text-transform: uppercase;
+  letter-spacing: ${typography.letterSpacing.wide};
+  background: ${colors.accent.subtle};
+  color: ${colors.accent.olive};
+  border: 1px solid ${colors.border.default};
+`;
+
 const SectionTitle = styled.h2`
   font-family: ${typography.fontFamily.display};
-  font-size: ${typography.fontSize.xl};
-  font-weight: ${typography.fontWeight.semibold};
+  font-size: ${typography.fontSize['2xl']};
+  font-weight: ${typography.fontWeight.light};
   color: ${colors.text.primary};
   margin-bottom: ${spacing[6]};
-  padding-bottom: ${spacing[3]};
-  border-bottom: 1px solid ${colors.border.default};
+  display: flex;
+  align-items: center;
+  gap: ${spacing[4]};
+
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: ${colors.border.default};
+  }
 `;
 
 const IngredientsList = styled.ul`
-  margin-bottom: ${spacing[10]};
+  margin-bottom: ${spacing[12]};
 `;
 
 const IngredientItem = styled.li`
@@ -164,34 +202,42 @@ const IngredientItem = styled.li`
   align-items: center;
   padding: ${spacing[4]} 0;
   border-bottom: 1px solid ${colors.border.subtle};
-  transition: background 0.2s ease;
+  transition: all 0.3s ease;
 
   &:hover {
-    background: ${colors.background.secondary};
     padding-left: ${spacing[4]};
-    padding-right: ${spacing[4]};
+    background: ${colors.background.secondary};
     margin-left: -${spacing[4]};
     margin-right: -${spacing[4]};
+    padding-right: ${spacing[4]};
   }
 `;
 
-const IngredientName = styled.span`
+const IngredientLink = styled(Link)`
+  font-family: ${typography.fontFamily.body};
   font-size: ${typography.fontSize.base};
   color: ${colors.text.primary};
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${colors.accent.primary};
+  }
 `;
 
 const IngredientMeasure = styled.span`
-  font-size: ${typography.fontSize.sm};
+  font-family: ${typography.fontFamily.serif};
+  font-size: ${typography.fontSize.base};
+  font-style: italic;
   color: ${colors.accent.primary};
-  font-weight: ${typography.fontWeight.medium};
 `;
 
 const Instructions = styled.div`
   p {
+    font-family: ${typography.fontFamily.serif};
     font-size: ${typography.fontSize.lg};
-    line-height: ${typography.lineHeight.relaxed};
+    font-style: italic;
+    line-height: ${typography.lineHeight.loose};
     color: ${colors.text.secondary};
-    margin-bottom: ${spacing[4]};
   }
 `;
 
@@ -200,14 +246,14 @@ const LoadingContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 60vh;
+  min-height: 100vh;
   color: ${colors.text.tertiary};
 `;
 
 const Spinner = styled.div`
   width: 40px;
   height: 40px;
-  border: 3px solid ${colors.border.default};
+  border: 2px solid ${colors.border.default};
   border-top-color: ${colors.accent.primary};
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -220,18 +266,46 @@ const Spinner = styled.div`
 `;
 
 const NotFound = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
   text-align: center;
-  padding: ${spacing[16]};
+  padding: ${spacing[8]};
 
   h2 {
-    font-size: ${typography.fontSize['2xl']};
+    font-family: ${typography.fontFamily.display};
+    font-size: ${typography.fontSize['3xl']};
+    font-weight: ${typography.fontWeight.light};
     color: ${colors.text.primary};
     margin-bottom: ${spacing[4]};
   }
 
   p {
+    font-family: ${typography.fontFamily.serif};
+    font-style: italic;
     color: ${colors.text.tertiary};
     margin-bottom: ${spacing[8]};
+  }
+`;
+
+const ReturnButton = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  gap: ${spacing[2]};
+  padding: ${spacing[4]} ${spacing[8]};
+  font-family: ${typography.fontFamily.body};
+  font-size: ${typography.fontSize.xs};
+  font-weight: ${typography.fontWeight.medium};
+  text-transform: uppercase;
+  letter-spacing: ${typography.letterSpacing.widest};
+  color: ${colors.text.light};
+  background: ${colors.text.primary};
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: ${colors.accent.primary};
   }
 `;
 
@@ -243,7 +317,6 @@ export const CocktailDetailPage: React.FC = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const { lenis } = useLenis();
 
-  // Scroll en haut quand on arrive sur la page
   useEffect(() => {
     if (lenis) {
       lenis.scrollTo(0, { immediate: true });
@@ -267,13 +340,14 @@ export const CocktailDetailPage: React.FC = () => {
     if (contentRef.current && cocktail) {
       gsap.fromTo(
         contentRef.current.children,
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
-          stagger: 0.1,
-          duration: 0.6,
+          stagger: 0.12,
+          duration: 0.8,
           ease: 'power3.out',
+          delay: 0.2,
         }
       );
     }
@@ -296,9 +370,9 @@ export const CocktailDetailPage: React.FC = () => {
         <NotFound>
           <h2>Cocktail non trouvé</h2>
           <p>Désolé, ce cocktail n'existe pas dans notre base de données.</p>
-          <BackButton onClick={() => navigate('/recettes')}>
+          <ReturnButton to="/recettes">
             Retour aux recettes
-          </BackButton>
+          </ReturnButton>
         </NotFound>
       </PageContainer>
     );
@@ -307,24 +381,11 @@ export const CocktailDetailPage: React.FC = () => {
   return (
     <PageContainer>
       <BackButton onClick={() => navigate('/recettes')}>
-        ← Retour aux recettes
+        ← Retour
       </BackButton>
 
-      <HeroSection ref={contentRef}>
-        <ImageContainer>
-          <CocktailImage src={cocktail.image} alt={cocktail.name} />
-          {cocktail.tags.length > 0 && (
-            <ImageOverlay>
-              <Tags>
-                {cocktail.tags.map((tag, i) => (
-                  <Tag key={i}>{tag}</Tag>
-                ))}
-              </Tags>
-            </ImageOverlay>
-          )}
-        </ImageContainer>
-
-        <ContentContainer>
+      <HeroSection>
+        <ContentColumn ref={contentRef}>
           <Category>{translateCategory(cocktail.category)}</Category>
           <CocktailName>{cocktail.name}</CocktailName>
 
@@ -343,11 +404,21 @@ export const CocktailDetailPage: React.FC = () => {
             </MetaItem>
           </Meta>
 
+          {cocktail.tags.length > 0 && (
+            <Tags>
+              {cocktail.tags.map((tag, i) => (
+                <Tag key={i}>{tag}</Tag>
+              ))}
+            </Tags>
+          )}
+
           <SectionTitle>Ingrédients</SectionTitle>
           <IngredientsList>
             {cocktail.ingredients.map((ing, i) => (
               <IngredientItem key={i}>
-                <IngredientName>{translateIngredient(ing.ingredient)}</IngredientName>
+                <IngredientLink to={`/recettes?ingredient=${encodeURIComponent(ing.ingredient)}`}>
+                  {translateIngredient(ing.ingredient)}
+                </IngredientLink>
                 <IngredientMeasure>{ing.measure}</IngredientMeasure>
               </IngredientItem>
             ))}
@@ -357,7 +428,11 @@ export const CocktailDetailPage: React.FC = () => {
           <Instructions>
             <p>{cocktail.instructionsFR || cocktail.instructions}</p>
           </Instructions>
-        </ContentContainer>
+        </ContentColumn>
+
+        <ImageColumn>
+          <CocktailImage $src={cocktail.image} />
+        </ImageColumn>
       </HeroSection>
     </PageContainer>
   );
