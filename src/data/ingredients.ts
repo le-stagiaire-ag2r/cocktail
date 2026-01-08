@@ -1,4 +1,4 @@
-// Liste des ingrédients de cocktails en français
+// Liste complète des ingrédients de cocktails en français
 // Organisée par catégorie pour une meilleure navigation
 
 export interface Ingredient {
