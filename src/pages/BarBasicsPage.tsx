@@ -18,10 +18,23 @@ const fadeInUp = keyframes`
   }
 `;
 
+// Page entière avec gradient continu - style Skyline Venice
+const PageWrapper = styled.div`
+  min-height: 100vh;
+  background: linear-gradient(
+    180deg,
+    rgb(107, 58, 74) 0%,
+    rgb(139, 69, 87) 20%,
+    rgb(180, 100, 80) 40%,
+    rgb(196, 112, 77) 60%,
+    rgb(125, 139, 106) 80%,
+    rgb(107, 122, 88) 100%
+  );
+`;
+
 const PageHeader = styled.section`
   padding: 160px ${spacing[8]} 100px;
   text-align: center;
-  background: linear-gradient(135deg, ${colors.palette.burgundyDark} 0%, ${colors.palette.plum} 100%);
   position: relative;
   overflow: hidden;
 
@@ -45,7 +58,7 @@ const PageLabel = styled.span`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.ultrawide};
-  color: ${colors.palette.coral};
+  color: ${colors.palette.cream};
   margin-bottom: ${spacing[6]};
   animation: ${fadeInUp} 0.6s ease forwards;
 
@@ -53,7 +66,7 @@ const PageLabel = styled.span`
     content: '';
     width: 30px;
     height: 1px;
-    background: ${colors.palette.coral};
+    background: rgba(247, 245, 235, 0.5);
   }
 `;
 
@@ -72,7 +85,7 @@ const PageDesc = styled.p`
   font-family: ${typography.fontFamily.serif};
   font-size: ${typography.fontSize.xl};
   font-style: italic;
-  color: ${colors.text.lightSecondary};
+  color: rgba(247, 245, 235, 0.8);
   max-width: 700px;
   margin: 0 auto;
   line-height: ${typography.lineHeight.relaxed};
@@ -81,32 +94,31 @@ const PageDesc = styled.p`
   opacity: 0;
 `;
 
-const PageWrapper = styled.div`
-  min-height: 100vh;
-  background: linear-gradient(180deg, ${colors.background.secondary} 0%, ${colors.background.warm} 100%);
-`;
+const Section = styled.section`
+  padding: ${spacing[16]} ${spacing[8]};
+  border-bottom: 1px solid rgba(247, 245, 235, 0.1);
 
-const Section = styled.section<{ $alt?: boolean }>`
-  padding: ${spacing[20]} ${spacing[8]};
-  background: ${props => props.$alt
-    ? `linear-gradient(180deg, ${colors.background.warm} 0%, ${colors.background.secondary} 100%)`
-    : 'transparent'};
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 const Container = styled.div`
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
 `;
 
 const SectionHeader = styled.div`
   text-align: center;
   margin-bottom: ${spacing[12]};
+  padding-bottom: ${spacing[6]};
+  border-bottom: 1px solid rgba(247, 245, 235, 0.15);
 
   h2 {
     font-family: ${typography.fontFamily.display};
     font-size: clamp(1.75rem, 4vw, 2.5rem);
     font-weight: ${typography.fontWeight.light};
-    color: ${colors.palette.burgundy};
+    color: ${colors.text.light};
     margin-bottom: ${spacing[4]};
   }
 
@@ -114,34 +126,24 @@ const SectionHeader = styled.div`
     font-family: ${typography.fontFamily.serif};
     font-size: ${typography.fontSize.lg};
     font-style: italic;
-    color: ${colors.text.secondary};
+    color: rgba(247, 245, 235, 0.7);
     max-width: 600px;
     margin: 0 auto;
   }
 `;
 
-const TechniquesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: ${spacing[6]};
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const TechniqueCard = styled.div`
-  background: ${colors.background.card};
-  border: 1px solid ${colors.border.default};
-  padding: ${spacing[8]};
-  transition: all 0.3s ease;
+// Techniques en liste fluide
+const TechniquesList = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
+`;
 
-  &:hover {
-    border-color: ${colors.accent.primary};
-    transform: translateY(-3px);
+const TechniqueItem = styled.div`
+  padding: ${spacing[8]} 0;
+  border-bottom: 1px solid rgba(247, 245, 235, 0.1);
+
+  &:last-child {
+    border-bottom: none;
   }
 `;
 
@@ -157,27 +159,30 @@ const TechniqueHeader = styled.div`
 
   h3 {
     font-family: ${typography.fontFamily.display};
-    font-size: ${typography.fontSize['xl']};
-    color: ${colors.accent.primary};
+    font-size: ${typography.fontSize['2xl']};
+    font-weight: ${typography.fontWeight.light};
+    color: ${colors.text.light};
   }
 `;
 
 const TechniqueDesc = styled.p`
   font-size: ${typography.fontSize.base};
-  color: ${colors.text.secondary};
+  color: rgba(247, 245, 235, 0.7);
   margin-bottom: ${spacing[6]};
   line-height: ${typography.lineHeight.relaxed};
+  max-width: 700px;
 `;
 
 const TechniqueSteps = styled.ol`
   counter-reset: step;
+  padding-left: ${spacing[2]};
 
   li {
     counter-increment: step;
     position: relative;
-    padding-left: ${spacing[8]};
+    padding-left: ${spacing[10]};
     padding-bottom: ${spacing[3]};
-    color: ${colors.text.secondary};
+    color: rgba(247, 245, 235, 0.8);
     font-size: ${typography.fontSize.sm};
     line-height: ${typography.lineHeight.relaxed};
 
@@ -186,12 +191,12 @@ const TechniqueSteps = styled.ol`
       position: absolute;
       left: 0;
       top: 0;
-      width: 24px;
-      height: 24px;
-      background: ${colors.accent.subtle};
-      color: ${colors.accent.primary};
+      width: 28px;
+      height: 28px;
+      background: rgba(247, 238, 192, 0.15);
+      color: ${colors.palette.cream};
       font-size: ${typography.fontSize.xs};
-      font-weight: ${typography.fontWeight.semibold};
+      font-weight: ${typography.fontWeight.medium};
       display: flex;
       align-items: center;
       justify-content: center;
@@ -201,19 +206,20 @@ const TechniqueSteps = styled.ol`
     &:not(:last-child)::after {
       content: '';
       position: absolute;
-      left: 11px;
-      top: 28px;
+      left: 13px;
+      top: 32px;
       width: 1px;
-      height: calc(100% - 20px);
-      background: ${colors.border.default};
+      height: calc(100% - 24px);
+      background: rgba(247, 245, 235, 0.2);
     }
   }
 `;
 
+// Outils en grille simple sans cartes
 const ToolsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: ${spacing[4]};
+  gap: ${spacing[1]};
 
   @media (max-width: 968px) {
     grid-template-columns: repeat(2, 1fr);
@@ -224,71 +230,71 @@ const ToolsGrid = styled.div`
   }
 `;
 
-const ToolCard = styled.div`
-  background: ${colors.background.card};
-  border: 1px solid ${colors.border.default};
+const ToolItem = styled.div`
   padding: ${spacing[6]};
   text-align: center;
-  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(247, 245, 235, 0.1);
+  transition: background 0.3s ease;
 
   &:hover {
-    border-color: ${colors.accent.primary};
-    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.03);
   }
 
   .icon {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto ${spacing[4]};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    background: ${colors.accent.subtle};
-    border: 1px solid ${colors.accent.muted};
-    border-radius: 50%;
+    font-size: 2.5rem;
+    margin-bottom: ${spacing[3]};
   }
 
   h4 {
-    font-size: ${typography.fontSize.base};
-    color: ${colors.text.primary};
+    font-family: ${typography.fontFamily.display};
+    font-size: ${typography.fontSize.lg};
+    font-weight: ${typography.fontWeight.light};
+    color: ${colors.text.light};
     margin-bottom: ${spacing[2]};
   }
 
   p {
     font-size: ${typography.fontSize.sm};
-    color: ${colors.text.tertiary};
-  }
-`;
-
-const TipsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: ${spacing[6]};
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const TipCard = styled.div`
-  background: ${colors.background.card};
-  border: 1px solid ${colors.border.default};
-  border-left: 3px solid ${colors.accent.primary};
-  padding: ${spacing[6]};
-
-  h4 {
-    font-family: ${typography.fontFamily.display};
-    font-size: ${typography.fontSize.lg};
-    color: ${colors.accent.primary};
-    margin-bottom: ${spacing[3]};
-  }
-
-  p {
-    font-size: ${typography.fontSize.sm};
-    color: ${colors.text.secondary};
+    color: rgba(247, 245, 235, 0.6);
     line-height: ${typography.lineHeight.relaxed};
   }
+`;
+
+// Conseils en liste fluide
+const TipsList = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const TipItem = styled.div`
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: ${spacing[6]};
+  padding: ${spacing[6]} 0;
+  border-bottom: 1px solid rgba(247, 245, 235, 0.1);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: ${spacing[3]};
+  }
+`;
+
+const TipTitle = styled.h4`
+  font-family: ${typography.fontFamily.display};
+  font-size: ${typography.fontSize.xl};
+  font-weight: ${typography.fontWeight.light};
+  color: ${colors.text.light};
+  min-width: 150px;
+`;
+
+const TipText = styled.p`
+  font-size: ${typography.fontSize.base};
+  color: rgba(247, 245, 235, 0.7);
+  line-height: ${typography.lineHeight.relaxed};
 `;
 
 const tips = [
@@ -333,6 +339,7 @@ export const BarBasicsPage: React.FC = () => {
           scrollTrigger: {
             trigger: ref.current,
             start: 'top bottom-=100',
+            toggleActions: 'play none none none',
           },
         }
       );
@@ -358,9 +365,9 @@ export const BarBasicsPage: React.FC = () => {
             <p>Chaque cocktail a sa méthode de préparation. Voici les techniques fondamentales.</p>
           </SectionHeader>
 
-          <TechniquesGrid>
+          <TechniquesList>
             {techniques.map((tech) => (
-              <TechniqueCard key={tech.id} className="animate-item">
+              <TechniqueItem key={tech.id} className="animate-item">
                 <TechniqueHeader>
                   <span>{tech.icon}</span>
                   <h3>{tech.name}</h3>
@@ -371,13 +378,13 @@ export const BarBasicsPage: React.FC = () => {
                     <li key={i}>{step}</li>
                   ))}
                 </TechniqueSteps>
-              </TechniqueCard>
+              </TechniqueItem>
             ))}
-          </TechniquesGrid>
+          </TechniquesList>
         </Container>
       </Section>
 
-      <Section $alt ref={toolsRef}>
+      <Section ref={toolsRef}>
         <Container>
           <SectionHeader>
             <h2>Les Outils Essentiels</h2>
@@ -386,11 +393,11 @@ export const BarBasicsPage: React.FC = () => {
 
           <ToolsGrid>
             {tools.map((tool, i) => (
-              <ToolCard key={i} className="animate-item">
+              <ToolItem key={i} className="animate-item">
                 <div className="icon">{tool.icon}</div>
                 <h4>{tool.name}</h4>
                 <p>{tool.description}</p>
-              </ToolCard>
+              </ToolItem>
             ))}
           </ToolsGrid>
         </Container>
@@ -403,14 +410,14 @@ export const BarBasicsPage: React.FC = () => {
             <p>Quelques astuces pour élever vos cocktails au niveau supérieur.</p>
           </SectionHeader>
 
-          <TipsGrid>
+          <TipsList>
             {tips.map((tip, i) => (
-              <TipCard key={i} className="animate-item">
-                <h4>{tip.title}</h4>
-                <p>{tip.text}</p>
-              </TipCard>
+              <TipItem key={i} className="animate-item">
+                <TipTitle>{tip.title}</TipTitle>
+                <TipText>{tip.text}</TipText>
+              </TipItem>
             ))}
-          </TipsGrid>
+          </TipsList>
         </Container>
       </Section>
     </PageWrapper>
