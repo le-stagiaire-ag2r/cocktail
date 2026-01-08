@@ -20,6 +20,19 @@ const slideUp = keyframes`
   }
 `;
 
+// Page entière avec gradient continu - style Skyline Venice
+const PageWrapper = styled.div`
+  min-height: 100vh;
+  background: linear-gradient(
+    180deg,
+    rgb(112, 42, 64) 0%,
+    rgb(180, 80, 60) 25%,
+    rgb(240, 126, 78) 50%,
+    rgb(125, 139, 106) 75%,
+    rgb(107, 74, 94) 100%
+  );
+  position: relative;
+`;
 
 const Hero = styled.section`
   min-height: 100vh;
@@ -30,7 +43,6 @@ const Hero = styled.section`
   text-align: center;
   position: relative;
   padding: ${spacing[8]};
-  background: ${colors.gradient.warm};
   overflow: hidden;
 
   &::before {
@@ -40,7 +52,7 @@ const Hero = styled.section`
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.08) 0%, transparent 50%);
   }
 `;
 
@@ -49,7 +61,6 @@ const HeroContent = styled.div`
   z-index: 2;
   max-width: 1200px;
 `;
-
 
 const HeroTitle = styled.h1`
   font-family: ${typography.fontFamily.display};
@@ -75,7 +86,7 @@ const HeroTitle = styled.h1`
   }
 
   .accent {
-    color: ${colors.palette.coral};
+    color: ${colors.palette.cream};
     font-style: italic;
     animation-delay: 0.5s;
   }
@@ -113,10 +124,9 @@ const HeroButton = styled(Link)`
   opacity: 0;
 
   &:hover {
-    background: ${colors.palette.coral};
-    color: ${colors.text.light};
+    background: rgba(255, 255, 255, 0.95);
     transform: translateY(-3px);
-    box-shadow: 0 20px 40px rgba(139, 69, 87, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   }
 
   svg {
@@ -130,21 +140,16 @@ const HeroButton = styled(Link)`
   }
 `;
 
-
-const Section = styled.section`
-  padding: 140px ${spacing[8]};
+// Sections fluides sans fond - tout sur le gradient
+const FluidSection = styled.section`
+  padding: 120px ${spacing[8]};
   position: relative;
-  background: ${colors.background.primary};
+  max-width: 1400px;
+  margin: 0 auto;
 
   @media (max-width: 768px) {
-    padding: 100px ${spacing[6]};
+    padding: 80px ${spacing[6]};
   }
-`;
-
-// Transition fluide entre sections
-const SectionTransition = styled.div<{ $from: string; $to: string }>`
-  height: 150px;
-  background: linear-gradient(180deg, ${props => props.$from} 0%, ${props => props.$to} 100%);
 `;
 
 const SectionHeader = styled.div`
@@ -160,14 +165,14 @@ const SectionLabel = styled.span`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.ultrawide};
-  color: ${colors.palette.terracotta};
+  color: ${colors.palette.cream};
   margin-bottom: ${spacing[6]};
 
   &::before, &::after {
     content: '';
     width: 30px;
     height: 1px;
-    background: ${colors.palette.terracotta};
+    background: rgba(247, 245, 235, 0.5);
   }
 `;
 
@@ -175,7 +180,7 @@ const SectionTitle = styled.h2`
   font-family: ${typography.fontFamily.display};
   font-size: ${typography.fontSize.heroSmall};
   font-weight: ${typography.fontWeight.light};
-  color: ${colors.text.primary};
+  color: ${colors.text.light};
   line-height: 1.1;
 `;
 
@@ -183,17 +188,16 @@ const SectionSubtitle = styled.p`
   font-family: ${typography.fontFamily.serif};
   font-size: ${typography.fontSize.xl};
   font-style: italic;
-  color: ${colors.text.secondary};
+  color: rgba(247, 245, 235, 0.8);
   max-width: 600px;
   margin: ${spacing[6]} auto 0;
 `;
 
+// Grid de cocktails - images avec overlay, pas de cartes
 const CocktailsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: ${spacing[4]};
-  max-width: 1400px;
-  margin: 0 auto;
+  gap: 2px;
 
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
@@ -206,12 +210,8 @@ const CocktailsGrid = styled.div`
 
 const CocktailCard = styled.div`
   position: relative;
-  height: 500px;
+  aspect-ratio: 3/4;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  background: ${colors.palette.burgundy};
   cursor: pointer;
 
   &::before {
@@ -221,7 +221,7 @@ const CocktailCard = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: ${colors.gradient.cardOverlay};
+    background: linear-gradient(0deg, rgba(112, 42, 64, 0.9) 0%, rgba(112, 42, 64, 0.3) 50%, transparent 100%);
     z-index: 1;
     transition: opacity 0.4s ease;
   }
@@ -241,12 +241,15 @@ const CocktailCard = styled.div`
   }
 
   &:hover::before {
-    opacity: 0.8;
+    opacity: 0.7;
   }
 `;
 
 const CocktailContent = styled.div`
-  position: relative;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 2;
   padding: ${spacing[8]};
 `;
@@ -257,8 +260,9 @@ const CocktailSpirit = styled.span`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.widest};
-  color: ${colors.palette.coral};
+  color: ${colors.palette.cream};
   margin-bottom: ${spacing[2]};
+  opacity: 0.8;
 `;
 
 const CocktailName = styled.h3`
@@ -279,84 +283,83 @@ const ViewAllButton = styled(Link)`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.widest};
-  color: ${colors.palette.burgundy};
+  color: ${colors.palette.cream};
   background: transparent;
-  border: 1px solid ${colors.palette.burgundy};
+  border: 1px solid rgba(247, 245, 235, 0.4);
   transition: all 0.4s ease;
 
   &:hover {
-    background: ${colors.palette.burgundy};
-    color: ${colors.text.light};
+    background: rgba(247, 245, 235, 0.1);
+    border-color: ${colors.palette.cream};
   }
 `;
 
-const SpiritsSection = styled(Section)`
-  background: ${colors.gradient.olive};
-`;
-
-const SpiritsSectionLabel = styled(SectionLabel)`
-  color: ${colors.palette.cream};
-
-  &::before, &::after {
-    background: ${colors.palette.cream};
-  }
-`;
-
-const SpiritsSectionTitle = styled(SectionTitle)`
-  color: ${colors.text.light};
-`;
-
-const SpiritsSubtitle = styled(SectionSubtitle)`
-  color: ${colors.text.lightSecondary};
-`;
-
-const SpiritsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: ${spacing[4]};
-  max-width: 1200px;
+// Spiritueux - liste fluide avec séparateurs, pas de cartes
+const SpiritsContainer = styled.div`
+  max-width: 900px;
   margin: 0 auto;
 `;
 
-const SpiritCard = styled(Link)`
-  padding: ${spacing[10]} ${spacing[6]};
-  text-align: center;
-  border: 1px solid ${colors.border.light};
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  background: rgba(255, 255, 255, 0.05);
+const SpiritRow = styled(Link)`
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: ${spacing[6]};
+  padding: ${spacing[6]} 0;
+  border-bottom: 1px solid rgba(247, 245, 235, 0.15);
+  transition: all 0.3s ease;
+
+  &:first-child {
+    border-top: 1px solid rgba(247, 245, 235, 0.15);
+  }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: ${colors.palette.cream};
-    transform: translateY(-8px);
+    padding-left: ${spacing[4]};
+    background: rgba(255, 255, 255, 0.05);
+    margin: 0 -${spacing[4]};
+    padding-right: ${spacing[4]};
   }
 `;
 
 const SpiritIcon = styled.span`
-  font-size: 3.5rem;
-  display: block;
-  margin-bottom: ${spacing[5]};
+  font-size: 2.5rem;
+  width: 60px;
+  text-align: center;
+`;
+
+const SpiritInfo = styled.div`
+  flex: 1;
 `;
 
 const SpiritName = styled.h4`
   font-family: ${typography.fontFamily.display};
   font-size: ${typography.fontSize['2xl']};
   font-weight: ${typography.fontWeight.light};
-  color: ${colors.palette.cream};
-  margin-bottom: ${spacing[2]};
+  color: ${colors.text.light};
+  margin-bottom: ${spacing[1]};
 `;
 
 const SpiritDesc = styled.p`
   font-size: ${typography.fontSize.sm};
-  color: ${colors.text.lightSecondary};
+  color: rgba(247, 245, 235, 0.6);
 `;
 
+const SpiritArrow = styled.span`
+  font-size: ${typography.fontSize.xl};
+  color: rgba(247, 245, 235, 0.4);
+  transition: all 0.3s ease;
+
+  ${SpiritRow}:hover & {
+    color: ${colors.palette.cream};
+    transform: translateX(5px);
+  }
+`;
+
+// CTA Section
 const CTASection = styled.section`
   padding: 160px ${spacing[8]};
   text-align: center;
-  background: ${colors.gradient.warm};
   position: relative;
-  overflow: hidden;
 
   &::before {
     content: '';
@@ -365,16 +368,8 @@ const CTASection = styled.section`
     right: -100px;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
     border-radius: 50%;
-  }
-`;
-
-const CTASectionLabel = styled(SectionLabel)`
-  color: ${colors.palette.cream};
-
-  &::before, &::after {
-    background: ${colors.palette.cream};
   }
 `;
 
@@ -390,11 +385,19 @@ const CTAText = styled.p`
   font-family: ${typography.fontFamily.serif};
   font-size: ${typography.fontSize.xl};
   font-style: italic;
-  color: ${colors.text.lightSecondary};
+  color: rgba(247, 245, 235, 0.8);
   margin-bottom: ${spacing[12]};
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+`;
+
+// Séparateur décoratif
+const Divider = styled.div`
+  width: 60px;
+  height: 1px;
+  background: rgba(247, 245, 235, 0.4);
+  margin: 0 auto ${spacing[8]};
 `;
 
 const CTAInfo = styled.div`
@@ -411,7 +414,7 @@ const CTABlock = styled.div`
   h4 {
     font-size: ${typography.fontSize.xs};
     font-weight: ${typography.fontWeight.medium};
-    color: ${colors.palette.cream};
+    color: rgba(247, 245, 235, 0.6);
     text-transform: uppercase;
     letter-spacing: ${typography.letterSpacing.widest};
     margin-bottom: ${spacing[3]};
@@ -429,7 +432,7 @@ const CTABlock = styled.div`
     font-family: ${typography.fontFamily.serif};
     font-size: ${typography.fontSize.base};
     font-style: italic;
-    color: rgba(247, 245, 235, 0.7);
+    color: rgba(247, 245, 235, 0.5);
     margin-top: ${spacing[1]};
   }
 `;
@@ -444,13 +447,13 @@ const CTAButton = styled(Link)`
   font-weight: ${typography.fontWeight.medium};
   text-transform: uppercase;
   letter-spacing: ${typography.letterSpacing.widest};
-  color: ${colors.palette.terracotta};
+  color: ${colors.palette.burgundy};
   background: ${colors.palette.cream};
   border: none;
   transition: all 0.4s ease;
 
   &:hover {
-    background: ${colors.text.light};
+    background: rgba(255, 255, 255, 0.95);
     transform: translateY(-3px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   }
@@ -468,13 +471,11 @@ const CTAButton = styled(Link)`
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const heroRef = useRef<HTMLDivElement>(null);
   const cocktailsRef = useRef<HTMLDivElement>(null);
   const spiritsRef = useRef<HTMLDivElement>(null);
   const [signatureCocktails, setSignatureCocktails] = useState<Cocktail[]>([]);
 
   useEffect(() => {
-    // Charger les cocktails depuis l'API
     const loadCocktails = async () => {
       const popular = await getPopularCocktails();
       setSignatureCocktails(popular.slice(0, 6));
@@ -483,15 +484,13 @@ export const HomePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Cocktails section animations
     if (cocktailsRef.current && signatureCocktails.length > 0) {
       gsap.fromTo(
         cocktailsRef.current.querySelectorAll('.cocktail-card'),
-        { opacity: 0, y: 80, scale: 0.95 },
+        { opacity: 0, y: 80 },
         {
           opacity: 1,
           y: 0,
-          scale: 1,
           stagger: 0.15,
           duration: 1,
           ease: 'power3.out',
@@ -503,15 +502,13 @@ export const HomePage: React.FC = () => {
       );
     }
 
-    // Spirits section animations
     if (spiritsRef.current) {
       gsap.fromTo(
-        spiritsRef.current.querySelectorAll('.spirit-card'),
-        { opacity: 0, y: 50, scale: 0.9 },
+        spiritsRef.current.querySelectorAll('.spirit-row'),
+        { opacity: 0, x: -30 },
         {
           opacity: 1,
-          y: 0,
-          scale: 1,
+          x: 0,
           stagger: 0.1,
           duration: 0.8,
           ease: 'power3.out',
@@ -525,8 +522,8 @@ export const HomePage: React.FC = () => {
   }, [signatureCocktails]);
 
   return (
-    <>
-      <Hero ref={heroRef}>
+    <PageWrapper>
+      <Hero>
         <HeroContent>
           <HeroTitle className="hero-title">
             <span className="line">
@@ -549,15 +546,12 @@ export const HomePage: React.FC = () => {
         </HeroContent>
       </Hero>
 
-      {/* Transition Hero vers Section cocktails */}
-      <SectionTransition $from={colors.palette.burgundy} $to={colors.background.primary} />
-
-      <Section ref={cocktailsRef}>
+      <FluidSection ref={cocktailsRef}>
         <SectionHeader>
           <SectionLabel>Signatures</SectionLabel>
           <SectionTitle>Nos Créations</SectionTitle>
           <SectionSubtitle>
-            Une sélection de cocktails emblématiques, préparés avec passion et savoir-faire.
+            Une sélection de cocktails emblématiques, préparés avec passion.
           </SectionSubtitle>
         </SectionHeader>
 
@@ -589,41 +583,39 @@ export const HomePage: React.FC = () => {
             </svg>
           </ViewAllButton>
         </div>
-      </Section>
+      </FluidSection>
 
-      {/* Transition Section cocktails vers Spiritueux */}
-      <SectionTransition $from={colors.background.primary} $to={colors.palette.olive} />
-
-      <SpiritsSection ref={spiritsRef}>
+      <FluidSection ref={spiritsRef}>
         <SectionHeader>
-          <SpiritsSectionLabel>Explorer</SpiritsSectionLabel>
-          <SpiritsSectionTitle>Les Spiritueux</SpiritsSectionTitle>
-          <SpiritsSubtitle>
-            Découvrez l'univers des spiritueux et leur rôle essentiel dans l'art du cocktail.
-          </SpiritsSubtitle>
+          <SectionLabel>Explorer</SectionLabel>
+          <SectionTitle>Les Spiritueux</SectionTitle>
+          <SectionSubtitle>
+            Découvrez l'univers des spiritueux et leur rôle essentiel.
+          </SectionSubtitle>
         </SectionHeader>
 
-        <SpiritsGrid>
+        <SpiritsContainer>
           {spirits.map((spirit) => (
-            <SpiritCard
+            <SpiritRow
               key={spirit.id}
               to={`/spiritueux#${spirit.id}`}
-              className="spirit-card"
+              className="spirit-row"
             >
               <SpiritIcon>{spirit.icon}</SpiritIcon>
-              <SpiritName>{spirit.name}</SpiritName>
-              <SpiritDesc>{spirit.description}</SpiritDesc>
-            </SpiritCard>
+              <SpiritInfo>
+                <SpiritName>{spirit.name}</SpiritName>
+                <SpiritDesc>{spirit.description}</SpiritDesc>
+              </SpiritInfo>
+              <SpiritArrow>→</SpiritArrow>
+            </SpiritRow>
           ))}
-        </SpiritsGrid>
-      </SpiritsSection>
-
-      {/* Transition Spiritueux vers CTA */}
-      <SectionTransition $from={colors.palette.olive} $to={colors.palette.terracotta} />
+        </SpiritsContainer>
+      </FluidSection>
 
       <CTASection>
-        <CTASectionLabel>Bienvenue</CTASectionLabel>
+        <SectionLabel>Bienvenue</SectionLabel>
         <CTATitle>Venez Nous Découvrir</CTATitle>
+        <Divider />
         <CTAText>
           Nous serions ravis de vous accueillir et de vous faire
           découvrir notre univers de cocktails raffinés.
@@ -649,7 +641,7 @@ export const HomePage: React.FC = () => {
           </svg>
         </CTAButton>
       </CTASection>
-    </>
+    </PageWrapper>
   );
 };
 

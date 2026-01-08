@@ -51,7 +51,12 @@ const rotate = keyframes`
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: ${colors.background.primary};
+  background: linear-gradient(
+    180deg,
+    rgb(112, 42, 64) 0%,
+    rgb(180, 80, 60) 40%,
+    rgb(240, 126, 78) 100%
+  );
 `;
 
 const BackButton = styled.button`
