@@ -81,9 +81,16 @@ const PageDesc = styled.p`
   opacity: 0;
 `;
 
+const PageWrapper = styled.div`
+  min-height: 100vh;
+  background: ${colors.gradient.cream};
+`;
+
 const SpiritSection = styled.section<{ $alt?: boolean }>`
   padding: ${spacing[20]} ${spacing[8]};
-  background: ${props => props.$alt ? colors.background.secondary : colors.background.primary};
+  background: ${props => props.$alt
+    ? `linear-gradient(180deg, ${colors.background.warm} 0%, ${colors.background.secondary} 100%)`
+    : colors.background.secondary};
 `;
 
 const SpiritContainer = styled.div`
@@ -307,7 +314,7 @@ export const SpiriteuxPage: React.FC = () => {
   };
 
   return (
-    <div ref={containerRef}>
+    <PageWrapper ref={containerRef}>
       <PageHeader>
         <PageLabel>Guide</PageLabel>
         <PageTitle>Les Spiritueux</PageTitle>
@@ -371,7 +378,7 @@ export const SpiriteuxPage: React.FC = () => {
           </SpiritContainer>
         </SpiritSection>
       ))}
-    </div>
+    </PageWrapper>
   );
 };
 

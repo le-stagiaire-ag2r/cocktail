@@ -81,9 +81,16 @@ const PageDesc = styled.p`
   opacity: 0;
 `;
 
+const PageWrapper = styled.div`
+  min-height: 100vh;
+  background: linear-gradient(180deg, ${colors.background.secondary} 0%, ${colors.background.warm} 100%);
+`;
+
 const Section = styled.section<{ $alt?: boolean }>`
   padding: ${spacing[20]} ${spacing[8]};
-  background: ${props => props.$alt ? colors.background.secondary : colors.background.primary};
+  background: ${props => props.$alt
+    ? `linear-gradient(180deg, ${colors.background.warm} 0%, ${colors.background.secondary} 100%)`
+    : 'transparent'};
 `;
 
 const Container = styled.div`
@@ -333,7 +340,7 @@ export const BarBasicsPage: React.FC = () => {
   }, []);
 
   return (
-    <>
+    <PageWrapper>
       <PageHeader>
         <PageLabel>Guide</PageLabel>
         <PageTitle>L'Art du Cocktail</PageTitle>
@@ -406,7 +413,7 @@ export const BarBasicsPage: React.FC = () => {
           </TipsGrid>
         </Container>
       </Section>
-    </>
+    </PageWrapper>
   );
 };
 

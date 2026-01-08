@@ -80,6 +80,11 @@ const PageDesc = styled.p`
   opacity: 0;
 `;
 
+const PageWrapper = styled.div`
+  min-height: 100vh;
+  background: linear-gradient(180deg, ${colors.background.secondary} 0%, ${colors.background.warm} 100%);
+`;
+
 const ContentSection = styled.section`
   padding: ${spacing[16]} ${spacing[8]};
   max-width: 1200px;
@@ -348,7 +353,7 @@ export const BarStockPage: React.FC = () => {
   }, []);
 
   return (
-    <>
+    <PageWrapper>
       <PageHeader>
         <PageLabel>Guide Essentiel</PageLabel>
         <PageTitle>Bar Bien Approvisionné</PageTitle>
@@ -407,7 +412,7 @@ export const BarStockPage: React.FC = () => {
           </TipsList>
         </TipsSection>
       </ContentSection>
-    </>
+    </PageWrapper>
   );
 };
 
