@@ -28,6 +28,7 @@ const PageWrapper = styled.div`
     rgb(180, 80, 60) 80%,
     rgb(112, 42, 64) 100%
   );
+  overflow-x: hidden;
 `;
 
 const PageHeader = styled.section`

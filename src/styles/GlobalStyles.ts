@@ -12,6 +12,7 @@ export const GlobalStyles = createGlobalStyle`
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   body {
@@ -21,6 +22,8 @@ export const GlobalStyles = createGlobalStyle`
     color: ${colors.text.primary};
     background-color: ${colors.background.primary};
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
 
   /* Custom scrollbar - style luxe */

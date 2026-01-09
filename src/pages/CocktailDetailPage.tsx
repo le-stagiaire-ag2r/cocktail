@@ -57,6 +57,7 @@ const PageContainer = styled.div`
     rgb(180, 80, 60) 40%,
     rgb(240, 126, 78) 100%
   );
+  overflow-x: hidden;
 `;
 
 const BackButton = styled.button`

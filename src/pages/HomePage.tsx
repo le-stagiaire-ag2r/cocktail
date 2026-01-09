@@ -32,6 +32,7 @@ const PageWrapper = styled.div`
     rgb(107, 74, 94) 100%
   );
   position: relative;
+  overflow-x: hidden;
 `;
 
 const Hero = styled.section`

@@ -332,6 +332,7 @@ const PageWrapper = styled.div`
     rgb(247, 238, 192) 80%,
     rgb(247, 245, 235) 100%
   );
+  overflow-x: hidden;
 `;
 
 const ContentSection = styled.section`
