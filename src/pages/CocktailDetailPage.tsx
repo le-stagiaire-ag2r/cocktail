@@ -5,6 +5,7 @@ import { colors, typography, spacing } from '../styles/designTokens';
 import { getCocktailById, Cocktail } from '../services/cocktailAPI';
 import { translateIngredient, translateCategory, translateGlass } from '../utils/translations';
 import { useLenis } from '../components/ui/SmoothScroll';
+import { useFavorites } from '../context/FavoritesContext';
 
 // Animations
 const slideInLeft = keyframes`
@@ -80,6 +81,51 @@ const BackButton = styled.button`
     color: ${colors.palette.cream};
     border-color: ${colors.palette.cream};
     transform: translateX(-5px);
+  }
+`;
+
+const ActionButtons = styled.div`
+  display: flex;
+  gap: ${spacing[3]};
+  margin-top: ${spacing[6]};
+`;
+
+const ActionButton = styled.button<{ $variant?: 'favorite' | 'share' | 'print'; $isActive?: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  gap: ${spacing[2]};
+  padding: ${spacing[3]} ${spacing[5]};
+  font-family: ${typography.fontFamily.body};
+  font-size: ${typography.fontSize.xs};
+  font-weight: ${typography.fontWeight.medium};
+  text-transform: uppercase;
+  letter-spacing: ${typography.letterSpacing.wider};
+  color: ${props => props.$isActive ? '#fff' : 'rgba(247, 245, 235, 0.9)'};
+  background: ${props => {
+    if (props.$isActive && props.$variant === 'favorite') return 'rgba(220, 53, 69, 0.9)';
+    return 'rgba(247, 245, 235, 0.1)';
+  }};
+  border: 1px solid ${props => props.$isActive ? 'transparent' : 'rgba(247, 245, 235, 0.3)'};
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: ${props => props.$isActive ? '#fff' : 'none'};
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+
+  &:hover {
+    background: ${props => {
+      if (props.$variant === 'favorite') return 'rgba(220, 53, 69, 0.8)';
+      if (props.$variant === 'share') return 'rgba(59, 130, 246, 0.3)';
+      if (props.$variant === 'print') return 'rgba(107, 122, 88, 0.3)';
+      return 'rgba(247, 245, 235, 0.2)';
+    }};
+    color: #fff;
+    border-color: transparent;
   }
 `;
 
@@ -497,10 +543,35 @@ const getSensoryProfile = (cocktail: Cocktail) => {
 export const CocktailDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { toggleFavorite, isFavorite } = useFavorites();
   const [cocktail, setCocktail] = useState<Cocktail | null>(null);
   const [loading, setLoading] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
   const { lenis } = useLenis();
+
+  const handleShare = async () => {
+    const shareData = {
+      title: cocktail?.name,
+      text: `Découvrez la recette du ${cocktail?.name} sur Le Old Fashioned`,
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        // User cancelled or error
+      }
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(window.location.href);
+      alert('Lien copié dans le presse-papier !');
+    }
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
 
   useEffect(() => {
     if (lenis) {
@@ -643,6 +714,37 @@ export const CocktailDetailPage: React.FC = () => {
                 <strong>{cocktail.isAlcoholic ? 'Alcoolisé' : 'Sans alcool'}</strong>
               </MetaItem>
             </Meta>
+
+            <ActionButtons>
+              <ActionButton
+                $variant="favorite"
+                $isActive={isFavorite(cocktail.id)}
+                onClick={() => toggleFavorite(cocktail.id)}
+              >
+                <svg viewBox="0 0 24 24">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+                {isFavorite(cocktail.id) ? 'Favori' : 'Ajouter aux favoris'}
+              </ActionButton>
+              <ActionButton $variant="share" onClick={handleShare}>
+                <svg viewBox="0 0 24 24">
+                  <circle cx="18" cy="5" r="3" />
+                  <circle cx="6" cy="12" r="3" />
+                  <circle cx="18" cy="19" r="3" />
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                </svg>
+                Partager
+              </ActionButton>
+              <ActionButton $variant="print" onClick={handlePrint}>
+                <svg viewBox="0 0 24 24">
+                  <polyline points="6 9 6 2 18 2 18 9" />
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                  <rect x="6" y="14" width="12" height="8" />
+                </svg>
+                Imprimer
+              </ActionButton>
+            </ActionButtons>
           </ContentInner>
         </ContentColumn>
 

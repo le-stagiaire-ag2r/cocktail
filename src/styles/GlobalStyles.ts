@@ -146,6 +146,43 @@ export const GlobalStyles = createGlobalStyle`
       padding: 80px 0;
     }
   }
+
+  /* Print styles */
+  @media print {
+    body {
+      background: white !important;
+      color: black !important;
+    }
+
+    nav, footer, button, .no-print {
+      display: none !important;
+    }
+
+    * {
+      background: transparent !important;
+      color: black !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+    }
+
+    a, a:visited {
+      text-decoration: underline;
+    }
+
+    img {
+      max-width: 100% !important;
+      page-break-inside: avoid;
+    }
+
+    h1, h2, h3, h4 {
+      page-break-after: avoid;
+    }
+
+    p, li {
+      orphans: 3;
+      widows: 3;
+    }
+  }
 `;
 
 export default GlobalStyles;
