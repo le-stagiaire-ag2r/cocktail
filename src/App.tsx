@@ -5,6 +5,7 @@ import { FloatingBackground } from './components/ui/FloatingBackground';
 import { Navigation } from './components/Navigation';
 import { ScrollToTop } from './components/ScrollToTop';
 import { GlobalStyles } from './styles/GlobalStyles';
+import { FavoritesProvider } from './context/FavoritesContext';
 import HomePage from './pages/HomePage';
 import RecettesPage from './pages/RecettesPage';
 import CocktailDetailPage from './pages/CocktailDetailPage';
@@ -151,9 +152,10 @@ const Legal = styled.p`
 
 function App() {
   return (
-    <Router>
-      <GlobalStyles />
-      <SmoothScroll>
+    <FavoritesProvider>
+      <Router>
+        <GlobalStyles />
+        <SmoothScroll>
         <ScrollToTop />
         <AppWrapper>
           <FloatingBackground />
@@ -220,7 +222,8 @@ function App() {
           </Footer>
         </AppWrapper>
       </SmoothScroll>
-    </Router>
+      </Router>
+    </FavoritesProvider>
   );
 }
 

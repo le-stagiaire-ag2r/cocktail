@@ -13,6 +13,7 @@ import {
   Cocktail
 } from '../services/cocktailAPI';
 import { translateIngredient, translateCategory, translateGlass } from '../utils/translations';
+import { useFavorites } from '../context/FavoritesContext';
 
 const fadeInUp = keyframes`
   from {
@@ -367,23 +368,71 @@ const ResultsTitle = styled.h2`
   color: ${colors.palette.burgundy};
 `;
 
-const LoadingContainer = styled.div`
-  text-align: center;
-  padding: ${spacing[20]};
-  color: ${colors.text.secondary};
+// Skeleton loader pour les cartes
+const shimmer = keyframes`
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 `;
 
-const Spinner = styled.div`
+const SkeletonGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const SkeletonCard = styled.div`
+  height: 420px;
+  background: linear-gradient(
+    90deg,
+    rgba(112, 42, 64, 0.3) 0%,
+    rgba(180, 80, 60, 0.4) 50%,
+    rgba(112, 42, 64, 0.3) 100%
+  );
+  background-size: 200% 100%;
+  animation: ${shimmer} 1.5s ease-in-out infinite;
+
+  @media (max-width: 640px) {
+    height: 350px;
+  }
+`;
+
+const FavoriteButton = styled.button<{ $isFavorite: boolean }>`
+  position: absolute;
+  top: ${spacing[3]};
+  right: ${spacing[3]};
+  z-index: 10;
   width: 40px;
   height: 40px;
-  margin: 0 auto ${spacing[4]};
-  border: 2px solid ${colors.border.default};
-  border-top-color: ${colors.palette.burgundy};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${props => props.$isFavorite ? 'rgba(220, 53, 69, 0.9)' : 'rgba(0, 0, 0, 0.4)'};
+  border: none;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
 
-  @keyframes spin {
-    to { transform: rotate(360deg); }
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: ${props => props.$isFavorite ? '#fff' : 'none'};
+    stroke: #fff;
+    stroke-width: 2;
+    transition: all 0.3s ease;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    background: ${props => props.$isFavorite ? 'rgba(220, 53, 69, 1)' : 'rgba(220, 53, 69, 0.7)'};
   }
 `;
 
@@ -513,7 +562,11 @@ const NoResults = styled.div`
 
 const spiritFilters = [
   { id: 'tous', label: 'Tous', ingredient: '__ALL__' },
+  { id: 'favoris', label: '❤️ Favoris', ingredient: '__FAVORITES__' },
   { id: 'all', label: 'Populaires', ingredient: '' },
+  { id: 'facile', label: '🟢 Facile', ingredient: '__EASY__' },
+  { id: 'moyen', label: '🟡 Moyen', ingredient: '__MEDIUM__' },
+  { id: 'expert', label: '🔴 Expert', ingredient: '__EXPERT__' },
   { id: 'vodka', label: 'Vodka', ingredient: 'Vodka' },
   { id: 'gin', label: 'Gin', ingredient: 'Gin' },
   { id: 'rum', label: 'Rhum', ingredient: 'Rum' },
@@ -527,6 +580,7 @@ const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 export const RecettesPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { favorites, toggleFavorite, isFavorite } = useFavorites();
   const [cocktails, setCocktails] = useState<Cocktail[]>([]);
   const [suggestions, setSuggestions] = useState<Cocktail[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -655,10 +709,31 @@ export const RecettesPage: React.FC = () => {
     setCurrentView('filter');
     setLoading(true);
 
-    if (filterId === 'tous') {
+    if (filterId === 'favoris') {
+      // Charger les cocktails favoris
+      if (favorites.length === 0) {
+        setCocktails([]);
+        setLoading(false);
+        return;
+      }
+      const favCocktails = await Promise.all(
+        favorites.map(id => import('../services/cocktailAPI').then(api => api.getCocktailById(id)))
+      );
+      setCocktails(favCocktails.filter((c): c is Cocktail => c !== null));
+    } else if (filterId === 'tous') {
       // Tous les cocktails A-Z
       const all = await getAllCocktails();
       setCocktails(all);
+    } else if (filterId === 'facile' || filterId === 'moyen' || filterId === 'expert') {
+      // Filtrer par difficulté (basé sur nombre d'ingrédients)
+      const all = await getAllCocktails();
+      const filtered = all.filter(c => {
+        const count = c.ingredients.length;
+        if (filterId === 'facile') return count <= 3;
+        if (filterId === 'moyen') return count >= 4 && count <= 6;
+        return count >= 7; // expert
+      });
+      setCocktails(filtered);
     } else if (filterId === 'all') {
       const popular = await getPopularCocktails();
       setCocktails(popular);
@@ -785,10 +860,16 @@ export const RecettesPage: React.FC = () => {
 
       <ContentSection id="resultats">
         {loading ? (
-          <LoadingContainer>
-            <Spinner />
-            <p>Chargement des cocktails...</p>
-          </LoadingContainer>
+          <>
+            <ResultsHeader>
+              <ResultsTitle>Chargement...</ResultsTitle>
+            </ResultsHeader>
+            <SkeletonGrid>
+              {[...Array(9)].map((_, i) => (
+                <SkeletonCard key={i} style={{ animationDelay: `${i * 0.1}s` }} />
+              ))}
+            </SkeletonGrid>
+          </>
         ) : cocktails.length === 0 ? (
           <NoResults>
             <h3>Aucun résultat</h3>
@@ -808,6 +889,18 @@ export const RecettesPage: React.FC = () => {
                   className="cocktail-card"
                   onClick={() => navigate(`/cocktail/${cocktail.id}`)}
                 >
+                  <FavoriteButton
+                    $isFavorite={isFavorite(cocktail.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(cocktail.id);
+                    }}
+                    title={isFavorite(cocktail.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                  >
+                    <svg viewBox="0 0 24 24">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                  </FavoriteButton>
                   <CardImage $src={cocktail.image + '/preview'} />
                   <CardContent>
                     <CardCategory>{translateCategory(cocktail.category)}</CardCategory>
