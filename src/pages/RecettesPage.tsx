@@ -41,6 +41,10 @@ const PageHeader = styled.section`
     background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
     border-radius: 50%;
   }
+
+  @media (max-width: 640px) {
+    padding: 120px ${spacing[4]} 60px;
+  }
 `;
 
 const PageLabel = styled.span`
@@ -90,6 +94,10 @@ const SearchSection = styled.div`
   padding: ${spacing[10]} ${spacing[8]};
   background: transparent;
   border-bottom: 1px solid rgba(247, 245, 235, 0.15);
+
+  @media (max-width: 640px) {
+    padding: ${spacing[6]} ${spacing[4]};
+  }
 `;
 
 const SearchContainer = styled.div`
@@ -233,6 +241,11 @@ const FiltersContainer = styled.div`
   flex-wrap: wrap;
   max-width: 800px;
   margin: ${spacing[8]} auto 0;
+
+  @media (max-width: 640px) {
+    margin: ${spacing[4]} auto 0;
+    gap: ${spacing[1]};
+  }
 `;
 
 const FilterButton = styled.button<{ $active: boolean }>`
@@ -251,6 +264,11 @@ const FilterButton = styled.button<{ $active: boolean }>`
     color: ${colors.text.light};
     border-color: rgba(247, 238, 192, 0.6);
     background: rgba(247, 238, 192, 0.15);
+  }
+
+  @media (max-width: 640px) {
+    padding: ${spacing[1]} ${spacing[2]};
+    font-size: 10px;
   }
 `;
 
@@ -294,6 +312,12 @@ const LetterButton = styled.button<{ $active: boolean }>`
     color: ${colors.text.light};
     background: rgba(247, 238, 192, 0.15);
   }
+
+  @media (max-width: 640px) {
+    width: 30px;
+    height: 30px;
+    font-size: ${typography.fontSize.sm};
+  }
 `;
 
 // Page entière avec gradient continu - style Skyline Venice
@@ -314,6 +338,10 @@ const ContentSection = styled.section`
   padding: ${spacing[16]} ${spacing[8]};
   max-width: 1400px;
   margin: 0 auto;
+
+  @media (max-width: 640px) {
+    padding: ${spacing[8]} ${spacing[4]};
+  }
 `;
 
 const ResultsHeader = styled.div`
@@ -392,6 +420,10 @@ const CocktailCard = styled.div`
 
   &:hover::before {
     opacity: 0.7;
+  }
+
+  @media (max-width: 640px) {
+    height: 350px;
   }
 `;
 

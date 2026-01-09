@@ -122,6 +122,10 @@ const ContentColumn = styled.div`
     padding: ${spacing[12]} ${spacing[6]};
     order: 2;
   }
+
+  @media (max-width: 640px) {
+    padding: ${spacing[8]} ${spacing[4]};
+  }
 `;
 
 const ImageColumn = styled.div`
@@ -139,6 +143,10 @@ const ImageColumn = styled.div`
     height: 50vh;
     order: 1;
     animation: ${fadeInUp} 0.6s ease forwards;
+  }
+
+  @media (max-width: 640px) {
+    height: 40vh;
   }
 `;
 
@@ -234,6 +242,12 @@ const DecorativeIcon = styled.div`
     stroke: ${colors.text.lightSecondary};
     stroke-width: 1;
   }
+
+  @media (max-width: 640px) {
+    width: 60px;
+    height: 60px;
+    margin: ${spacing[6]} auto;
+  }
 `;
 
 const SectionTitle = styled.h2`
@@ -257,6 +271,10 @@ const SensoryProfile = styled.div`
   animation: ${fadeInUp} 0.6s ease forwards;
   animation-delay: 0.9s;
   opacity: 0;
+
+  @media (max-width: 640px) {
+    gap: ${spacing[3]};
+  }
 `;
 
 const SensoryItem = styled.div`
@@ -355,6 +373,12 @@ const Meta = styled.div`
   animation: ${fadeInUp} 0.6s ease forwards;
   animation-delay: 1.2s;
   opacity: 0;
+
+  @media (max-width: 640px) {
+    gap: ${spacing[6]};
+    margin-top: ${spacing[8]};
+    padding-top: ${spacing[6]};
+  }
 `;
 
 const MetaItem = styled.div`

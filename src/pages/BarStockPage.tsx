@@ -45,6 +45,10 @@ const PageHeader = styled.section`
     background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
     border-radius: 50%;
   }
+
+  @media (max-width: 640px) {
+    padding: 120px ${spacing[4]} 60px;
+  }
 `;
 
 const PageLabel = styled.span`
@@ -95,6 +99,10 @@ const ContentSection = styled.section`
   padding: ${spacing[16]} ${spacing[8]};
   max-width: 1000px;
   margin: 0 auto;
+
+  @media (max-width: 640px) {
+    padding: ${spacing[10]} ${spacing[4]};
+  }
 `;
 
 const IntroText = styled.div`
@@ -137,6 +145,10 @@ const CategoryHeader = styled.div`
 
 const CategoryIcon = styled.span`
   font-size: ${typography.fontSize['3xl']};
+
+  @media (max-width: 640px) {
+    font-size: ${typography.fontSize['2xl']};
+  }
 `;
 
 const CategoryTitle = styled.h2`
@@ -144,6 +156,10 @@ const CategoryTitle = styled.h2`
   font-size: ${typography.fontSize['2xl']};
   font-weight: ${typography.fontWeight.light};
   color: ${colors.text.light};
+
+  @media (max-width: 640px) {
+    font-size: ${typography.fontSize.xl};
+  }
 `;
 
 const CategoryDesc = styled.p`

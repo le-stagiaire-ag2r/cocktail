@@ -48,6 +48,10 @@ const PageHeader = styled.section`
     background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
     border-radius: 50%;
   }
+
+  @media (max-width: 640px) {
+    padding: 120px ${spacing[4]} 60px;
+  }
 `;
 
 const PageLabel = styled.span`
@@ -100,6 +104,10 @@ const Section = styled.section`
 
   &:last-child {
     border-bottom: none;
+  }
+
+  @media (max-width: 640px) {
+    padding: ${spacing[10]} ${spacing[4]};
   }
 `;
 
@@ -162,6 +170,18 @@ const TechniqueHeader = styled.div`
     font-size: ${typography.fontSize['2xl']};
     font-weight: ${typography.fontWeight.light};
     color: ${colors.text.light};
+  }
+
+  @media (max-width: 640px) {
+    gap: ${spacing[3]};
+
+    span {
+      font-size: 1.8rem;
+    }
+
+    h3 {
+      font-size: ${typography.fontSize.xl};
+    }
   }
 `;
 
@@ -257,6 +277,14 @@ const ToolItem = styled.div`
     font-size: ${typography.fontSize.sm};
     color: rgba(247, 245, 235, 0.6);
     line-height: ${typography.lineHeight.relaxed};
+  }
+
+  @media (max-width: 640px) {
+    padding: ${spacing[4]};
+
+    .icon {
+      font-size: 2rem;
+    }
   }
 `;
 
