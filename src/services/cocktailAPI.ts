@@ -169,6 +169,24 @@ export const getCocktailsByLetter = async (letter: string): Promise<Cocktail[]> 
   }
 };
 
+// Récupérer TOUS les cocktails (lettres A-Z)
+export const getAllCocktails = async (): Promise<Cocktail[]> => {
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+  const allCocktails: Cocktail[] = [];
+
+  // Fetch toutes les lettres en parallèle pour plus de rapidité
+  const results = await Promise.all(
+    alphabet.map(letter => getCocktailsByLetter(letter))
+  );
+
+  results.forEach(cocktails => {
+    allCocktails.push(...cocktails);
+  });
+
+  // Trier par nom
+  return allCocktails.sort((a, b) => a.name.localeCompare(b.name));
+};
+
 // Récupérer les cocktails par ingrédient
 export const getCocktailsByIngredient = async (ingredient: string): Promise<Cocktail[]> => {
   try {
@@ -286,6 +304,7 @@ export default {
   getCocktailById,
   getRandomCocktail,
   getCocktailsByLetter,
+  getAllCocktails,
   getCocktailsByIngredient,
   getPopularCocktails,
   getCategories,

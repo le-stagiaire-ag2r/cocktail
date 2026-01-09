@@ -9,6 +9,7 @@ import {
   getCocktailsByIngredient,
   getCocktailsByLetter,
   getRandomCocktail,
+  getAllCocktails,
   Cocktail
 } from '../services/cocktailAPI';
 import { translateIngredient, translateCategory, translateGlass } from '../utils/translations';
@@ -511,6 +512,7 @@ const NoResults = styled.div`
 `;
 
 const spiritFilters = [
+  { id: 'tous', label: 'Tous', ingredient: '__ALL__' },
   { id: 'all', label: 'Populaires', ingredient: '' },
   { id: 'vodka', label: 'Vodka', ingredient: 'Vodka' },
   { id: 'gin', label: 'Gin', ingredient: 'Gin' },
@@ -653,7 +655,11 @@ export const RecettesPage: React.FC = () => {
     setCurrentView('filter');
     setLoading(true);
 
-    if (filterId === 'all') {
+    if (filterId === 'tous') {
+      // Tous les cocktails A-Z
+      const all = await getAllCocktails();
+      setCocktails(all);
+    } else if (filterId === 'all') {
       const popular = await getPopularCocktails();
       setCocktails(popular);
     } else {
