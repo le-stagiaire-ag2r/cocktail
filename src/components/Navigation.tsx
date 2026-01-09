@@ -15,6 +15,10 @@ const Header = styled.header<{ $scrolled: boolean }>`
     : 'linear-gradient(180deg, rgba(107, 58, 74, 0.9) 0%, rgba(107, 58, 74, 0.7) 50%, transparent 100%)'};
   backdrop-filter: ${props => props.$scrolled ? 'blur(20px)' : 'none'};
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  @media (max-width: 640px) {
+    padding: ${props => props.$scrolled ? spacing[2] : spacing[3]} ${spacing[4]};
+  }
 `;
 
 const Nav = styled.nav`
@@ -40,6 +44,10 @@ const Logo = styled(Link)`
 
   &:hover {
     color: ${colors.palette.coral};
+  }
+
+  @media (max-width: 640px) {
+    font-size: ${typography.fontSize.lg};
   }
 `;
 

@@ -49,6 +49,10 @@ const PageHeader = styled.section`
     background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
     border-radius: 50%;
   }
+
+  @media (max-width: 640px) {
+    padding: 120px ${spacing[4]} 60px;
+  }
 `;
 
 const PageLabel = styled.span`
@@ -103,6 +107,10 @@ const SpiritSection = styled.section`
   &:last-child {
     border-bottom: none;
   }
+
+  @media (max-width: 640px) {
+    padding: ${spacing[10]} ${spacing[4]};
+  }
 `;
 
 const SpiritContainer = styled.div`
@@ -122,11 +130,20 @@ const SpiritHeader = styled.div`
     flex-direction: column;
     text-align: center;
   }
+
+  @media (max-width: 640px) {
+    gap: ${spacing[3]};
+    margin-bottom: ${spacing[6]};
+  }
 `;
 
 const SpiritIcon = styled.span`
   font-size: 4rem;
   line-height: 1;
+
+  @media (max-width: 640px) {
+    font-size: 2.5rem;
+  }
 `;
 
 const SpiritInfo = styled.div`

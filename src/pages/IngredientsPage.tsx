@@ -46,6 +46,10 @@ const PageHeader = styled.section`
     background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
     border-radius: 50%;
   }
+
+  @media (max-width: 640px) {
+    padding: 120px ${spacing[4]} 60px;
+  }
 `;
 
 const PageLabel = styled.span`
@@ -96,6 +100,10 @@ const SearchSection = styled.div`
   padding: ${spacing[6]} ${spacing[8]};
   background: transparent;
   border-bottom: 1px solid rgba(247, 245, 235, 0.15);
+
+  @media (max-width: 640px) {
+    padding: ${spacing[4]} ${spacing[4]};
+  }
 `;
 
 const SearchContainer = styled.div`
@@ -177,12 +185,22 @@ const LetterButton = styled.button<{ $active: boolean; $disabled: boolean }>`
     color: ${props => !props.$disabled && colors.text.light};
     background: ${props => !props.$disabled && 'rgba(247, 238, 192, 0.15)'};
   }
+
+  @media (max-width: 640px) {
+    width: 28px;
+    height: 28px;
+    font-size: ${typography.fontSize.xs};
+  }
 `;
 
 const ContentSection = styled.section`
   padding: ${spacing[12]} ${spacing[8]};
   max-width: 1200px;
   margin: 0 auto;
+
+  @media (max-width: 640px) {
+    padding: ${spacing[8]} ${spacing[4]};
+  }
 `;
 
 const TotalCount = styled.div`
@@ -207,6 +225,10 @@ const CategoryTitle = styled.h2`
   display: flex;
   align-items: center;
   gap: ${spacing[3]};
+
+  @media (max-width: 640px) {
+    font-size: ${typography.fontSize.xl};
+  }
 `;
 
 const LetterSection = styled.div`
@@ -221,6 +243,10 @@ const LetterTitle = styled.h2`
   margin-bottom: ${spacing[6]};
   padding-bottom: ${spacing[4]};
   border-bottom: 1px solid rgba(247, 245, 235, 0.15);
+
+  @media (max-width: 640px) {
+    font-size: ${typography.fontSize['2xl']};
+  }
 `;
 
 // Grille d'ingrédients pour réduire le scroll

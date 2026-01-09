@@ -138,6 +138,10 @@ const HeroButton = styled(Link)`
   &:hover svg {
     transform: translateX(5px);
   }
+
+  @media (max-width: 640px) {
+    padding: ${spacing[4]} ${spacing[6]};
+  }
 `;
 
 // Sections fluides sans fond - tout sur le gradient
@@ -155,6 +159,10 @@ const FluidSection = styled.section`
 const SectionHeader = styled.div`
   text-align: center;
   margin-bottom: 80px;
+
+  @media (max-width: 640px) {
+    margin-bottom: 40px;
+  }
 `;
 
 const SectionLabel = styled.span`
@@ -319,12 +327,22 @@ const SpiritRow = styled(Link)`
     margin: 0 -${spacing[4]};
     padding-right: ${spacing[4]};
   }
+
+  @media (max-width: 640px) {
+    gap: ${spacing[3]};
+    padding: ${spacing[4]} 0;
+  }
 `;
 
 const SpiritIcon = styled.span`
   font-size: 2.5rem;
   width: 60px;
   text-align: center;
+
+  @media (max-width: 640px) {
+    font-size: 1.8rem;
+    width: 45px;
+  }
 `;
 
 const SpiritInfo = styled.div`
@@ -337,11 +355,19 @@ const SpiritName = styled.h4`
   font-weight: ${typography.fontWeight.light};
   color: ${colors.text.light};
   margin-bottom: ${spacing[1]};
+
+  @media (max-width: 640px) {
+    font-size: ${typography.fontSize.lg};
+  }
 `;
 
 const SpiritDesc = styled.p`
   font-size: ${typography.fontSize.sm};
   color: rgba(247, 245, 235, 0.6);
+
+  @media (max-width: 640px) {
+    font-size: ${typography.fontSize.xs};
+  }
 `;
 
 const SpiritArrow = styled.span`
@@ -370,6 +396,10 @@ const CTASection = styled.section`
     height: 400px;
     background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
     border-radius: 50%;
+  }
+
+  @media (max-width: 640px) {
+    padding: 80px ${spacing[4]};
   }
 `;
 
@@ -406,6 +436,12 @@ const CTAInfo = styled.div`
   gap: ${spacing[16]};
   flex-wrap: wrap;
   margin-bottom: ${spacing[12]};
+
+  @media (max-width: 640px) {
+    gap: ${spacing[8]};
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const CTABlock = styled.div`
@@ -466,6 +502,10 @@ const CTAButton = styled(Link)`
 
   &:hover svg {
     transform: translateX(5px);
+  }
+
+  @media (max-width: 640px) {
+    padding: ${spacing[4]} ${spacing[6]};
   }
 `;
 
